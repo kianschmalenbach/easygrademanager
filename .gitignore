@@ -328,3 +328,6 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/EasyGradeManager/EasyGradeManager.csproj
+/EasyGradeManager/Web.config
+/EasyGradeManager/packages.config
