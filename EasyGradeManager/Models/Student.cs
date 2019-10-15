@@ -8,7 +8,7 @@ using System.Web;
 namespace EasyGradeManager.Models
 {
     [Table("Étudiant")]
-    public class Student
+    public class Student:Person
     {
         public int Id { get; set; } //primary key by convention
         [Required] //next property is NOT NULL
