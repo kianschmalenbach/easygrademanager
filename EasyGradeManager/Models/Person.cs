@@ -1,8 +1,10 @@
-public class Person
+namespace EasyGradeManager.Models
 {
-	private int identifier;
-
-	private string name;
-
+    public class Person
+    {
+        public int Id { get; set; }
+        public int Identifier { get; set; }
+        public string Name { get; set; }
+ 
+    }
 }
-

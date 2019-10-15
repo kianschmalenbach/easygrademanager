@@ -1,8 +1,11 @@
 using System.Collections.ObjectModel;
 
-public class Assignment
+namespace EasyGradeManager.Models
 {
-	private Collection<EvaluationCriterion> evaluationCriteria;
+    public class Assignment
+    {
+        public int Id { get; set; }
+        public Collection<EvaluationCriterion> EvaluationCriteria { get; set; }
 
+    }
 }
-

@@ -1,4 +1,7 @@
-public class Tutor : Person
+namespace EasyGradeManager.Models
 {
-}
+    public class Tutor : Person
+    {
 
+    }
+}

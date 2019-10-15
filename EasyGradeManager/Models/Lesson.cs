@@ -1,6 +1,9 @@
-public class Lesson
+namespace EasyGradeManager.Models
 {
-	private string date;
+    public class Lesson
+    {
+        public int Id { get; set; }
+        public string Date { get; set; }
 
+    }
 }
-

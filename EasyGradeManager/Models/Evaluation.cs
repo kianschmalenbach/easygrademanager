@@ -1,6 +1,9 @@
-public class Evaluation
+namespace EasyGradeManager.Models
 {
-	private Score score;
+    public class Evaluation
+    {
+        public int Id { get; set; }
+        public Score Score { get; set; }
 
+    }
 }
-

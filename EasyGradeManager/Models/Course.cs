@@ -1,25 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace EasyGradeManager.Models
 {
     public class Course
     {
         public int Id { get; set; }
-        [Required]
-        public String CourseName { get; set; }
+        //[Required]
+        public String Name { get; set; }
         public ICollection<Student> Students { get; set; }
-        
-        private string name;
+        public int MinAllowedGroupSize { get; set; }
+        public int MaxAllowedGroupSize { get; set; }
+        public ICollection<EvaluationCriterion> EvaluationCriteria { get; set; }
 
-        private int minAllowedGroupSize;
-
-        private int maxAllowedGroupSize;
-
-        private Collection<EvaluationCriterion> evaluationCriteria;
     }
 }
