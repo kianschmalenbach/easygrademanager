@@ -18,5 +18,25 @@ namespace EasyGradeManager.Models
         public System.Data.Entity.DbSet<EasyGradeManager.Models.Student> Students { get; set; }
 
         public System.Data.Entity.DbSet<EasyGradeManager.Models.Course> Courses { get; set; }
+
+        public System.Data.Entity.DbSet<EasyGradeManager.Models.Assignment> Assignments { get; set; }
+
+        public System.Data.Entity.DbSet<EasyGradeManager.Models.Evaluation> Evaluations { get; set; }
+
+        public System.Data.Entity.DbSet<EasyGradeManager.Models.EvaluationCriterion> EvaluationCriterions { get; set; }
+
+        public System.Data.Entity.DbSet<EasyGradeManager.Models.Group> Groups { get; set; }
+
+        public System.Data.Entity.DbSet<EasyGradeManager.Models.Lesson> Lessons { get; set; }
+
+        public System.Data.Entity.DbSet<EasyGradeManager.Models.Person> People { get; set; }
+
+        public System.Data.Entity.DbSet<EasyGradeManager.Models.Score> Scores { get; set; }
+
+        public System.Data.Entity.DbSet<EasyGradeManager.Models.Task> Tasks { get; set; }
+
+        public System.Data.Entity.DbSet<EasyGradeManager.Models.Teacher> Teachers { get; set; }
+
+        public System.Data.Entity.DbSet<EasyGradeManager.Models.Tutor> Tutors { get; set; }
     }
 }
