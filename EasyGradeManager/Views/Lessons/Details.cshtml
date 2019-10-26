@@ -1,0 +1,50 @@
+﻿@model EasyGradeManager.Models.Lesson
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Lesson</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Assignment.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Assignment.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DerivedFrom.Id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DerivedFrom.Id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tutor.Id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tutor.Id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Number)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

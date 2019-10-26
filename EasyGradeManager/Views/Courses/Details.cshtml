@@ -1,0 +1,66 @@
+﻿@model EasyGradeManager.Models.Course
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Course</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Teacher.Id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Teacher.Id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Term)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Term)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Archived)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Archived)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MinRequiredAssignments)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MinRequiredAssignments)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MinRequiredScore)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MinRequiredScore)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

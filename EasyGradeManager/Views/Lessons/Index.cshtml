@@ -1,0 +1,51 @@
+﻿@model IEnumerable<EasyGradeManager.Models.Lesson>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Assignment.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DerivedFrom.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Tutor.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Number)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Assignment.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DerivedFrom.Id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Tutor.Id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Number)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

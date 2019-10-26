@@ -1,0 +1,98 @@
+﻿@model EasyGradeManager.Models.Assignment
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Assignment</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Course.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Course.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Deadline)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Deadline)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MinRequiredScore)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MinRequiredScore)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Mandatory)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mandatory)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Weight)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Weight)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MinGroupSize)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MinGroupSize)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MaxGroupSize)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MaxGroupSize)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsFinal)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsFinal)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
