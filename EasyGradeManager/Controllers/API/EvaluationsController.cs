@@ -10,7 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using EasyGradeManager.Models;
 
-namespace EasyGradeManager.Controllers
+namespace EasyGradeManager.Controllers.API
 {
     public class EvaluationsController : ApiController
     {
@@ -44,7 +44,7 @@ namespace EasyGradeManager.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != evaluation.Id)
+            if (id != evaluation.GroupId)
             {
                 return BadRequest();
             }
@@ -80,9 +80,24 @@ namespace EasyGradeManager.Controllers
             }
 
             db.Evaluations.Add(evaluation);
-            db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = evaluation.Id }, evaluation);
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                if (EvaluationExists(evaluation.GroupId))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return CreatedAtRoute("DefaultApi", new { id = evaluation.GroupId }, evaluation);
         }
 
         // DELETE: api/Evaluations/5
@@ -112,7 +127,7 @@ namespace EasyGradeManager.Controllers
 
         private bool EvaluationExists(int id)
         {
-            return db.Evaluations.Count(e => e.Id == id) > 0;
+            return db.Evaluations.Count(e => e.GroupId == id) > 0;
         }
     }
 }

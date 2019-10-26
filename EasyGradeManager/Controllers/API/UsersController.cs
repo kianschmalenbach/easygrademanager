@@ -10,46 +10,46 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using EasyGradeManager.Models;
 
-namespace EasyGradeManager.Controllers
+namespace EasyGradeManager.Controllers.API
 {
-    public class AssignmentsController : ApiController
+    public class UsersController : ApiController
     {
         private EasyGradeManagerContext db = new EasyGradeManagerContext();
 
-        // GET: api/Assignments
-        public IQueryable<Assignment> GetAssignments()
+        // GET: api/Users
+        public IQueryable<User> GetAccounts()
         {
-            return db.Assignments;
+            return db.Accounts;
         }
 
-        // GET: api/Assignments/5
-        [ResponseType(typeof(Assignment))]
-        public IHttpActionResult GetAssignment(int id)
+        // GET: api/Users/5
+        [ResponseType(typeof(User))]
+        public IHttpActionResult GetUser(int id)
         {
-            Assignment assignment = db.Assignments.Find(id);
-            if (assignment == null)
+            User user = db.Accounts.Find(id);
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return Ok(assignment);
+            return Ok(user);
         }
 
-        // PUT: api/Assignments/5
+        // PUT: api/Users/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutAssignment(int id, Assignment assignment)
+        public IHttpActionResult PutUser(int id, User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != assignment.Id)
+            if (id != user.Id)
             {
                 return BadRequest();
             }
 
-            db.Entry(assignment).State = EntityState.Modified;
+            db.Entry(user).State = EntityState.Modified;
 
             try
             {
@@ -57,7 +57,7 @@ namespace EasyGradeManager.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AssignmentExists(id))
+                if (!UserExists(id))
                 {
                     return NotFound();
                 }
@@ -70,35 +70,35 @@ namespace EasyGradeManager.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Assignments
-        [ResponseType(typeof(Assignment))]
-        public IHttpActionResult PostAssignment(Assignment assignment)
+        // POST: api/Users
+        [ResponseType(typeof(User))]
+        public IHttpActionResult PostUser(User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Assignments.Add(assignment);
+            db.Accounts.Add(user);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = assignment.Id }, assignment);
+            return CreatedAtRoute("DefaultApi", new { id = user.Id }, user);
         }
 
-        // DELETE: api/Assignments/5
-        [ResponseType(typeof(Assignment))]
-        public IHttpActionResult DeleteAssignment(int id)
+        // DELETE: api/Users/5
+        [ResponseType(typeof(User))]
+        public IHttpActionResult DeleteUser(int id)
         {
-            Assignment assignment = db.Assignments.Find(id);
-            if (assignment == null)
+            User user = db.Accounts.Find(id);
+            if (user == null)
             {
                 return NotFound();
             }
 
-            db.Assignments.Remove(assignment);
+            db.Accounts.Remove(user);
             db.SaveChanges();
 
-            return Ok(assignment);
+            return Ok(user);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +110,9 @@ namespace EasyGradeManager.Controllers
             base.Dispose(disposing);
         }
 
-        private bool AssignmentExists(int id)
+        private bool UserExists(int id)
         {
-            return db.Assignments.Count(e => e.Id == id) > 0;
+            return db.Accounts.Count(e => e.Id == id) > 0;
         }
     }
 }

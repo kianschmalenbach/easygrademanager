@@ -10,46 +10,46 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using EasyGradeManager.Models;
 
-namespace EasyGradeManager.Controllers
+namespace EasyGradeManager.Controllers.API
 {
-    public class TasksController : ApiController
+    public class CoursesController : ApiController
     {
         private EasyGradeManagerContext db = new EasyGradeManagerContext();
 
-        // GET: api/Tasks
-        public IQueryable<Task> GetTasks()
+        // GET: api/Courses
+        public IQueryable<Course> GetCourses()
         {
-            return db.Tasks;
+            return db.Courses;
         }
 
-        // GET: api/Tasks/5
-        [ResponseType(typeof(Task))]
-        public IHttpActionResult GetTask(int id)
+        // GET: api/Courses/5
+        [ResponseType(typeof(Course))]
+        public IHttpActionResult GetCourse(int id)
         {
-            Task task = db.Tasks.Find(id);
-            if (task == null)
+            Course course = db.Courses.Find(id);
+            if (course == null)
             {
                 return NotFound();
             }
 
-            return Ok(task);
+            return Ok(course);
         }
 
-        // PUT: api/Tasks/5
+        // PUT: api/Courses/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutTask(int id, Task task)
+        public IHttpActionResult PutCourse(int id, Course course)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != task.Id)
+            if (id != course.Id)
             {
                 return BadRequest();
             }
 
-            db.Entry(task).State = EntityState.Modified;
+            db.Entry(course).State = EntityState.Modified;
 
             try
             {
@@ -57,7 +57,7 @@ namespace EasyGradeManager.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TaskExists(id))
+                if (!CourseExists(id))
                 {
                     return NotFound();
                 }
@@ -70,35 +70,35 @@ namespace EasyGradeManager.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Tasks
-        [ResponseType(typeof(Task))]
-        public IHttpActionResult PostTask(Task task)
+        // POST: api/Courses
+        [ResponseType(typeof(Course))]
+        public IHttpActionResult PostCourse(Course course)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Tasks.Add(task);
+            db.Courses.Add(course);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = task.Id }, task);
+            return CreatedAtRoute("DefaultApi", new { id = course.Id }, course);
         }
 
-        // DELETE: api/Tasks/5
-        [ResponseType(typeof(Task))]
-        public IHttpActionResult DeleteTask(int id)
+        // DELETE: api/Courses/5
+        [ResponseType(typeof(Course))]
+        public IHttpActionResult DeleteCourse(int id)
         {
-            Task task = db.Tasks.Find(id);
-            if (task == null)
+            Course course = db.Courses.Find(id);
+            if (course == null)
             {
                 return NotFound();
             }
 
-            db.Tasks.Remove(task);
+            db.Courses.Remove(course);
             db.SaveChanges();
 
-            return Ok(task);
+            return Ok(course);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +110,9 @@ namespace EasyGradeManager.Controllers
             base.Dispose(disposing);
         }
 
-        private bool TaskExists(int id)
+        private bool CourseExists(int id)
         {
-            return db.Tasks.Count(e => e.Id == id) > 0;
+            return db.Courses.Count(e => e.Id == id) > 0;
         }
     }
 }

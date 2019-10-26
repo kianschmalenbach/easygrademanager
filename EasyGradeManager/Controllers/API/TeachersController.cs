@@ -10,46 +10,46 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using EasyGradeManager.Models;
 
-namespace EasyGradeManager.Controllers
+namespace EasyGradeManager.Controllers.API
 {
-    public class TutorsController : ApiController
+    public class TeachersController : ApiController
     {
         private EasyGradeManagerContext db = new EasyGradeManagerContext();
 
-        // GET: api/Tutors
-        public IQueryable<Tutor> GetTutors()
+        // GET: api/Teachers
+        public IQueryable<Teacher> GetTeachers()
         {
-            return db.Tutors;
+            return db.Teachers;
         }
 
-        // GET: api/Tutors/5
-        [ResponseType(typeof(Tutor))]
-        public IHttpActionResult GetTutor(int id)
+        // GET: api/Teachers/5
+        [ResponseType(typeof(Teacher))]
+        public IHttpActionResult GetTeacher(int id)
         {
-            Tutor tutor = db.Tutors.Find(id);
-            if (tutor == null)
+            Teacher teacher = db.Teachers.Find(id);
+            if (teacher == null)
             {
                 return NotFound();
             }
 
-            return Ok(tutor);
+            return Ok(teacher);
         }
 
-        // PUT: api/Tutors/5
+        // PUT: api/Teachers/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutTutor(int id, Tutor tutor)
+        public IHttpActionResult PutTeacher(int id, Teacher teacher)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != tutor.Id)
+            if (id != teacher.Id)
             {
                 return BadRequest();
             }
 
-            db.Entry(tutor).State = EntityState.Modified;
+            db.Entry(teacher).State = EntityState.Modified;
 
             try
             {
@@ -57,7 +57,7 @@ namespace EasyGradeManager.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TutorExists(id))
+                if (!TeacherExists(id))
                 {
                     return NotFound();
                 }
@@ -70,35 +70,35 @@ namespace EasyGradeManager.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Tutors
-        [ResponseType(typeof(Tutor))]
-        public IHttpActionResult PostTutor(Tutor tutor)
+        // POST: api/Teachers
+        [ResponseType(typeof(Teacher))]
+        public IHttpActionResult PostTeacher(Teacher teacher)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Tutors.Add(tutor);
+            db.Persons.Add(teacher);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = tutor.Id }, tutor);
+            return CreatedAtRoute("DefaultApi", new { id = teacher.Id }, teacher);
         }
 
-        // DELETE: api/Tutors/5
-        [ResponseType(typeof(Tutor))]
-        public IHttpActionResult DeleteTutor(int id)
+        // DELETE: api/Teachers/5
+        [ResponseType(typeof(Teacher))]
+        public IHttpActionResult DeleteTeacher(int id)
         {
-            Tutor tutor = db.Tutors.Find(id);
-            if (tutor == null)
+            Teacher teacher = db.Teachers.Find(id);
+            if (teacher == null)
             {
                 return NotFound();
             }
 
-            db.Tutors.Remove(tutor);
+            db.Persons.Remove(teacher);
             db.SaveChanges();
 
-            return Ok(tutor);
+            return Ok(teacher);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +110,9 @@ namespace EasyGradeManager.Controllers
             base.Dispose(disposing);
         }
 
-        private bool TutorExists(int id)
+        private bool TeacherExists(int id)
         {
-            return db.Tutors.Count(e => e.Id == id) > 0;
+            return db.Persons.Count(e => e.Id == id) > 0;
         }
     }
 }

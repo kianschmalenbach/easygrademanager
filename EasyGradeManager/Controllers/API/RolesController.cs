@@ -10,46 +10,46 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using EasyGradeManager.Models;
 
-namespace EasyGradeManager.Controllers
+namespace EasyGradeManager.Controllers.API
 {
-    public class GroupsController : ApiController
+    public class RolesController : ApiController
     {
         private EasyGradeManagerContext db = new EasyGradeManagerContext();
 
-        // GET: api/Groups
-        public IQueryable<Group> GetGroups()
+        // GET: api/Roles
+        public IQueryable<Role> GetPersons()
         {
-            return db.Groups;
+            return db.Persons;
         }
 
-        // GET: api/Groups/5
-        [ResponseType(typeof(Group))]
-        public IHttpActionResult GetGroup(int id)
+        // GET: api/Roles/5
+        [ResponseType(typeof(Role))]
+        public IHttpActionResult GetRole(int id)
         {
-            Group group = db.Groups.Find(id);
-            if (group == null)
+            Role role = db.Persons.Find(id);
+            if (role == null)
             {
                 return NotFound();
             }
 
-            return Ok(group);
+            return Ok(role);
         }
 
-        // PUT: api/Groups/5
+        // PUT: api/Roles/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutGroup(int id, Group group)
+        public IHttpActionResult PutRole(int id, Role role)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != group.Id)
+            if (id != role.Id)
             {
                 return BadRequest();
             }
 
-            db.Entry(group).State = EntityState.Modified;
+            db.Entry(role).State = EntityState.Modified;
 
             try
             {
@@ -57,7 +57,7 @@ namespace EasyGradeManager.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!GroupExists(id))
+                if (!RoleExists(id))
                 {
                     return NotFound();
                 }
@@ -70,35 +70,35 @@ namespace EasyGradeManager.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Groups
-        [ResponseType(typeof(Group))]
-        public IHttpActionResult PostGroup(Group group)
+        // POST: api/Roles
+        [ResponseType(typeof(Role))]
+        public IHttpActionResult PostRole(Role role)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Groups.Add(group);
+            db.Persons.Add(role);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = group.Id }, group);
+            return CreatedAtRoute("DefaultApi", new { id = role.Id }, role);
         }
 
-        // DELETE: api/Groups/5
-        [ResponseType(typeof(Group))]
-        public IHttpActionResult DeleteGroup(int id)
+        // DELETE: api/Roles/5
+        [ResponseType(typeof(Role))]
+        public IHttpActionResult DeleteRole(int id)
         {
-            Group group = db.Groups.Find(id);
-            if (group == null)
+            Role role = db.Persons.Find(id);
+            if (role == null)
             {
                 return NotFound();
             }
 
-            db.Groups.Remove(group);
+            db.Persons.Remove(role);
             db.SaveChanges();
 
-            return Ok(group);
+            return Ok(role);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +110,9 @@ namespace EasyGradeManager.Controllers
             base.Dispose(disposing);
         }
 
-        private bool GroupExists(int id)
+        private bool RoleExists(int id)
         {
-            return db.Groups.Count(e => e.Id == id) > 0;
+            return db.Persons.Count(e => e.Id == id) > 0;
         }
     }
 }

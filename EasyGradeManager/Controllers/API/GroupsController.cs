@@ -10,46 +10,46 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using EasyGradeManager.Models;
 
-namespace EasyGradeManager.Controllers
+namespace EasyGradeManager.Controllers.API
 {
-    public class LessonsController : ApiController
+    public class GroupsController : ApiController
     {
         private EasyGradeManagerContext db = new EasyGradeManagerContext();
 
-        // GET: api/Lessons
-        public IQueryable<Lesson> GetLessons()
+        // GET: api/Groups
+        public IQueryable<Group> GetGroups()
         {
-            return db.Lessons;
+            return db.Groups;
         }
 
-        // GET: api/Lessons/5
-        [ResponseType(typeof(Lesson))]
-        public IHttpActionResult GetLesson(int id)
+        // GET: api/Groups/5
+        [ResponseType(typeof(Group))]
+        public IHttpActionResult GetGroup(int id)
         {
-            Lesson lesson = db.Lessons.Find(id);
-            if (lesson == null)
+            Group group = db.Groups.Find(id);
+            if (group == null)
             {
                 return NotFound();
             }
 
-            return Ok(lesson);
+            return Ok(group);
         }
 
-        // PUT: api/Lessons/5
+        // PUT: api/Groups/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutLesson(int id, Lesson lesson)
+        public IHttpActionResult PutGroup(int id, Group group)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != lesson.Id)
+            if (id != group.Id)
             {
                 return BadRequest();
             }
 
-            db.Entry(lesson).State = EntityState.Modified;
+            db.Entry(group).State = EntityState.Modified;
 
             try
             {
@@ -57,7 +57,7 @@ namespace EasyGradeManager.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!LessonExists(id))
+                if (!GroupExists(id))
                 {
                     return NotFound();
                 }
@@ -70,35 +70,35 @@ namespace EasyGradeManager.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Lessons
-        [ResponseType(typeof(Lesson))]
-        public IHttpActionResult PostLesson(Lesson lesson)
+        // POST: api/Groups
+        [ResponseType(typeof(Group))]
+        public IHttpActionResult PostGroup(Group group)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Lessons.Add(lesson);
+            db.Groups.Add(group);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = lesson.Id }, lesson);
+            return CreatedAtRoute("DefaultApi", new { id = group.Id }, group);
         }
 
-        // DELETE: api/Lessons/5
-        [ResponseType(typeof(Lesson))]
-        public IHttpActionResult DeleteLesson(int id)
+        // DELETE: api/Groups/5
+        [ResponseType(typeof(Group))]
+        public IHttpActionResult DeleteGroup(int id)
         {
-            Lesson lesson = db.Lessons.Find(id);
-            if (lesson == null)
+            Group group = db.Groups.Find(id);
+            if (group == null)
             {
                 return NotFound();
             }
 
-            db.Lessons.Remove(lesson);
+            db.Groups.Remove(group);
             db.SaveChanges();
 
-            return Ok(lesson);
+            return Ok(group);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +110,9 @@ namespace EasyGradeManager.Controllers
             base.Dispose(disposing);
         }
 
-        private bool LessonExists(int id)
+        private bool GroupExists(int id)
         {
-            return db.Lessons.Count(e => e.Id == id) > 0;
+            return db.Groups.Count(e => e.Id == id) > 0;
         }
     }
 }

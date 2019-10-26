@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace EasyGradeManager.Models
 {
@@ -14,29 +15,38 @@ namespace EasyGradeManager.Models
         public EasyGradeManagerContext() : base("name=EasyGradeManagerContext")
         {
         }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+            modelBuilder.Entity<Evaluation>()
+                .HasKey(evaluation => new { evaluation.GroupId, evaluation.TaskId });
+            modelBuilder.Entity<GroupMembership>()
+                .HasKey(membership => new { membership.GroupId, membership.StudentId });
+        }
 
-        public System.Data.Entity.DbSet<EasyGradeManager.Models.Student> Students { get; set; }
+        public DbSet<Course> Courses { get; set; }
 
-        public System.Data.Entity.DbSet<EasyGradeManager.Models.Course> Courses { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
 
-        public System.Data.Entity.DbSet<EasyGradeManager.Models.Assignment> Assignments { get; set; }
+        public DbSet<Evaluation> Evaluations { get; set; }
 
-        public System.Data.Entity.DbSet<EasyGradeManager.Models.Evaluation> Evaluations { get; set; }
+        public DbSet<Group> Groups { get; set; }
 
-        public System.Data.Entity.DbSet<EasyGradeManager.Models.EvaluationCriterion> EvaluationCriterions { get; set; }
+        public DbSet<Lesson> Lessons { get; set; }
 
-        public System.Data.Entity.DbSet<EasyGradeManager.Models.Group> Groups { get; set; }
+        public DbSet<Role> Persons{ get; set; }
 
-        public System.Data.Entity.DbSet<EasyGradeManager.Models.Lesson> Lessons { get; set; }
+        public DbSet<Task> Tasks { get; set; }
 
-        public System.Data.Entity.DbSet<EasyGradeManager.Models.Person> People { get; set; }
+        public DbSet<User> Accounts { get; set; }
 
-        public System.Data.Entity.DbSet<EasyGradeManager.Models.Score> Scores { get; set; }
+        public DbSet<GroupMembership> GroupMemberships { get; set; }
 
-        public System.Data.Entity.DbSet<EasyGradeManager.Models.Task> Tasks { get; set; }
+        public DbSet<Student> Students { get; set; }
 
-        public System.Data.Entity.DbSet<EasyGradeManager.Models.Teacher> Teachers { get; set; }
+        public DbSet<Teacher> Teachers { get; set; }
 
-        public System.Data.Entity.DbSet<EasyGradeManager.Models.Tutor> Tutors { get; set; }
+        public DbSet<Tutor> Tutors { get; set; }
     }
 }

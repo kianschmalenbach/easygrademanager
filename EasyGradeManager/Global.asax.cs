@@ -23,6 +23,10 @@ namespace EasyGradeManager
             IDatabaseInitializer<EasyGradeManagerContext> init = new DropCreateDatabaseAlways<EasyGradeManagerContext>();
             Database.SetInitializer(init);
             init.InitializeDatabase(new EasyGradeManagerContext());
+            HttpConfiguration config = GlobalConfiguration.Configuration;
+            config.Formatters.JsonFormatter
+                        .SerializerSettings
+                        .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
         }
     }
 }
