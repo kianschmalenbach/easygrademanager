@@ -1,16 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Text.RegularExpressions;
 using System.Web.Mvc;
 
 namespace EasyGradeManager.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        public ActionResult Details(int? id)
         {
-            return View();
+            string path = System.AppDomain.CurrentDomain.BaseDirectory + "\\Views\\Home\\Index.html";
+            string text = System.IO.File.ReadAllText(path);
+            if (id != null)
+            {
+                var array = Regex.Split(text, "<head>");
+                text = array[0] + "<head>\n\t<script type=\"text/javascript\">\n";
+                text += "\t\tconst entityId = " + id + ";";
+                text += "\n\t</script>" + array[1];
+            }
+            ContentResult result = Content(text, "text/html");
+            Response.Headers.Add("entity-id", id.ToString());
+            return result;
         }
 
         public ActionResult About()

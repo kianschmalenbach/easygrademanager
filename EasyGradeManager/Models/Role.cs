@@ -8,8 +8,8 @@ namespace EasyGradeManager.Models
     {
         public int Id { get; set; }
         [Required]
-        public int AccountId { get; set; }
-        public virtual User Account { get; set; }
+        public int UserId { get; set; }
+        public virtual User User { get; set; }
     }
 
     [Table("Students")]

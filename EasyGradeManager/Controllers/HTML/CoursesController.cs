@@ -1,132 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Web;
+﻿using System.Text.RegularExpressions;
 using System.Web.Mvc;
-using EasyGradeManager.Models;
 
 namespace EasyGradeManager.Controllers.HTML
 {
     public class CoursesController : Controller
     {
-        private EasyGradeManagerContext db = new EasyGradeManagerContext();
-
-        // GET: Courses
-        public ActionResult Index()
-        {
-            var courses = db.Courses.Include(c => c.Teacher);
-            return View(courses.ToList());
-        }
-
-        // GET: Courses/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            string path = System.AppDomain.CurrentDomain.BaseDirectory + "\\Views\\Courses\\Index.html";
+            string text = System.IO.File.ReadAllText(path);
+            if (id != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var array = Regex.Split(text, "<head>");
+                text = array[0] + "<head>\n\t<script type=\"text/javascript\">\n";
+                text += "\t\tconst entityId = " + id + ";";
+                text += "\n\t</script>" + array[1];
             }
-            Course course = db.Courses.Find(id);
-            if (course == null)
-            {
-                return HttpNotFound();
-            }
-            return View(course);
-        }
-
-        // GET: Courses/Create
-        public ActionResult Create()
-        {
-            ViewBag.TeacherId = new SelectList(db.Persons, "Id", "Id");
-            return View();
-        }
-
-        // POST: Courses/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Term,Archived,MinRequiredAssignments,MinRequiredScore,TeacherId")] Course course)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Courses.Add(course);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.TeacherId = new SelectList(db.Persons, "Id", "Id", course.TeacherId);
-            return View(course);
-        }
-
-        // GET: Courses/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Course course = db.Courses.Find(id);
-            if (course == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.TeacherId = new SelectList(db.Persons, "Id", "Id", course.TeacherId);
-            return View(course);
-        }
-
-        // POST: Courses/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Term,Archived,MinRequiredAssignments,MinRequiredScore,TeacherId")] Course course)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(course).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.TeacherId = new SelectList(db.Persons, "Id", "Id", course.TeacherId);
-            return View(course);
-        }
-
-        // GET: Courses/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Course course = db.Courses.Find(id);
-            if (course == null)
-            {
-                return HttpNotFound();
-            }
-            return View(course);
-        }
-
-        // POST: Courses/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Course course = db.Courses.Find(id);
-            db.Courses.Remove(course);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            ContentResult result = Content(text, "text/html");
+            Response.Headers.Add("entity-id", id.ToString());
+            return result;
         }
     }
 }

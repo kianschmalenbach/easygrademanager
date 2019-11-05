@@ -1,140 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Web;
+﻿using System.Text.RegularExpressions;
 using System.Web.Mvc;
-using EasyGradeManager.Models;
 
 namespace EasyGradeManager.Controllers.HTML
 {
     public class LessonsController : Controller
     {
-        private EasyGradeManagerContext db = new EasyGradeManagerContext();
-
-        // GET: Lessons
-        public ActionResult Index()
-        {
-            var lessons = db.Lessons.Include(l => l.Assignment).Include(l => l.DerivedFrom).Include(l => l.Tutor);
-            return View(lessons.ToList());
-        }
-
-        // GET: Lessons/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            string path = System.AppDomain.CurrentDomain.BaseDirectory + "\\Views\\Lessons\\Index.html";
+            string text = System.IO.File.ReadAllText(path);
+            if (id != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var array = Regex.Split(text, "<head>");
+                text = array[0] + "<head>\n\t<script type=\"text/javascript\">\n";
+                text += "\t\tconst entityId = " + id + ";";
+                text += "\n\t</script>" + array[1];
             }
-            Lesson lesson = db.Lessons.Find(id);
-            if (lesson == null)
-            {
-                return HttpNotFound();
-            }
-            return View(lesson);
-        }
-
-        // GET: Lessons/Create
-        public ActionResult Create()
-        {
-            ViewBag.AssignmentId = new SelectList(db.Assignments, "Id", "Name");
-            ViewBag.DerivedFromId = new SelectList(db.Lessons, "Id", "Id");
-            ViewBag.TutorId = new SelectList(db.Persons, "Id", "Id");
-            return View();
-        }
-
-        // POST: Lessons/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Number,AssignmentId,TutorId,DerivedFromId")] Lesson lesson)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Lessons.Add(lesson);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.AssignmentId = new SelectList(db.Assignments, "Id", "Name", lesson.AssignmentId);
-            ViewBag.DerivedFromId = new SelectList(db.Lessons, "Id", "Id", lesson.DerivedFromId);
-            ViewBag.TutorId = new SelectList(db.Persons, "Id", "Id", lesson.TutorId);
-            return View(lesson);
-        }
-
-        // GET: Lessons/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Lesson lesson = db.Lessons.Find(id);
-            if (lesson == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.AssignmentId = new SelectList(db.Assignments, "Id", "Name", lesson.AssignmentId);
-            ViewBag.DerivedFromId = new SelectList(db.Lessons, "Id", "Id", lesson.DerivedFromId);
-            ViewBag.TutorId = new SelectList(db.Persons, "Id", "Id", lesson.TutorId);
-            return View(lesson);
-        }
-
-        // POST: Lessons/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Number,AssignmentId,TutorId,DerivedFromId")] Lesson lesson)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(lesson).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.AssignmentId = new SelectList(db.Assignments, "Id", "Name", lesson.AssignmentId);
-            ViewBag.DerivedFromId = new SelectList(db.Lessons, "Id", "Id", lesson.DerivedFromId);
-            ViewBag.TutorId = new SelectList(db.Persons, "Id", "Id", lesson.TutorId);
-            return View(lesson);
-        }
-
-        // GET: Lessons/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Lesson lesson = db.Lessons.Find(id);
-            if (lesson == null)
-            {
-                return HttpNotFound();
-            }
-            return View(lesson);
-        }
-
-        // POST: Lessons/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Lesson lesson = db.Lessons.Find(id);
-            db.Lessons.Remove(lesson);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            ContentResult result = Content(text, "text/html");
+            Response.Headers.Add("entity-id", id.ToString());
+            return result;
         }
     }
 }
