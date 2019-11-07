@@ -1,8 +1,8 @@
 ﻿<!Doctype html>
-<html>
+<html lang="en">
 <head>
     <title>Lessons</title>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <script type="text/javascript" src="/Scripts/application.js"></script>
     <script type="text/javascript" src="/Scripts/network.js"></script>
     <link rel="stylesheet" type="text/css" href="/Content/style.css">
@@ -16,47 +16,44 @@
     </script>
 </head>
 <body>
-    <header><a href="/Assignments/1">Back to Assignment</a></header>
-    <h1>Lesson 1</h1>
-    <div class="box">
-        <h2>Lesson Details</h2>
-        <table>
-            <tr>
-                <td>Assignment:</td>
-                <td>Sheet 1</td>
-            </tr>
-            <tr>
-                <td>Tutor:</td>
-                <td>Sarah Miller</td>
-            </tr>
-            <tr>
-                <td>Dates:</td>
-                <td>28/10/2019 10:00-11:00</td>
-            </tr>
-        </table>
-    </div>
-    <div class="box">
-        <h2>Student Groups</h2>
-        <table class="centerTable">
-            <tr>
-                <th>Group</th>
-                <th>Members</th>
-                <th>Score</th>
-                <th>Final Score</th>
-            </tr>
-            <tr>
-                <td><a href="/Evaluations/1">Group 1</a></td>
-                <td>Carolina Faria<br>Kian Schmalenbach</td>
-                <td>14 (out of 20)</td>
-                <td>No</td>
-            </tr>
-            <tr>
-                <td><a href="/Evaluations/2">Group 2</a></td>
-                <td>Fang Li<br>Yi Shi</td>
-                <td>12 (out of 20)</td>
-                <td>Yes</td>
-            </tr>
-        </table>
-    </div>
+<header><span link="Assignment">Back to Assignment</span></header>
+<h1>Lesson <span id="Number"></span></h1>
+<div class="box">
+    <h2>Lesson Details</h2>
+    <table>
+        <tr>
+            <td>Assignment:</td>
+            <td id="Assignment.Name" link="Assignment"></td>
+        </tr>
+        <tr>
+            <td>Tutor:</td>
+            <td id="Tutor.User.Name" link="Tutor.User"></td>
+        </tr>
+        <tr>
+            <td>Dates:</td>
+            <td id="Assignment.Dates"></td>
+        </tr>
+    </table>
+</div>
+<div class="box">
+    <h2>Student Groups</h2>
+    <table class="centerTable">
+        <tr>
+            <th>Number</th>
+            <th>Password</th>
+        </tr>
+        <tr id="Group" order="Group.Number ASC">
+            <td id="Group.Number"></td>
+            <td id="Group.Password"></td>
+        </tr>
+    </table>
+    <!-- ALTERNATIVE STRUCTURE TO TABLE:
+    <ul>
+        <li id="Group" order="Group.Number">
+            <span id="Group.Number" link="Group"></span>: <span id="Group.Password"></span>
+        </li>
+    </ul>
+    -->
+</div>
 </body>
 </html>

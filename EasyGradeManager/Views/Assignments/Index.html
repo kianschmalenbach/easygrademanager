@@ -1,8 +1,8 @@
 ﻿<!Doctype html>
-<html>
+<html lang="en">
 <head>
     <title>Assignments</title>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <script type="text/javascript" src="/Scripts/application.js"></script>
     <script type="text/javascript" src="/Scripts/network.js"></script>
     <link rel="stylesheet" type="text/css" href="/Content/style.css">
@@ -16,117 +16,96 @@
     </script>
 </head>
 <body>
-    <header><a href="/Courses/1">Back to Course</a></header>
-    <h1>Assignment "Sheet 1"</h1>
-    <div class="box">
-        <h2>Assignment Details</h2>
-        <table>
-            <tr>
-                <td>Number:</td>
-                <td>1</td>
-            </tr>
-            <tr>
-                <td>Name:</td>
-                <td>Sheet 1</td>
-            </tr>
-            <tr>
-                <td>Deadline:</td>
-                <td>25/10/2019</td>
-            </tr>
-            <tr>
-                <td>Min. required Score:</td>
-                <td>10 (out of 20)</td>
-            </tr>
-            <tr>
-                <td>Mandatory:</td>
-                <td>No</td>
-            </tr>
-            <tr>
-                <td>Weight:</td>
-                <td>20%</td>
-            </tr>
-            <tr>
-                <td>Group Size:</td>
-                <td>2-3</td>
-            </tr>
-            <tr>
-                <td>Derived from:</td>
-                <td>-</td>
-            </tr>
-        </table>
-        <p>
-            <button>Set Assignment Results as Final</button>
-            <button>Edit Assignment Details</button>
-            <button>Delete Assignment</button>
-        </p>
+<header><span link="Course">Back to Course</span></header>
+<h1>Assignment "<span id="Name"></span>"</h1>
+<div class="box">
+    <h2>Assignment Details</h2>
+    <table>
+        <tr>
+            <td>Number:</td>
+            <td id="Number"></td>
+        </tr>
+        <tr>
+            <td>Deadline:</td>
+            <td id="Deadline"></td>
+        </tr>
+        <tr>
+            <td>Min. required Score:</td>
+            <td id="MinRequiredScore"></td>
+        </tr>
+        <tr>
+            <td>Mandatory:</td>
+            <td id="Mandatory"></td>
+        </tr>
+        <tr>
+            <td>Weight:</td>
+            <td id="Weight"></td>
+        </tr>
+        <tr>
+            <td>Group Size:</td>
+            <td><span id="MinGroupSize"></span>-<span id="MaxGroupSize"></span></td>
+        </tr>
+    </table>
+    <p>
+        <button>Set Assignment Results as Final</button>
+        <button id="Edit">Edit Assignment Details</button>
+        <button id="Delete">Delete Assignment</button>
+    </p>
+</div>
+<div class="box">
+    <h2>Assignment Lessons</h2>
+    <table class="centerTable">
+        <tr>
+            <th>Number</th>
+            <th>Dates</th>
+            <th>Tutor</th>
+            <th>Actions</th>
+        </tr>
+        <!-- ALSO POSSIBLE: order="Lesson.Tutor.User.Name DESC" -->
+        <tr id="Lesson" order="Lesson.Number ASC">
+            <td><span id="Lesson.Number" link="Lesson"></span></td>
+            <td><span id="Lesson.Dates"></span></td>
+            <td><span id="Lesson.Tutor.User.Name" link="Lesson.Tutor.User"></span></td>
+            <td>
+                <button id="Lesson.Edit">Edit</button>
+                <button id="Lesson.Delete">Delete</button>
+            </td>
+        </tr>
+    </table>
+    <div class="buttonCenter">
+        <form id="NewLesson">
+            <input size="12" placeholder="Lesson Number" id="NewLesson.Number">
+            <input size="15" placeholder="Tutor" id="NewLesson.Tutor">
+            <input size="20" placeholder="Dates" id="NewLesson.Dates">
+            <button id="NewLesson.Add">Add Lesson</button>
+        </form>
     </div>
-    <div class="box">
-        <h2>Assignment Lessons</h2>
-        <table class="centerTable">
-            <tr>
-                <th>Number</th>
-                <th>Tutor</th>
-                <th>Dates</th>
-                <th>Actions</th>
-            </tr>
-            <tr>
-                <td><a href="/Lessons/1">1</a></td>
-                <td>Sarah Miller</td>
-                <td>28/10/2019 10:00-11:00</td>
-                <td><button>Edit</button> <button>Delete</button></td>
-            </tr>
-            <tr>
-                <td><a href="/Lessons/2">2</a></td>
-                <td>Jack Smith</td>
-                <td>28/10/2019 11:00-12:00</td>
-                <td><button>Edit</button> <button>Delete</button></td>
-            </tr>
-        </table>
-        <div class="buttonCenter">
-            <form>
-                <input type="text" size="12" placeholder="Lesson Number">
-                <input type="text" size="15" placeholder="Tutor">
-                <input type="text" size="20" placeholder="Dates">
-                <button>Add Lesson</button>
-            </form>
-        </div>
+</div>
+<div class="box">
+    <h2>Assignment Tasks</h2>
+    <table class="centerTable">
+        <tr>
+            <th>Name</th>
+            <th>Maximum Score</th>
+            <th>Actions</th>
+        </tr>
+        <tr id="Task" order="Task.Number ASC">
+            <td><span id="Task.Name"></span></td>
+            <td><span id="Task.MaxScore"></span></td>
+            <td>
+                <button id="Task.Edit">Edit</button>
+                <button id="Task.Delete">Delete</button>
+            </td>
+        </tr>
+    </table>
+    <div class="buttonCenter">
+        <form id="NewTask">
+            <input size="10" placeholder="Task Number" id="NewTask.Number">
+            <input size="20" placeholder="Task Name" id="NewTask.Name">
+            <input size="10" placeholder="Max. Score" id="NewTask.MaxScore">
+            <button id="NewTask.Add">Add Task</button>
+        </form>
     </div>
-    <div class="box">
-        <h2>Assignment Tasks</h2>
-        <table class="centerTable">
-            <tr>
-                <th>Number</th>
-                <th>Name</th>
-                <th>Max. Score</th>
-                <th>Actions</th>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Task 1</td>
-                <td>8</td>
-                <td><button>Edit</button> <button>Delete</button></td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Task 2</td>
-                <td>6</td>
-                <td><button>Edit</button> <button>Delete</button></td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Task 3</td>
-                <td>6</td>
-                <td><button>Edit</button> <button>Delete</button></td>
-            </tr>
-        </table>
-        <div class="buttonCenter">
-            <form>
-                <input type="text" size="10" placeholder="Task Number">
-                <input type="text" size="20" placeholder="Task Name">
-                <input type="text" size="10" placeholder="Max. Score">
-                <button>Add Task</button>
-            </form>
-        </div>
-    </div>
+</div>
 </body>
 </html>

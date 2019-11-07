@@ -1,85 +1,105 @@
 ﻿<!Doctype html>
-<html>
-    <head>
-        <title>Courses</title>
-        <meta charset="utf-8"/>
-        <script type="text/javascript" src="/Scripts/application.js"></script>
-        <script type="text/javascript" src="/Scripts/network.js"></script>
-        <link rel="stylesheet" type="text/css" href="/Content/style.css">
-        <script type="text/javascript" defer>
-            if (typeof entityId !== "undefined") {
-                fetchData("/api/Courses/" + entityId)
-                    .then(data => {
-                        fillPageWithData(data);
-                    });
-            }
-        </script>
-    </head>
-    <body>
-        <header><a href="/Users/1">Back to Start Page</a></header>
-        <h1>Course "<span id="Name"></span>"</h1>
-        <div class="box">
-            <h2>Course Details</h2>
-            <table>
-                <tr>
-                    <td>Term:</td>
-                    <td id="Term"></td>
-                </tr>
-                <tr>
-                    <td>Min. req. Assignments:</td>
-                    <td id="MinRequiredAssignments"></td>
-                </tr>
-                <tr>
-                    <td>Min. req. Score:</td>
-                    <td id="MinRequiredScore"></td>
-                </tr>
-                <tr>
-                    <td>Grading Scheme:</td>
-                    <td id="GradingScheme"></td>
-                </tr>
-            </table>
-            <p>
-                <button>Edit Course Details</button>
-                <button>Create Grading Scheme</button>
-                <button>Archive Course</button>
-                <button>Delete Course</button>
-            </p>
-        </div>
-        <div class="box">
-            <h2>Teacher Details</h2>
-            <table>
-                <tr>
-                    <td>Name:</td>
-                    <td id="UName"></td>
-                </tr>
-                <tr>
-                    <td>Email:</td>
-                    <td id="UEmail"></td>
-                </tr>
-                <tr>
-                    <td>User ID:</td>
-                    <td id="UIdentifier"></td>
-                </tr>
-            </table>
-            <a id="ULink">See Teacher Details</a>
-        </div>
-        <div class="box">
-            <h2>Course Assignments</h2>
-            <table class="centerTable" id="Assignments" 
-                   cols="Name Number Deadline IsFinal MinRequiredScore Mandatory Weight MinGroupSize MaxGroupSize" 
-                   link="Name">
-            </table>
-            <div class="buttonCenter">
-                <input type="text" placeholder="Assignment Name">
-                <input type="checkbox"> Derive from
-                <select>
-                    <option>Sheet 1</option>
-                    <option>Exam</option>
-                </select>
-                <input type="checkbox"> copy groups
-                and include <input type="text" size="1" placeholder="0"> days offset
-                <button>Add Assignment</button>
-            </div>
-        </div>
-    </body>
+<html lang="en">
+<head>
+    <title>Courses</title>
+    <meta charset="utf-8"/>
+    <script type="text/javascript" src="/Scripts/application.js"></script>
+    <script type="text/javascript" src="/Scripts/network.js"></script>
+    <link rel="stylesheet" type="text/css" href="/Content/style.css">
+    <script type="text/javascript" defer>
+        if (typeof entityId !== "undefined") {
+            fetchData("/api/Courses/" + entityId)
+                .then(data => {
+                    fillPageWithData(data);
+                });
+        }
+    </script>
+</head>
+<body>
+<header><span link="Teacher.User">Back to Start Page</span></header>
+<h1>Course "<span id="Name"></span>"</h1>
+<div class="box">
+    <h2>Course Details</h2>
+    <table>
+        <tr>
+            <td>Term:</td>
+            <td id="Term"></td>
+        </tr>
+        <tr>
+            <td>Min. req. Assignments:</td>
+            <td id="MinRequiredAssignments"></td>
+        </tr>
+        <tr>
+            <td>Min. req. Score:</td>
+            <td id="MinRequiredScore"></td>
+        </tr>
+        <tr>
+            <td>Grading Scheme:</td>
+            <td id="GradingScheme"></td>
+        </tr>
+    </table>
+    <p>
+        <button>Edit Course Details</button>
+        <button>Create Grading Scheme</button>
+        <button>Archive Course</button>
+        <button>Delete Course</button>
+    </p>
+</div>
+<div class="box">
+    <h2>Teacher Details</h2>
+    <table>
+        <tr class="big">
+            <td>Name:</td>
+            <td id="Teacher.User.Name" link="Teacher.User"></td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td id="Teacher.User.Email"></td>
+        </tr>
+        <tr>
+            <td>User ID:</td>
+            <td id="Teacher.User.Identifier"></td>
+        </tr>
+    </table>
+</div>
+<div class="box">
+    <h2>Course Assignments</h2>
+    <table class="centerTable">
+        <tr>
+            <th>Name</th>
+            <th>Deadline</th>
+            <th>Final</th>
+            <th>Min. Required Score</th>
+            <th>Mandatory</th>
+            <th>Weight</th>
+            <th>Group Size</th>
+            <th>Actions</th>
+        </tr>
+        <tr id="Assignment" order="Assignment.Number ASC">
+            <td><span id="Assignment.Name" link="Assignment"></span></td>
+            <td><span id="Assignment.Deadline"></span></td>
+            <td><span id="Assignment.IsFinal"></span></td>
+            <td><span id="Assignment.MinRequiredScore"></span></td>
+            <td><span id="Assignment.Mandatory"></span></td>
+            <td><span id="Assignment.Weight"></span></td>
+            <td><span id="Assignment.MinGroupSize"></span>-<span id="Assignment.MaxGroupSize"></span></td>
+            <td>
+                <button id="Assignment.Edit">Edit</button>
+                <button id="Assignment.Delete">Delete</button>
+            </td>
+        </tr>
+    </table>
+    <div class="buttonCenter">
+        <input type="text" placeholder="Assignment Name">
+        <input type="checkbox"> Derive from
+        <select>
+            <option>Sheet 1</option>
+            <option>Exam</option>
+        </select>
+        <input type="checkbox"> copy groups
+        and include <input type="text" size="1" placeholder="0"> days offset
+        <button>Add Assignment</button>
+    </div>
+</div>
+</body>
 </html>

@@ -1,8 +1,8 @@
 ﻿<!Doctype html>
-<html>
+<html lang="en">
 <head>
     <title>Users</title>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <script type="text/javascript" src="/Scripts/application.js"></script>
     <script type="text/javascript" src="/Scripts/network.js"></script>
     <link rel="stylesheet" type="text/css" href="/Content/style.css">
@@ -16,43 +16,46 @@
     </script>
 </head>
 <body>
-    <header><a href="/">Log out</a></header>
-    <h1>EasyGradeManager</h1>
-    <div class="box">
-        <h2>My Profile <button>Edit</button></h2>
-        <table>
-            <tr>
-                <td>Name:</td>
-                <td>Alice Cooper</td>
-            </tr>
-            <tr>
-                <td>Role(s):</td>
-                <td>Teacher</td>
-            </tr>
-            <tr>
-                <td>Email:</td>
-                <td>alice.cooper@example.org</td>
-            </tr>
-        </table>
+<header><a href="/">Log out</a></header>
+<h1>EasyGradeManager</h1>
+<div class="box">
+    <h2>My Profile
+        <button>Edit</button>
+    </h2>
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td id="Name"></td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td id="Email"></td>
+        </tr>
+    </table>
+</div>
+<div class="box">
+    <h2>My Current Courses</h2>
+    <div>
+        <span id="Role" order="Role.Id ASC">
+            <ul id="Role.Course" order="Role.Course.Name ASC">
+                <li id="Role.Course.Name" link="Role.Course"></li>
+            </ul>
+        </span>
     </div>
-    <div class="box">
-        <h2>My Current Courses</h2>
-        <ul>
-            <li><a href="/Courses/1">Software Engineering</a></li>
-        </ul>
-        <input type="text" placeholder="Course Name"> <button>Add Course</button>
-    </div>
-    <div class="box">
-        <h2>My Previous Courses</h2>
-        <h3>Summer 2019</h3>
-        <ul>
-            <li><a href="/Courses/2">Introduction to Databases</a></li>
-            <li><a href="/Courses/3">Seminar "Agile Development"</a></li>
-        </ul>
-        <h3>Winter 2018/19</h3>
-        <ul>
-            <li><a href="/Courses/4">Software Engineering</a></li>
-        </ul>
-    </div>
+    <input type="text" placeholder="Course Name">
+    <button>Add Course</button>
+</div>
+<div class="box">
+    <h2>My Previous Courses</h2>
+    <h3>Summer 2019</h3>
+    <ul>
+        <li><a href="/Courses/2">Introduction to Databases</a></li>
+        <li><a href="/Courses/3">Seminar "Agile Development"</a></li>
+    </ul>
+    <h3>Winter 2018/19</h3>
+    <ul>
+        <li><a href="/Courses/4">Software Engineering</a></li>
+    </ul>
+</div>
 </body>
 </html>
