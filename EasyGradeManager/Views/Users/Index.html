@@ -25,37 +25,141 @@
     <table>
         <tr>
             <td>Name:</td>
-            <td id="Name"></td>
+            <td data="Name"></td>
         </tr>
         <tr>
             <td>Email:</td>
-            <td id="Email"></td>
+            <td data="Email"></td>
+        </tr>
+        <tr>
+            <td>User ID:</td>
+            <td data="Identifier"></td>
         </tr>
     </table>
 </div>
-<div class="box">
-    <h2>My Current Courses</h2>
-    <div>
-        <span id="Role" order="Role.Id ASC">
-            <ul id="Role.Course" order="Role.Course.Name ASC">
-                <li id="Role.Course.Name" link="Role.Course"></li>
+<div id="TeacherBox" class="box">
+    <h2>My Taught Classes</h2>
+    <div datalist="Role" filter="Role.Name=Teacher" removeOnEmpty="TeacherBox">
+        <h3>Current Term</h3>
+        <div id="CurrentTaughtCourses">
+            <ul>
+                <li datalist="Role.Course" filter="Role.Course.Archived=false" removeonempty="CurrentTaughtCourses">
+                    <span data="Role.Course.Name" link="Role.Course"></span>
+                    (<span data="Role.Course.Term"></span>)
+                </li>
             </ul>
-        </span>
+        </div>
+        <div data="NewCourse">
+            <input data="NewCourse.Name" type="text" placeholder="Course Name">
+            <button task="NewCourse.Add">Add Course</button>
+        </div>
+        <div id="PreviousTaughtCourses">
+            <h3>Previous Terms</h3>
+            <ul>
+                <li datalist="Role.Course" order="Role.Course.Term DESC" filter="Role.Course.Archived=true"
+                    removeonempty="PreviousTaughtCourses">
+                    <span data="Role.Course.Name" link="Role.Course"></span>
+                    (<span data="Role.Course.Term"></span>)
+                </li>
+            </ul>
+        </div>
     </div>
-    <input type="text" placeholder="Course Name">
-    <button>Add Course</button>
 </div>
-<div class="box">
-    <h2>My Previous Courses</h2>
-    <h3>Summer 2019</h3>
-    <ul>
-        <li><a href="/Courses/2">Introduction to Databases</a></li>
-        <li><a href="/Courses/3">Seminar "Agile Development"</a></li>
-    </ul>
-    <h3>Winter 2018/19</h3>
-    <ul>
-        <li><a href="/Courses/4">Software Engineering</a></li>
-    </ul>
+<div id="TutorBox" class="box">
+    <h2>My Tutored Lessons</h2>
+    <div datalist="Role" filter="Role.Name=Tutor" removeOnEmpty="TutorBox">
+        <div id="CurrentTutoredCourses">
+            <h3>Current Term</h3>
+            <table class="centerTable">
+                <tr>
+                    <th>Lesson</th>
+                    <th>Dates</th>
+                    <th>Course</th>
+                    <th>Term</th>
+                </tr>
+                <tr datalist="Role.Lesson" filter="Role.Lesson.Assignment.Course.Archived=false"
+                    order="Role.Lesson.Assignment.Course.Name ASC" removeonempty="CurrentTutoredCourses">
+                    <td data="Role.Lesson.Number" link="Role.Lesson"></td>
+                    <td data="Role.Lesson.Dates"></td>
+                    <td data="Role.Lesson.Assignment.Course.Name" link="Role.Lesson.Assignment.Course"></td>
+                    <td data="Role.Lesson.Assignment.Course.Term"></td>
+                </tr>
+            </table>
+        </div>
+        <div id="PreviousTutoredCourses">
+            <h3>Previous Terms</h3>
+            <table class="centerTable">
+                <tr>
+                    <th>Lesson</th>
+                    <th>Dates</th>
+                    <th>Course</th>
+                    <th>Term</th>
+                </tr>
+                <tr datalist="Role.Lesson" filter="Role.Lesson.Assignment.Course.Archived=true"
+                    order="Role.Lesson.Assignment.Course.Name ASC" removeonempty="PreviousTutoredCourses">
+                    <td data="Role.Lesson.Number" link="Role.Lesson"></td>
+                    <td data="Role.Lesson.Dates"></td>
+                    <td data="Role.Lesson.Assignment.Course.Name" link="Role.Lesson.Assignment.Course"></td>
+                    <td data="Role.Lesson.Assignment.Course.Term"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="StudentBox" class="box">
+    <h2>My Student Groups</h2>
+    <div datalist="Role" filter="Role.Name=Student" removeOnEmpty="StudentBox">
+        <div id="CurrentStudentGroups">
+            <h3>Current Term</h3>
+            <table class="centerTable">
+                <tr>
+                    <th>Course</th>
+                    <th>Assignment</th>
+                    <th>Group</th>
+                    <th>Lesson</th>
+                    <th>Tutor</th>
+                    <th>Term</th>
+                </tr>
+                <tr datalist="Role.GroupMembership" filter="Role.GroupMembership.Group.Assignment.Course.Archived=false"
+                    order="Role.GroupMembership.Group.Assignment.Course.Name ASC" removeonempty="CurrentStudentGroups">
+                    <td data="Role.GroupMembership.Group.Assignment.Course.Name"
+                        link="Role.GroupMembership.Group.Assignment.Course"></td>
+                    <td data="Role.GroupMembership.Group.Assignment.Name"
+                        link="Role.GroupMembership.Group.Assignment"></td>
+                    <td data="Role.GroupMembership.Group.Number"></td>
+                    <td data="Role.GroupMembership.Group.Lesson.Number" link="Role.GroupMembership.Group.Lesson"></td>
+                    <td data="Role.GroupMembership.Group.Lesson.Tutor.User.Name"
+                        link="Role.GroupMembership.Group.Lesson.Tutor.User"></td>
+                    <td data="Role.GroupMembership.Group.Assignment.Course.Term"></td>
+                </tr>
+            </table>
+        </div>
+        <div id="PreviousStudentGroups">
+            <h3>Previous Terms</h3>
+            <table class="centerTable">
+                <tr>
+                    <th>Course</th>
+                    <th>Assignment</th>
+                    <th>Group</th>
+                    <th>Lesson</th>
+                    <th>Tutor</th>
+                    <th>Term</th>
+                </tr>
+                <tr datalist="Role.GroupMembership" filter="Role.GroupMembership.Group.Assignment.Course.Archived=true"
+                    order="Role.GroupMembership.Group.Assignment.Course.Name ASC" removeonempty="PreviousStudentGroups">
+                    <td data="Role.GroupMembership.Group.Assignment.Course.Name"
+                        link="Role.GroupMembership.Group.Assignment.Course"></td>
+                    <td data="Role.GroupMembership.Group.Assignment.Name"
+                        link="Role.GroupMembership.Group.Assignment"></td>
+                    <td data="Role.GroupMembership.Group.Number"></td>
+                    <td data="Role.GroupMembership.Group.Lesson.Number" link="Role.GroupMembership.Group.Lesson"></td>
+                    <td data="Role.GroupMembership.Group.Lesson.Tutor.User.Name"
+                        link="Role.GroupMembership.Group.Lesson.Tutor.User"></td>
+                    <td data="Role.GroupMembership.Group.Assignment.Course.Term"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </div>
 </body>
 </html>

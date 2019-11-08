@@ -10,6 +10,7 @@ namespace EasyGradeManager.Models
         [Required]
         public int UserId { get; set; }
         public virtual User User { get; set; }
+        public string Name { get; set; }
     }
 
     [Table("Students")]
@@ -18,6 +19,7 @@ namespace EasyGradeManager.Models
         public Student()
         {
             this.GroupMemberships = new HashSet<GroupMembership>();
+            this.Name = "Student";
         }
         public virtual ICollection<GroupMembership> GroupMemberships { get; set; }
     }
@@ -28,6 +30,7 @@ namespace EasyGradeManager.Models
         public Teacher()
         {
             this.Courses = new HashSet<Course>();
+            this.Name = "Teacher";
         }
         public virtual ICollection<Course> Courses { get; set; }
     }
@@ -38,6 +41,7 @@ namespace EasyGradeManager.Models
         public Tutor()
         {
             this.Lessons = new HashSet<Lesson>();
+            this.Name = "Tutor";
         }
         public virtual ICollection<Lesson> Lessons { get; set; }
     }

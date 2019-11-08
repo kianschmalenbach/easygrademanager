@@ -17,40 +17,40 @@
 </head>
 <body>
 <header><span link="Assignment">Back to Assignment</span></header>
-<h1>Lesson <span id="Number"></span></h1>
+<h1>Lesson <span data="Number"></span></h1>
 <div class="box">
     <h2>Lesson Details</h2>
     <table>
         <tr>
             <td>Assignment:</td>
-            <td id="Assignment.Name" link="Assignment"></td>
+            <td data="Assignment.Name" link="Assignment"></td>
         </tr>
         <tr>
             <td>Tutor:</td>
-            <td id="Tutor.User.Name" link="Tutor.User"></td>
+            <td data="Tutor.User.Name" link="Tutor.User"></td>
         </tr>
         <tr>
             <td>Dates:</td>
-            <td id="Assignment.Dates"></td>
+            <td data="Assignment.Dates"></td>
         </tr>
     </table>
 </div>
 <div class="box">
     <h2>Student Groups</h2>
-    <table class="centerTable">
+    <table class="centerTable" id="GroupTable">
         <tr>
             <th>Number</th>
             <th>Password</th>
         </tr>
-        <tr id="Group" order="Group.Number ASC">
-            <td id="Group.Number"></td>
-            <td id="Group.Password"></td>
+        <tr datalist="Group" order="Group.Number ASC" removeonempty="GroupTable">
+            <td data="Group.Number"></td>
+            <td data="Group.Password"></td>
         </tr>
     </table>
     <!-- ALTERNATIVE STRUCTURE TO TABLE:
-    <ul>
-        <li id="Group" order="Group.Number">
-            <span id="Group.Number" link="Group"></span>: <span id="Group.Password"></span>
+    <ul id="GroupList">
+        <li data="Group" order="Group.Number ASC" removeonempty="GroupList">
+            <span data="Group.Number" link="Group"></span>: <span data="Group.Password"></span>
         </li>
     </ul>
     -->

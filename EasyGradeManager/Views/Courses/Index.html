@@ -17,32 +17,32 @@
 </head>
 <body>
 <header><span link="Teacher.User">Back to Start Page</span></header>
-<h1>Course "<span id="Name"></span>"</h1>
+<h1>Course "<span data="Name"></span>"</h1>
 <div class="box">
     <h2>Course Details</h2>
     <table>
         <tr>
             <td>Term:</td>
-            <td id="Term"></td>
+            <td data="Term"></td>
         </tr>
         <tr>
             <td>Min. req. Assignments:</td>
-            <td id="MinRequiredAssignments"></td>
+            <td data="MinRequiredAssignments"></td>
         </tr>
         <tr>
             <td>Min. req. Score:</td>
-            <td id="MinRequiredScore"></td>
+            <td data="MinRequiredScore"></td>
         </tr>
         <tr>
             <td>Grading Scheme:</td>
-            <td id="GradingScheme"></td>
+            <td data="GradingScheme"></td>
         </tr>
     </table>
     <p>
-        <button>Edit Course Details</button>
+        <button task="Edit">Edit Course Details</button>
         <button>Create Grading Scheme</button>
         <button>Archive Course</button>
-        <button>Delete Course</button>
+        <button task="Delete">Delete Course</button>
     </p>
 </div>
 <div class="box">
@@ -50,15 +50,15 @@
     <table>
         <tr class="big">
             <td>Name:</td>
-            <td id="Teacher.User.Name" link="Teacher.User"></td>
+            <td data="Teacher.User.Name" link="Teacher.User"></td>
         </tr>
         <tr>
             <td>Email:</td>
-            <td id="Teacher.User.Email"></td>
+            <td data="Teacher.User.Email"></td>
         </tr>
         <tr>
             <td>User ID:</td>
-            <td id="Teacher.User.Identifier"></td>
+            <td data="Teacher.User.Identifier"></td>
         </tr>
     </table>
 </div>
@@ -75,17 +75,17 @@
             <th>Group Size</th>
             <th>Actions</th>
         </tr>
-        <tr id="Assignment" order="Assignment.Number ASC">
-            <td><span id="Assignment.Name" link="Assignment"></span></td>
-            <td><span id="Assignment.Deadline"></span></td>
-            <td><span id="Assignment.IsFinal"></span></td>
-            <td><span id="Assignment.MinRequiredScore"></span></td>
-            <td><span id="Assignment.Mandatory"></span></td>
-            <td><span id="Assignment.Weight"></span></td>
-            <td><span id="Assignment.MinGroupSize"></span>-<span id="Assignment.MaxGroupSize"></span></td>
+        <tr datalist="Assignment" order="Assignment.Number ASC">
+            <td><span data="Assignment.Name" link="Assignment"></span></td>
+            <td><span data="Assignment.Deadline"></span></td>
+            <td><span data="Assignment.IsFinal"></span></td>
+            <td><span data="Assignment.MinRequiredScore"></span></td>
+            <td><span data="Assignment.Mandatory"></span></td>
+            <td><span data="Assignment.Weight"></span></td>
+            <td><span data="Assignment.MinGroupSize"></span>-<span data="Assignment.MaxGroupSize"></span></td>
             <td>
-                <button id="Assignment.Edit">Edit</button>
-                <button id="Assignment.Delete">Delete</button>
+                <button task="Assignment.Edit">Edit</button>
+                <button task="Assignment.Delete">Delete</button>
             </td>
         </tr>
     </table>

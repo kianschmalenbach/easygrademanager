@@ -9,6 +9,7 @@ namespace EasyGradeManager.Models
             this.Score = 0.0;
             this.IsFinal = false;
         }
+        public int Id { get; set; }
         [Required]
         public int GroupId { get; set; }
         public virtual Group Group { get; set; }

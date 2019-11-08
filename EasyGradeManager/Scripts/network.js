@@ -5,7 +5,10 @@
             .then(data => data.json())
             .then(json => {
                 resolve(json);
-            });
+            })
+            .catch(error => {
+                console.error(error);
+            })
     });
 }
 

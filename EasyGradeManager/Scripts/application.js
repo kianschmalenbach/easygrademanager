@@ -1,29 +1,8 @@
 ﻿function fillPageWithData(data, type = "") {
-    let id;
-    if (data.hasOwnProperty("Id")) {
-        id = data.Id;
-        const linkList = document.querySelectorAll("*[link=\"" + type + "\"]");
-        if (linkList.length > 0)
-            for (let index = 0; index < linkList.length; ++index) {
-                const element = linkList[index];
-                if (element.getElementsByTagName("a").length === 0) {
-                    const link = document.createElement("a");
-                    const array = type.split(".");
-                    link.setAttribute("href", "/" + array[array.length - 1] + "s/" + id);
-                    if (element.hasAttribute("id")) {
-                        const id = element.getAttribute("id");
-                        element.removeAttribute("id");
-                        link.setAttribute("id", id);
-                    }
-                    while (element.childNodes.length > 0)
-                        link.appendChild(element.childNodes[0]);
-                    element.appendChild(link);
-                }
-            }
-    }
+    generateLinks(data, type);
     if (type !== "")
         type += ".";
-    for (const key in data) {
+    for (let key in data) {
         const element = data[key];
         switch (typeof element) {
             case "undefined":
@@ -31,40 +10,97 @@
             case "object":
                 if (element === null)
                     continue;
-                if (element.constructor === Array && element.length > 0)
-                    handleArray(key.substring(0, key.length - 1), type, element);
-                else
+                if (element.constructor === Array) {
+                    key = key.substring(0, key.length - 1);
+                    const elementList = document.querySelectorAll("*[datalist=\"" + type + key + "\"]");
+                    for (let index = 0; index < elementList.length; ++index)
+                        handleArray(key, type, element, elementList[index]);
+                } else
                     fillPageWithData(element, type + key);
                 break;
             default:
-                handleElement(key, type, element);
+                const elementList = document.querySelectorAll("*[data=\"" + type + key + "\"]");
+                for (let index = 0; index < elementList.length; ++index)
+                    handleElement(key, type, element, elementList[index]);
         }
     }
 }
 
-function handleElement(key, type, element) {
-    const htmlElement = document.getElementById(type + key);
+function generateLinks(data, type) {
+    if (!data.hasOwnProperty("Id"))
+        return;
+    const id = data.Id;
+    const linkList = document.querySelectorAll("*[link=\"" + type + "\"]");
+    for (let index = 0; index < linkList.length; ++index) {
+        const element = linkList[index];
+        if (element.getElementsByTagName("a").length === 0) {
+            const link = document.createElement("a");
+            const array = type.split(".");
+            link.setAttribute("href", "/" + array[array.length - 1] + "s/" + id);
+            if (element.hasAttribute("data")) {
+                const id = element.getAttribute("data");
+                element.removeAttribute("data");
+                link.setAttribute("data", id);
+            }
+            while (element.childNodes.length > 0)
+                link.appendChild(element.childNodes[0]);
+            element.appendChild(link);
+        }
+    }
+}
+
+function handleElement(key, type, element, htmlElement) {
     if (htmlElement !== null)
         htmlElement.innerText = element.toString();
 }
 
-function handleArray(key, type, array) {
-    const rootElement = document.getElementById(type + key);
+function handleArray(key, type, array, rootElement) {
     if (rootElement === null)
         return;
     const listElement = rootElement.parentElement;
     rootElement.remove();
+    if (rootElement.hasAttribute("filter"))
+        array = filterArray(array, rootElement.getAttribute("filter"));
+    if (array.length === 0 && rootElement.hasAttribute("removeOnEmpty")) {
+        const toRemove = document.getElementById(rootElement.getAttribute("removeOnEmpty"));
+        if (toRemove !== null)
+            toRemove.remove();
+    }
     if (rootElement.hasAttribute("order"))
         array = sortArray(array);
+    console.log(key);
+    console.log(array);
     for (let index = 0; index < array.length; ++index) {
         const element = array[index];
         if (!element.hasOwnProperty("Id"))
             continue;
         const newElement = rootElement.cloneNode(true);
         listElement.appendChild(newElement);
-        newElement.setAttribute("id", key + "[" + element.Id + "]");
+        newElement.setAttribute("data", key + "[" + element.Id + "]");
         fillPageWithData(element, type + key);
-        modifyChildIds(newElement, key, key + "[" + element.Id + "]");
+        modifyChildDataAttrs(newElement, key, key + "[" + element.Id + "]");
+    }
+
+    function filterArray(array, filter) {
+        if (!filter.startsWith(type + key))
+            return array;
+        filter = filter
+            .substring((type + key).length + 1)
+            .replace(" =", "=")
+            .replace("= ", "=")
+            .split("=");
+        if (filter.length !== 2)
+            return array;
+        return array.filter(element => {
+            let criterion = filter[0];
+            const value = filter[1];
+            while (element && criterion.split(".").length > 1) {
+                const filterStep = criterion.split(".")[0];
+                element = element[filterStep];
+                criterion = criterion.substring(filterStep.length + 1);
+            }
+            return element && element.hasOwnProperty(criterion) && element[criterion].toString() === value;
+        });
     }
 
     function sortArray(array) {
@@ -89,13 +125,15 @@ function handleArray(key, type, array) {
         return array;
     }
 
-    function modifyChildIds(root, oldValue, newValue) {
+    function modifyChildDataAttrs(root, oldValue, newValue) {
         const childElements = root.getElementsByTagName("*");
         for (let i = 0; i < childElements.length; ++i) {
-            if (childElements[i].hasAttribute("id")) {
-                const id = childElements[i].getAttribute("id").replace(oldValue, newValue);
-                childElements[i].setAttribute("id", id);
-            }
+            ["data", "task"].forEach(attr => {
+                if (childElements[i].hasAttribute(attr)) {
+                    const data = childElements[i].getAttribute(attr).replace(oldValue, newValue);
+                    childElements[i].setAttribute(attr, data);
+                }
+            });
         }
     }
 }

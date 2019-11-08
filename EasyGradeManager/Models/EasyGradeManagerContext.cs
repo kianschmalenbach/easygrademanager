@@ -19,10 +19,10 @@ namespace EasyGradeManager.Models
         {
             modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
-            modelBuilder.Entity<Evaluation>()
-                .HasKey(evaluation => new { evaluation.GroupId, evaluation.TaskId });
-            modelBuilder.Entity<GroupMembership>()
-                .HasKey(membership => new { membership.GroupId, membership.StudentId });
+            //modelBuilder.Entity<Evaluation>()
+            //    .HasKey(evaluation => new { evaluation.GroupId, evaluation.TaskId });
+            //modelBuilder.Entity<GroupMembership>()
+            //    .HasKey(membership => new { membership.GroupId, membership.StudentId });
         }
 
         public DbSet<Course> Courses { get; set; }

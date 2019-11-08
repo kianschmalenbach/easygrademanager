@@ -17,44 +17,44 @@
 </head>
 <body>
 <header><span link="Course">Back to Course</span></header>
-<h1>Assignment "<span id="Name"></span>"</h1>
+<h1>Assignment "<span data="Name"></span>"</h1>
 <div class="box">
     <h2>Assignment Details</h2>
     <table>
         <tr>
             <td>Number:</td>
-            <td id="Number"></td>
+            <td data="Number"></td>
         </tr>
         <tr>
             <td>Deadline:</td>
-            <td id="Deadline"></td>
+            <td data="Deadline"></td>
         </tr>
         <tr>
             <td>Min. required Score:</td>
-            <td id="MinRequiredScore"></td>
+            <td data="MinRequiredScore"></td>
         </tr>
         <tr>
             <td>Mandatory:</td>
-            <td id="Mandatory"></td>
+            <td data="Mandatory"></td>
         </tr>
         <tr>
             <td>Weight:</td>
-            <td id="Weight"></td>
+            <td data="Weight"></td>
         </tr>
         <tr>
             <td>Group Size:</td>
-            <td><span id="MinGroupSize"></span>-<span id="MaxGroupSize"></span></td>
+            <td><span data="MinGroupSize"></span>-<span data="MaxGroupSize"></span></td>
         </tr>
     </table>
     <p>
         <button>Set Assignment Results as Final</button>
-        <button id="Edit">Edit Assignment Details</button>
-        <button id="Delete">Delete Assignment</button>
+        <button task="Edit">Edit Assignment Details</button>
+        <button task="Delete">Delete Assignment</button>
     </p>
 </div>
 <div class="box">
     <h2>Assignment Lessons</h2>
-    <table class="centerTable">
+    <table class="centerTable" id="LessonTable">
         <tr>
             <th>Number</th>
             <th>Dates</th>
@@ -62,48 +62,48 @@
             <th>Actions</th>
         </tr>
         <!-- ALSO POSSIBLE: order="Lesson.Tutor.User.Name DESC" -->
-        <tr id="Lesson" order="Lesson.Number ASC">
-            <td><span id="Lesson.Number" link="Lesson"></span></td>
-            <td><span id="Lesson.Dates"></span></td>
-            <td><span id="Lesson.Tutor.User.Name" link="Lesson.Tutor.User"></span></td>
+        <tr datalist="Lesson" order="Lesson.Number ASC" removeonempty="LessonTable">
+            <td><span data="Lesson.Number" link="Lesson"></span></td>
+            <td><span data="Lesson.Dates"></span></td>
+            <td><span data="Lesson.Tutor.User.Name" link="Lesson.Tutor.User"></span></td>
             <td>
-                <button id="Lesson.Edit">Edit</button>
-                <button id="Lesson.Delete">Delete</button>
+                <button task="Lesson.Edit">Edit</button>
+                <button task="Lesson.Delete">Delete</button>
             </td>
         </tr>
     </table>
     <div class="buttonCenter">
-        <form id="NewLesson">
-            <input size="12" placeholder="Lesson Number" id="NewLesson.Number">
-            <input size="15" placeholder="Tutor" id="NewLesson.Tutor">
-            <input size="20" placeholder="Dates" id="NewLesson.Dates">
-            <button id="NewLesson.Add">Add Lesson</button>
+        <form data="NewLesson">
+            <input size="12" placeholder="Lesson Number" data="NewLesson.Number">
+            <input size="15" placeholder="Tutor" data="NewLesson.Tutor">
+            <input size="20" placeholder="Dates" data="NewLesson.Dates">
+            <button task="NewLesson.Add">Add Lesson</button>
         </form>
     </div>
 </div>
 <div class="box">
     <h2>Assignment Tasks</h2>
-    <table class="centerTable">
+    <table class="centerTable" id="TaskTable">
         <tr>
             <th>Name</th>
             <th>Maximum Score</th>
             <th>Actions</th>
         </tr>
-        <tr id="Task" order="Task.Number ASC">
-            <td><span id="Task.Name"></span></td>
-            <td><span id="Task.MaxScore"></span></td>
+        <tr datalist="Task" order="Task.Number ASC" removeonempty="TaskTable">
+            <td><span data="Task.Name"></span></td>
+            <td><span data="Task.MaxScore"></span></td>
             <td>
-                <button id="Task.Edit">Edit</button>
-                <button id="Task.Delete">Delete</button>
+                <button task="Task.Edit">Edit</button>
+                <button task="Task.Delete">Delete</button>
             </td>
         </tr>
     </table>
     <div class="buttonCenter">
-        <form id="NewTask">
-            <input size="10" placeholder="Task Number" id="NewTask.Number">
-            <input size="20" placeholder="Task Name" id="NewTask.Name">
-            <input size="10" placeholder="Max. Score" id="NewTask.MaxScore">
-            <button id="NewTask.Add">Add Task</button>
+        <form data="NewTask">
+            <input size="10" placeholder="Task Number" data="NewTask.Number">
+            <input size="20" placeholder="Task Name" data="NewTask.Name">
+            <input size="10" placeholder="Max. Score" data="NewTask.MaxScore">
+            <button task="NewTask.Add">Add Task</button>
         </form>
     </div>
 </div>
