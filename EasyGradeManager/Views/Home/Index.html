@@ -1,30 +1,25 @@
 ﻿<!Doctype html>
-<html>
+<html lang="en">
 <head>
     <title>EasyGradeManager</title>
     <meta charset="utf-8"/>
     <script type="text/javascript" src="/Scripts/application.js"></script>
     <script type="text/javascript" src="/Scripts/network.js"></script>
     <link rel="stylesheet" type="text/css" href="/Content/style.css">
-    <script type="text/javascript" defer>
-        if (typeof entityId !== "undefined") {
-            fetchData("/api/Home/" + entityId)
-                .then(data => {
-                    fillPageWithData(data);
-                });
-        }
-    </script>
 </head>
 <body>
 <h1>Welcome to EasyGradeManager!</h1>
 <div class="box">
-    <h2>Demo Login</h2>
-    <p class="buttonCenter">
-        Please log in as...<br>
-        <a href="/Users/1">Teacher</a><br>
-        <a href="/Users/2">Tutor</a><br>
-        <a href="/Users/3">Student</a>
-    </p>
+    <h2>User Login</h2>
+    <p class="note">Authentication is required to continue.<br><br>Please log in below:</p>
+    <div class="buttonCenter">
+        <form onsubmit="return login()">
+            <input id="identifier" type="text" placeholder="Identifier" autofocus required>
+            <input id="password" type="password" placeholder="Password" required>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+    <p class="note" id="status"></p>
 </div>
 </body>
 </html>

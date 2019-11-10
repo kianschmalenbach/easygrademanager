@@ -35,25 +35,16 @@
         </tr>
     </table>
 </div>
-<div class="box">
+<div class="box" id="GroupBox">
     <h2>Student Groups</h2>
-    <table class="centerTable" id="GroupTable">
-        <tr>
-            <th>Number</th>
-            <th>Password</th>
-        </tr>
-        <tr datalist="Group" order="Group.Number ASC" removeonempty="GroupTable">
-            <td data="Group.Number"></td>
-            <td data="Group.Password"></td>
-        </tr>
-    </table>
-    <!-- ALTERNATIVE STRUCTURE TO TABLE:
-    <ul id="GroupList">
-        <li data="Group" order="Group.Number ASC" removeonempty="GroupList">
-            <span data="Group.Number" link="Group"></span>: <span data="Group.Password"></span>
-        </li>
-    </ul>
-    -->
+    <div datalist="Group" order="Group.Number ASC" removeonempty="GroupBox">
+        <h3>Group <span data="Group.Id"></span></h3>
+        <ul>
+            <li datalist="Group.GroupMembership">
+                <span data="Group.GroupMembership.Student.User.Name" link="Group.GroupMembership.Student.User"></span>
+            </li>
+        </ul>
+    </div>
 </div>
 </body>
 </html>

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using EasyGradeManager.Models;
+using EasyGradeManager.Static;
 
 namespace EasyGradeManager.Controllers.API
 {
@@ -19,14 +16,14 @@ namespace EasyGradeManager.Controllers.API
         // GET: api/Users
         public IQueryable<User> GetAccounts()
         {
-            return db.Accounts;
+            return db.Users;
         }
 
         // GET: api/Users/5
         [ResponseType(typeof(User))]
         public IHttpActionResult GetUser(int id)
         {
-            User user = db.Accounts.Find(id);
+            User user = db.Users.Find(id);
             if (user == null)
             {
                 return NotFound();
@@ -74,12 +71,12 @@ namespace EasyGradeManager.Controllers.API
         [ResponseType(typeof(User))]
         public IHttpActionResult PostUser(User user)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || user.Identifier.Contains("&") || user.Password.Contains("&"))
             {
                 return BadRequest(ModelState);
             }
-
-            db.Accounts.Add(user);
+            user.Password = SecurePasswordHasher.Hash(user.Password);
+            db.Users.Add(user);
             db.SaveChanges();
 
             return CreatedAtRoute("DefaultApi", new { id = user.Id }, user);
@@ -89,13 +86,13 @@ namespace EasyGradeManager.Controllers.API
         [ResponseType(typeof(User))]
         public IHttpActionResult DeleteUser(int id)
         {
-            User user = db.Accounts.Find(id);
+            User user = db.Users.Find(id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            db.Accounts.Remove(user);
+            db.Users.Remove(user);
             db.SaveChanges();
 
             return Ok(user);
@@ -112,7 +109,7 @@ namespace EasyGradeManager.Controllers.API
 
         private bool UserExists(int id)
         {
-            return db.Accounts.Count(e => e.Id == id) > 0;
+            return db.Users.Count(e => e.Id == id) > 0;
         }
     }
 }

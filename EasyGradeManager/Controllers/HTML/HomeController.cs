@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 
 namespace EasyGradeManager.Controllers
@@ -17,8 +18,14 @@ namespace EasyGradeManager.Controllers
                 text += "\n\t</script>" + array[1];
             }
             ContentResult result = Content(text, "text/html");
-            Response.Headers.Add("entity-id", id.ToString());
             return result;
+        }
+
+        public ActionResult Logout()
+        {
+            if (Request.Cookies["user"] != null)
+                Response.Cookies["user"].Expires = DateTime.Now.AddDays(-1);
+            return new RedirectResult("/");
         }
 
         public ActionResult About()

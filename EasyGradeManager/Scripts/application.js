@@ -2,6 +2,7 @@
     generateLinks(data, type);
     if (type !== "")
         type += ".";
+    const datalists = [];
     for (let key in data) {
         const element = data[key];
         switch (typeof element) {
@@ -10,12 +11,9 @@
             case "object":
                 if (element === null)
                     continue;
-                if (element.constructor === Array) {
-                    key = key.substring(0, key.length - 1);
-                    const elementList = document.querySelectorAll("*[datalist=\"" + type + key + "\"]");
-                    for (let index = 0; index < elementList.length; ++index)
-                        handleArray(key, type, element, elementList[index]);
-                } else
+                if (element.constructor === Array)
+                    datalists.push([key, element]);
+                else
                     fillPageWithData(element, type + key);
                 break;
             default:
@@ -24,6 +22,12 @@
                     handleElement(key, type, element, elementList[index]);
         }
     }
+    datalists.forEach(entry => {
+        const key = entry[0].substring(0, entry[0].length - 1);
+        const elementList = document.querySelectorAll("*[datalist=\"" + type + key + "\"]");
+        for (let index = 0; index < elementList.length; ++index)
+            handleArray(key, type, entry[1], elementList[index]);
+    });
 }
 
 function generateLinks(data, type) {
@@ -36,7 +40,8 @@ function generateLinks(data, type) {
         if (element.getElementsByTagName("a").length === 0) {
             const link = document.createElement("a");
             const array = type.split(".");
-            link.setAttribute("href", "/" + array[array.length - 1] + "s/" + id);
+            const href = array[array.length - 1].replace(/\[[0-9]+]/, "");
+            link.setAttribute("href", "/" + href + "s/" + id);
             if (element.hasAttribute("data")) {
                 const id = element.getAttribute("data");
                 element.removeAttribute("data");
@@ -50,8 +55,9 @@ function generateLinks(data, type) {
 }
 
 function handleElement(key, type, element, htmlElement) {
-    if (htmlElement !== null)
+    if (htmlElement !== null) {
         htmlElement.innerText = element.toString();
+    }
 }
 
 function handleArray(key, type, array, rootElement) {
@@ -68,24 +74,26 @@ function handleArray(key, type, array, rootElement) {
     }
     if (rootElement.hasAttribute("order"))
         array = sortArray(array);
-    console.log(key);
-    console.log(array);
     for (let index = 0; index < array.length; ++index) {
         const element = array[index];
         if (!element.hasOwnProperty("Id"))
             continue;
         const newElement = rootElement.cloneNode(true);
+        newElement.setAttribute("data", type + key + "[" + element.Id + "]");
+        newElement.removeAttribute("datalist");
+        newElement.removeAttribute("order");
+        newElement.removeAttribute("removeonempty");
         listElement.appendChild(newElement);
-        newElement.setAttribute("data", key + "[" + element.Id + "]");
-        fillPageWithData(element, type + key);
         modifyChildDataAttrs(newElement, key, key + "[" + element.Id + "]");
+        fillPageWithData(element, type + key + "[" + element.Id + "]");
     }
 
     function filterArray(array, filter) {
-        if (!filter.startsWith(type + key))
+        const typeClass = type.replace(/\[[0-9]+]/, "");
+        if (!filter.startsWith(typeClass + key))
             return array;
         filter = filter
-            .substring((type + key).length + 1)
+            .substring((typeClass + key).length + 1)
             .replace(" =", "=")
             .replace("= ", "=")
             .split("=");
@@ -128,7 +136,7 @@ function handleArray(key, type, array, rootElement) {
     function modifyChildDataAttrs(root, oldValue, newValue) {
         const childElements = root.getElementsByTagName("*");
         for (let i = 0; i < childElements.length; ++i) {
-            ["data", "task"].forEach(attr => {
+            ["data", "datalist", "link", "task"].forEach(attr => {
                 if (childElements[i].hasAttribute(attr)) {
                     const data = childElements[i].getAttribute(attr).replace(oldValue, newValue);
                     childElements[i].setAttribute(attr, data);
