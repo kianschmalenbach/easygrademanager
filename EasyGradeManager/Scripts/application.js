@@ -40,7 +40,9 @@ function generateLinks(data, type) {
         if (element.getElementsByTagName("a").length === 0) {
             const link = document.createElement("a");
             const array = type.split(".");
-            const href = array[array.length - 1].replace(/\[[0-9]+]/, "");
+            let href = array[array.length - 1].replace(/\[[0-9]+]/, "");
+            if(href === "AuthorizedUser")
+                href = "User";
             link.setAttribute("href", "/" + href + "s/" + id);
             if (element.hasAttribute("data")) {
                 const id = element.getAttribute("data");

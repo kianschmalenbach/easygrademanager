@@ -3,20 +3,19 @@
 <head>
     <title>Assignments</title>
     <meta charset="utf-8"/>
-    <script type="text/javascript" src="/Scripts/application.js"></script>
-    <script type="text/javascript" src="/Scripts/network.js"></script>
+    <script type="text/javascript" src="/Scripts/application.js" defer></script>
+    <script type="text/javascript" src="/Scripts/network.js" defer></script>
+    <script type="text/javascript" src="/Scripts/Pages/assignment.js" defer></script>
     <link rel="stylesheet" type="text/css" href="/Content/style.css">
-    <script type="text/javascript" defer>
-        if (typeof entityId !== "undefined") {
-            fetchData("/api/Assignments/" + entityId)
-                .then(data => {
-                    fillPageWithData(data);
-                });
-        }
-    </script>
 </head>
-<body>
-<header><span link="Course">Back to Course</span></header>
+<body onload="init()">
+<header>
+    Logged in as <span data="AuthorizedUser.Name"></span>
+    (<span data="AuthorizedUser.Identifier"></span>) -
+    <span link="AuthorizedUser"><button>Homepage</button></span>
+    <a href="/Logout"><button>Logout</button></a>
+</header>
+<p class="buttonCenter">Course: <span data="Course.Name" link="Course"></span> (<span data="Course.Term"></span>)</p>
 <h1>Assignment "<span data="Name"></span>"</h1>
 <div class="box">
     <h2>Assignment Details</h2>
@@ -56,16 +55,16 @@
     <h2>Assignment Lessons</h2>
     <table class="centerTable" id="LessonTable">
         <tr>
-            <th>Number</th>
+            <th>Lesson</th>
             <th>Dates</th>
             <th>Tutor</th>
             <th>Actions</th>
         </tr>
         <!-- ALSO POSSIBLE: order="Lesson.Tutor.User.Name DESC" -->
         <tr datalist="Lesson" order="Lesson.Number ASC" removeonempty="LessonTable">
-            <td><span data="Lesson.Number" link="Lesson"></span></td>
+            <td link="Lesson">Lesson <span data="Lesson.Number"></span></td>
             <td><span data="Lesson.Dates"></span></td>
-            <td><span data="Lesson.Tutor.User.Name" link="Lesson.Tutor.User"></span></td>
+            <td><span data="Lesson.Tutor.User.Name"></span></td>
             <td>
                 <button task="Lesson.Edit">Edit</button>
                 <button task="Lesson.Delete">Delete</button>

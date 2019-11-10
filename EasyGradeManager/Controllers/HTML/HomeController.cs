@@ -1,6 +1,8 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using EasyGradeManager.Models;
+using System;
 using System.Web.Mvc;
+using static EasyGradeManager.Static.Authorize;
+using static EasyGradeManager.Static.Webpage;
 
 namespace EasyGradeManager.Controllers
 {
@@ -8,15 +10,8 @@ namespace EasyGradeManager.Controllers
     {
         public ActionResult Details(int? id)
         {
-            string path = System.AppDomain.CurrentDomain.BaseDirectory + "\\Views\\Home\\Index.html";
-            string text = System.IO.File.ReadAllText(path);
-            if (id != null)
-            {
-                var array = Regex.Split(text, "<head>");
-                text = array[0] + "<head>\n\t<script type=\"text/javascript\">\n";
-                text += "\t\tconst entityId = " + id + ";";
-                text += "\n\t</script>" + array[1];
-            }
+            User user = GetAuthorizedUser(Request.Cookies["user"]);
+            string text = GetWebpage("Home", user, id);
             ContentResult result = Content(text, "text/html");
             return result;
         }

@@ -3,20 +3,18 @@
 <head>
     <title>Courses</title>
     <meta charset="utf-8"/>
-    <script type="text/javascript" src="/Scripts/application.js"></script>
-    <script type="text/javascript" src="/Scripts/network.js"></script>
+    <script type="text/javascript" src="/Scripts/application.js" defer></script>
+    <script type="text/javascript" src="/Scripts/network.js" defer></script>
+    <script type="text/javascript" src="/Scripts/Pages/course.js" defer></script>
     <link rel="stylesheet" type="text/css" href="/Content/style.css">
-    <script type="text/javascript" defer>
-        if (typeof entityId !== "undefined") {
-            fetchData("/api/Courses/" + entityId)
-                .then(data => {
-                    fillPageWithData(data);
-                });
-        }
-    </script>
 </head>
-<body>
-<header><span link="Teacher.User">Back to Start Page</span></header>
+<body onload="init()">
+<header>
+    Logged in as <span data="AuthorizedUser.Name"></span>
+    (<span data="AuthorizedUser.Identifier"></span>) -
+    <span link="AuthorizedUser"><button>Homepage</button></span>
+    <a href="/Logout"><button>Logout</button></a>
+</header>
 <h1>Course "<span data="Name"></span>"</h1>
 <div class="box">
     <h2>Course Details</h2>
@@ -50,7 +48,7 @@
     <table>
         <tr class="big">
             <td>Name:</td>
-            <td data="Teacher.User.Name" link="Teacher.User"></td>
+            <td data="Teacher.User.Name"></td>
         </tr>
         <tr>
             <td>Email:</td>
@@ -64,7 +62,7 @@
 </div>
 <div class="box">
     <h2>Course Assignments</h2>
-    <table class="centerTable">
+    <table class="centerTable" id="AssignmentTable">
         <tr>
             <th>Name</th>
             <th>Deadline</th>
@@ -75,7 +73,7 @@
             <th>Group Size</th>
             <th>Actions</th>
         </tr>
-        <tr datalist="Assignment" order="Assignment.Number ASC">
+        <tr datalist="Assignment" order="Assignment.Number ASC" removeonempty="AssignmentTable">
             <td><span data="Assignment.Name" link="Assignment"></span></td>
             <td><span data="Assignment.Deadline"></span></td>
             <td><span data="Assignment.IsFinal"></span></td>

@@ -2,21 +2,23 @@
 
 function fetchData(path) {
     const url = baseUrl + path;
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         fetch(url, {
                 method: 'GET',
                 credentials: 'include'
             })
             .then(data => {
+                if(data.status !== 200)
+                    reject(handleError(data));
                 return data.json();
             })
-            .then(json => {
-                resolve(json);
-            })
-            .catch(error => {
-                console.error(error);
-            })
+            .then(json => resolve(json))
+            .catch(error => handleError(error))
     });
+}
+
+function handleError(error) {
+    console.error(error);
 }
 
 function login() {
@@ -34,9 +36,14 @@ function login() {
         if(response.redirected)
             window.location.href = response.url;
         else if(!response.ok && response.status === 401) {
-            document.getElementById("status").innerText = "Invalid Identifier or Password";
+            document.getElementById("Login.status").innerText = "Invalid Identifier or Password";
             document.getElementById("password").value = "";
         }
     });
+    return false;
+}
+
+function postData(type) {
+    console.log("Posting " + type);
     return false;
 }

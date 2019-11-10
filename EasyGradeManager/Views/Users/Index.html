@@ -3,20 +3,17 @@
 <head>
     <title>Users</title>
     <meta charset="utf-8"/>
-    <script type="text/javascript" src="/Scripts/application.js"></script>
-    <script type="text/javascript" src="/Scripts/network.js"></script>
+    <script type="text/javascript" src="/Scripts/application.js" defer></script>
+    <script type="text/javascript" src="/Scripts/network.js" defer></script>
+    <script type="text/javascript" src="/Scripts/Pages/user.js" defer></script>
     <link rel="stylesheet" type="text/css" href="/Content/style.css">
-    <script type="text/javascript" defer>
-        if (typeof entityId !== "undefined") {
-            fetchData("/api/Users/" + entityId)
-                .then(data => {
-                    fillPageWithData(data);
-                });
-        }
-    </script>
 </head>
-<body>
-<header><a href="/Logout">Log out</a></header>
+<body onload="init()">
+<header>
+    Logged in as <span data="AuthorizedUser.Name"></span>
+    (<span data="AuthorizedUser.Identifier"></span>) -
+    <a href="/Logout"><button>Logout</button></a>
+</header>
 <h1>EasyGradeManager</h1>
 <div class="box">
     <h2>My Profile
@@ -72,16 +69,18 @@
             <h3>Current Term</h3>
             <table class="centerTable">
                 <tr>
+                    <th>Course</th>
+                    <th>Assignment</th>
                     <th>Lesson</th>
                     <th>Dates</th>
-                    <th>Course</th>
                     <th>Term</th>
                 </tr>
                 <tr datalist="Role.Lesson" filter="Role.Lesson.Assignment.Course.Archived=false"
                     order="Role.Lesson.Assignment.Course.Name ASC" removeonempty="CurrentTutoredCourses">
-                    <td data="Role.Lesson.Number" link="Role.Lesson"></td>
-                    <td data="Role.Lesson.Dates"></td>
                     <td data="Role.Lesson.Assignment.Course.Name" link="Role.Lesson.Assignment.Course"></td>
+                    <td data="Role.Lesson.Assignment.Name" link="Role.Lesson.Assignment"></td>
+                    <td link="Role.Lesson">Lesson <span data="Role.Lesson.Number"></span></td>
+                    <td data="Role.Lesson.Dates"></td>
                     <td data="Role.Lesson.Assignment.Course.Term"></td>
                 </tr>
             </table>
@@ -92,14 +91,16 @@
                 <tr>
                     <th>Lesson</th>
                     <th>Dates</th>
+                    <th>Assignment</th>
                     <th>Course</th>
                     <th>Term</th>
                 </tr>
                 <tr datalist="Role.Lesson" filter="Role.Lesson.Assignment.Course.Archived=true"
                     order="Role.Lesson.Assignment.Course.Name ASC" removeonempty="PreviousTutoredCourses">
-                    <td data="Role.Lesson.Number" link="Role.Lesson"></td>
-                    <td data="Role.Lesson.Dates"></td>
                     <td data="Role.Lesson.Assignment.Course.Name" link="Role.Lesson.Assignment.Course"></td>
+                    <td data="Role.Lesson.Assignment.Name" link="Role.Lesson.Assignment"></td>
+                    <td link="Role.Lesson">Lesson <span data="Role.Lesson.Number"></span></td>
+                    <td data="Role.Lesson.Dates"></td>
                     <td data="Role.Lesson.Assignment.Course.Term"></td>
                 </tr>
             </table>
@@ -126,10 +127,9 @@
                         link="Role.GroupMembership.Group.Assignment.Course"></td>
                     <td data="Role.GroupMembership.Group.Assignment.Name"
                         link="Role.GroupMembership.Group.Assignment"></td>
-                    <td data="Role.GroupMembership.Group.Number"></td>
-                    <td data="Role.GroupMembership.Group.Lesson.Number" link="Role.GroupMembership.Group.Lesson"></td>
-                    <td data="Role.GroupMembership.Group.Lesson.Tutor.User.Name"
-                        link="Role.GroupMembership.Group.Lesson.Tutor.User"></td>
+                    <td>Group <span data="Role.GroupMembership.Group.Number"></span></td>
+                    <td link="Role.GroupMembership.Group.Lesson">Lesson <span data="Role.GroupMembership.Group.Lesson.Number"></span></td>
+                    <td data="Role.GroupMembership.Group.Lesson.Tutor.User.Name"></td>
                     <td data="Role.GroupMembership.Group.Assignment.Course.Term"></td>
                 </tr>
             </table>
@@ -153,8 +153,7 @@
                         link="Role.GroupMembership.Group.Assignment"></td>
                     <td data="Role.GroupMembership.Group.Number"></td>
                     <td data="Role.GroupMembership.Group.Lesson.Number" link="Role.GroupMembership.Group.Lesson"></td>
-                    <td data="Role.GroupMembership.Group.Lesson.Tutor.User.Name"
-                        link="Role.GroupMembership.Group.Lesson.Tutor.User"></td>
+                    <td data="Role.GroupMembership.Group.Lesson.Tutor.User.Name"></td>
                     <td data="Role.GroupMembership.Group.Assignment.Course.Term"></td>
                 </tr>
             </table>

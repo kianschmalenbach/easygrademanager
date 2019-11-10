@@ -17,6 +17,16 @@ namespace EasyGradeManager.Static
             return GetAuthorizedUser(credentials[1] + "&" + credentials[2]);
         }
 
+        public static User GetAuthorizedUser(System.Net.Http.Headers.CookieHeaderValue cookie)
+        {
+            if (cookie == null || cookie["user"] == null || cookie["user"].Value == null)
+                return null;
+            string[] credentials = Regex.Split(cookie["user"].Value, "&");
+            if (credentials.Length != 3)
+                return null;
+            return GetAuthorizedUser(credentials[1] + "&" + credentials[2]);
+        }
+
         public static User GetAuthorizedUser(string value)
         {
             string[] credentials = value.Split('&');

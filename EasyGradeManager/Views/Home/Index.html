@@ -3,15 +3,23 @@
 <head>
     <title>EasyGradeManager</title>
     <meta charset="utf-8"/>
-    <script type="text/javascript" src="/Scripts/application.js"></script>
-    <script type="text/javascript" src="/Scripts/network.js"></script>
+    <script type="text/javascript" src="/Scripts/application.js" defer></script>
+    <script type="text/javascript" src="/Scripts/network.js" defer></script>
+    <script type="text/javascript" src="/Scripts/Pages/home.js" defer></script>
     <link rel="stylesheet" type="text/css" href="/Content/style.css">
 </head>
-<body>
+<body onload="init()">
+<header id="header">
+    Logged in as <span data="AuthorizedUser.Name"></span>
+    (<span data="AuthorizedUser.Identifier"></span>) -
+    <span link="AuthorizedUser"><button>Homepage</button></span>
+    <a href="/Logout"><button>Logout</button></a>
+</header>
 <h1>Welcome to EasyGradeManager!</h1>
+<p class="buttonCenter">Authentication is required to continue.</p>
 <div class="box">
     <h2>User Login</h2>
-    <p class="note">Authentication is required to continue.<br><br>Please log in below:</p>
+    <p class="note">Please log in below:</p>
     <div class="buttonCenter">
         <form onsubmit="return login()">
             <input id="identifier" type="text" placeholder="Identifier" autofocus required>
@@ -19,7 +27,21 @@
             <input type="submit" value="Login">
         </form>
     </div>
-    <p class="note" id="status"></p>
+    <p class="note" id="Login.status"></p>
+</div>
+<div class="box">
+    <h2>User Registration</h2>
+    <p class="note">Alternatively, you can create a new user account:</p>
+    <div class="buttonCenter">
+        <form onsubmit="return postData('NewUser')">
+            <input data="NewUser.Identifier" type="text" placeholder="Identifier" autofocus required>
+            <input data="NewUser.Name" type="text" placeholder="Your Name" autofocus required>
+            <input data="NewUser.Password" type="password" placeholder="Password" required>
+            <input data="NewUser.PasswordConfirm" type="password" placeholder="Confirm Password" required>
+            <input type="submit" value="Register">
+        </form>
+    </div>
+    <p class="note" id="NewUser.status"></p>
 </div>
 </body>
 </html>

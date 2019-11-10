@@ -3,20 +3,22 @@
 <head>
     <title>Lessons</title>
     <meta charset="utf-8"/>
-    <script type="text/javascript" src="/Scripts/application.js"></script>
-    <script type="text/javascript" src="/Scripts/network.js"></script>
+    <script type="text/javascript" src="/Scripts/application.js" defer></script>
+    <script type="text/javascript" src="/Scripts/network.js" defer></script>
+    <script type="text/javascript" src="/Scripts/Pages/lesson.js" defer></script>
     <link rel="stylesheet" type="text/css" href="/Content/style.css">
-    <script type="text/javascript" defer>
-        if (typeof entityId !== "undefined") {
-            fetchData("/api/Lessons/" + entityId)
-                .then(data => {
-                    fillPageWithData(data);
-                });
-        }
-    </script>
 </head>
-<body>
-<header><span link="Assignment">Back to Assignment</span></header>
+<body onload="init()">
+<header>
+    Logged in as <span data="AuthorizedUser.Name"></span>
+    (<span data="AuthorizedUser.Identifier"></span>) -
+    <span link="AuthorizedUser"><button>Homepage</button></span>
+    <a href="/Logout"><button>Logout</button></a>
+</header>
+<p class="buttonCenter">
+    Course: <span data="Assignment.Course.Name" link="Assignment.Course"></span>
+    (<span data="Assignment.Course.Term"></span>)
+</p>
 <h1>Lesson <span data="Number"></span></h1>
 <div class="box">
     <h2>Lesson Details</h2>
@@ -27,7 +29,7 @@
         </tr>
         <tr>
             <td>Tutor:</td>
-            <td data="Tutor.User.Name" link="Tutor.User"></td>
+            <td data="Tutor.User.Name"></td>
         </tr>
         <tr>
             <td>Dates:</td>
@@ -41,7 +43,7 @@
         <h3>Group <span data="Group.Id"></span></h3>
         <ul>
             <li datalist="Group.GroupMembership">
-                <span data="Group.GroupMembership.Student.User.Name" link="Group.GroupMembership.Student.User"></span>
+                <span data="Group.GroupMembership.Student.User.Name"></span>
             </li>
         </ul>
     </div>
