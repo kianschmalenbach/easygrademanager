@@ -147,3 +147,25 @@ function handleArray(key, type, array, rootElement) {
         }
     }
 }
+
+function showLoaders() {
+    const boxes = document.querySelectorAll("div[class=\"box\"]");
+    for(let i=0; i<boxes.length; ++i) {
+        const element = boxes[i];
+        const loaderWrapper = document.createElement("div");
+        loaderWrapper.setAttribute("class", "loaderWrapper");
+        const loaderContainer = document.createElement("div");
+        loaderContainer.setAttribute("class", "loaderContainer");
+        const loader = document.createElement("div");
+        loader.setAttribute("class", "loader");
+        loaderContainer.appendChild(loader);
+        loaderWrapper.appendChild(loaderContainer);
+        element.appendChild(loaderWrapper);
+    }
+}
+
+function hideLoaders() {
+    const loaders = document.querySelectorAll("div[class=\"loaderWrapper\"]");
+    for(let i=0; i<loaders.length; ++i)
+        loaders[i].remove();
+}
