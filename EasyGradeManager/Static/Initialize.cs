@@ -6,7 +6,7 @@ namespace EasyGradeManager.Static
 {
     public static class Initialize
     {
-        private static EasyGradeManagerContext db = new EasyGradeManagerContext();
+        private static readonly EasyGradeManagerContext db = new EasyGradeManagerContext();
         public static void InitializeDatabase()
         {
             if (db.Users.Count() > 0)
@@ -153,13 +153,18 @@ namespace EasyGradeManager.Static
             {
                 Name = "French"
             };
-            for (double i = 0; i <= 20; ++i)
-            {
-                gradingScheme.MinScores.Add(i / 20);
-                gradingScheme.Grades.Add(i.ToString());
-            }
             db.GradingSchemes.Add(gradingScheme);
             db.SaveChanges();
+            for (double i = 0; i <= 20; ++i)
+            {
+                db.Grades.Add(new Grade()
+                {
+                    GradingSchemeId = 1,
+                    MinPercentage = i / 20,
+                    Name = i.ToString()
+                });
+                db.SaveChanges();
+            }
         }
 
         private static void InitializeCourses()

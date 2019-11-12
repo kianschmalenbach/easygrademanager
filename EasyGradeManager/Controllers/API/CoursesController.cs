@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -9,30 +7,131 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using EasyGradeManager.Models;
+using static EasyGradeManager.Static.Authorize;
 
 namespace EasyGradeManager.Controllers.API
 {
     public class CoursesController : ApiController
     {
-        private EasyGradeManagerContext db = new EasyGradeManagerContext();
+        private readonly EasyGradeManagerContext db = new EasyGradeManagerContext();
 
         // GET: api/Courses
-        public IQueryable<Course> GetCourses()
+        public IHttpActionResult GetCourses()
         {
-            return db.Courses;
+            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            if (authorizedUser == null)
+                return Unauthorized();
+            var result = new List<CourseListDTO>();
+            foreach (Course course in db.Courses)
+            {
+                result.Add(new CourseListDTO()
+                {
+                    Id = course.Id,
+                    Name = course.Name,
+                    Term = course.Term,
+                    Archived = course.Archived
+                });
+            }
+            return Ok(result);
         }
 
         // GET: api/Courses/5
-        [ResponseType(typeof(Course))]
         public IHttpActionResult GetCourse(int id)
         {
+            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            if (authorizedUser == null)
+                return Unauthorized();
             Course course = db.Courses.Find(id);
             if (course == null)
-            {
                 return NotFound();
+            bool authorized = authorizedUser.Equals(course.Teacher.User);
+            if (!authorized && authorizedUser.GetTutor() != null) {
+                Tutor authorizedTutor = authorizedUser.GetTutor();
+                foreach(Lesson lesson in authorizedTutor.Lessons)
+                {
+                    if(course.Equals(lesson.Assignment.Course))
+                    {
+                        authorized = true;
+                        break;
+                    }
+                }
             }
-
-            return Ok(course);
+            if (!authorized && authorizedUser.GetStudent() != null)
+            {
+                Student authorizedStudent = authorizedUser.GetStudent();
+                foreach (GroupMembership membership in authorizedStudent.GroupMemberships)
+                {
+                    if (course.Equals(membership.Group.Lesson.Assignment.Course))
+                    {
+                        authorized = true;
+                        break;
+                    }
+                }
+            }
+            if(authorized)
+            {
+                CourseDetailDTO result = new CourseDetailDTO()
+                {
+                    Id = course.Id,
+                    Name = course.Name,
+                    Term = course.Term,
+                    Archived = course.Archived,
+                    MinRequiredAssignments = course.MinRequiredAssignments,
+                    MinRequiredScore = course.MinRequiredScore,
+                    Teacher = new UserListDTO()
+                    {
+                        Id = course.Teacher.User.Id,
+                        Identifier = course.Teacher.User.Identifier,
+                        Name = course.Teacher.User.Name
+                    }
+                };
+                if (course.GradingScheme != null)
+                {
+                    GradingSchemeDTO gradingScheme = new GradingSchemeDTO()
+                    {
+                        Id = course.GradingScheme.Id,
+                        Name = course.GradingScheme.Name
+                    };
+                    foreach(Grade grade in course.GradingScheme.Grades)
+                    {
+                        gradingScheme.Grades.Add(new GradeDTO()
+                        { 
+                            Id = grade.Id,
+                            MinPercentage = grade.MinPercentage,
+                            Name = grade.Name
+                        });
+                    }
+                    result.GradingScheme = gradingScheme;
+                }
+                foreach (Assignment assignment in course.Assignments)
+                {
+                    result.Assignments.Add(new AssignmentListDTO()
+                    {
+                        Id = assignment.Id,
+                        Deadline = assignment.Deadline,
+                        IsFinal = assignment.IsFinal,
+                        Mandatory = assignment.Mandatory,
+                        MaxGroupSize = assignment.MaxGroupSize,
+                        MinGroupSize = assignment.MinGroupSize,
+                        MinRequiredScore = assignment.MinRequiredScore,
+                        Name = assignment.Name,
+                        Number = assignment.Number,
+                        Weight = assignment.Weight
+                    });
+                }
+                return Ok(result);
+            }
+            else
+            {
+                CourseListDTO result = new CourseListDTO()
+                {
+                    Id = course.Id,
+                    Name = course.Name,
+                    Term = course.Term,
+                    Archived = course.Archived
+                };
+                return Ok(result);
+            }
         }
 
         // PUT: api/Courses/5

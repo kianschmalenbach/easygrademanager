@@ -13,16 +13,15 @@
     Logged in as <span data="AuthorizedUser.Name"></span>
     (<span data="AuthorizedUser.Identifier"></span>) -
     <span link="AuthorizedUser"><button>Homepage</button></span>
-    <a href="/Logout"><button>Logout</button></a>
+    <a href="/Logout">
+        <button>Logout</button>
+    </a>
 </header>
 <h1>Course "<span data="Name"></span>"</h1>
+<p class="buttonCenter" data="Term"></p>
 <div class="box">
     <h2>Course Details</h2>
     <table>
-        <tr>
-            <td>Term:</td>
-            <td data="Term"></td>
-        </tr>
         <tr>
             <td>Min. req. Assignments:</td>
             <td data="MinRequiredAssignments"></td>
@@ -31,14 +30,9 @@
             <td>Min. req. Score:</td>
             <td data="MinRequiredScore"></td>
         </tr>
-        <tr>
-            <td>Grading Scheme:</td>
-            <td data="GradingScheme"></td>
-        </tr>
     </table>
-    <p>
+    <p roles="Teacher">
         <button task="Edit">Edit Course Details</button>
-        <button>Create Grading Scheme</button>
         <button>Archive Course</button>
         <button task="Delete">Delete Course</button>
     </p>
@@ -46,17 +40,13 @@
 <div class="box">
     <h2>Teacher Details</h2>
     <table>
-        <tr class="big">
-            <td>Name:</td>
-            <td data="Teacher.User.Name"></td>
-        </tr>
-        <tr>
-            <td>Email:</td>
-            <td data="Teacher.User.Email"></td>
-        </tr>
         <tr>
             <td>User ID:</td>
-            <td data="Teacher.User.Identifier"></td>
+            <td data="Teacher.Identifier"></td>
+        </tr>
+        <tr class="big">
+            <td>Name:</td>
+            <td data="Teacher.Name"></td>
         </tr>
     </table>
 </div>
@@ -71,7 +61,7 @@
             <th>Mandatory</th>
             <th>Weight</th>
             <th>Group Size</th>
-            <th>Actions</th>
+            <th roles="Teacher">Actions</th>
         </tr>
         <tr datalist="Assignment" order="Assignment.Number ASC" removeonempty="AssignmentTable">
             <td><span data="Assignment.Name" link="Assignment"></span></td>
@@ -81,13 +71,13 @@
             <td><span data="Assignment.Mandatory"></span></td>
             <td><span data="Assignment.Weight"></span></td>
             <td><span data="Assignment.MinGroupSize"></span>-<span data="Assignment.MaxGroupSize"></span></td>
-            <td>
+            <td roles="Teacher">
                 <button task="Assignment.Edit">Edit</button>
                 <button task="Assignment.Delete">Delete</button>
             </td>
         </tr>
     </table>
-    <div class="buttonCenter">
+    <div class="buttonCenter" roles="Teacher">
         <input type="text" placeholder="Assignment Name">
         <input type="checkbox"> Derive from
         <select>
@@ -98,6 +88,27 @@
         and include <input type="text" size="1" placeholder="0"> days offset
         <button>Add Assignment</button>
     </div>
+</div>
+<div class="box">
+    <h2>Grading Scheme: <span data="GradingScheme.Name"></span></h2>
+    <table class="centerTable" id="GradingSchemeTable">
+        <tr>
+            <th>Grade</th>
+            <td datalist="GradingScheme.Grade" order="GradingScheme.Grade.MinPercentage DESC"
+                removeonempty="GradingSchemeTable">
+                <span data="GradingScheme.Grade.Name"></span>
+            </td>
+        </tr>
+        <tr>
+            <th>Required Percentage</th>
+            <td datalist="GradingScheme.Grade" order="GradingScheme.Grade.MinPercentage DESC">
+                <span data="GradingScheme.Grade.MinPercentage"></span>
+            </td>
+        </tr>
+    </table>
+    <p class="buttonCenter" roles="Teacher">
+        <button task="GradingScheme.Edit">Edit Grading Scheme</button>
+    </p>
 </div>
 </body>
 </html>

@@ -29,6 +29,33 @@ namespace EasyGradeManager.Models
         {
             return Id;
         }
+        public Teacher GetTeacher()
+        {
+            foreach(Role role in Roles)
+            {
+                if (role.Name == "Teacher")
+                    return (Teacher)role;
+            }
+            return null;
+        }
+        public Tutor GetTutor()
+        {
+            foreach (Role role in Roles)
+            {
+                if (role.Name == "Tutor")
+                    return (Tutor)role;
+            }
+            return null;
+        }
+        public Student GetStudent()
+        {
+            foreach (Role role in Roles)
+            {
+                if (role.Name == "Student")
+                    return (Student)role;
+            }
+            return null;
+        }
     }
 
     public class UserListDTO

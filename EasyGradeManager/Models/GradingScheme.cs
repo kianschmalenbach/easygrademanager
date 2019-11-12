@@ -7,15 +7,13 @@ namespace EasyGradeManager.Models
     {
         public GradingScheme()
         {
-            MinScores = new List<double>();
-            Grades = new List<string>();
+            Grades = new HashSet<Grade>();
             Courses = new List<Course>();
         }
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        public List<double> MinScores { get; }
-        public List<string> Grades { get; }
+        public virtual ICollection<Grade> Grades { get; }
         public virtual ICollection<Course> Courses { get; set; }
         public override bool Equals(object other)
         {
@@ -31,13 +29,11 @@ namespace EasyGradeManager.Models
     {
         public GradingSchemeDTO()
         {
-            MinScores = new List<double>();
-            Grades = new List<string>();
+            Grades = new HashSet<GradeDTO>();
         }
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<double> MinScores { get; }
-        public List<string> Grades { get; }
+        public ICollection<GradeDTO> Grades { get; }
         public override bool Equals(object other)
         {
             return other != null && other is GradingSchemeDTO && Id == ((GradingSchemeDTO)other).Id;

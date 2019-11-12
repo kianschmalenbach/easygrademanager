@@ -1,4 +1,5 @@
 ﻿function fillPageWithData(data, type = "") {
+    removeRoleSpecificElements();
     generateLinks(data, type);
     if (type !== "")
         type += ".";
@@ -28,6 +29,25 @@
         for (let index = 0; index < elementList.length; ++index)
             handleArray(key, type, entry[1], elementList[index]);
     });
+}
+
+function removeRoleSpecificElements() {
+    const roleSpecificElements = document.querySelectorAll("*[roles]");
+    for (let i = 0; i < roleSpecificElements.length; ++i) {
+        const element = roleSpecificElements[i];
+        const roles = element.getAttribute("roles").split(" ");
+        let show = false;
+        for (const index in roles) {
+            if (authorizedUser.Roles.includes(roles[index])) {
+                show = true;
+                break;
+            }
+        }
+        if (!show)
+            element.remove();
+        else
+            element.removeAttribute("roles");
+    }
 }
 
 function generateLinks(data, type) {

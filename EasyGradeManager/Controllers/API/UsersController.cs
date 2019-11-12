@@ -21,13 +21,14 @@ namespace EasyGradeManager.Controllers.API
             if (authorizedUser == null)
                 return Unauthorized();
             var result = new List<UserListDTO>();
-            foreach(User user in db.Users)
+            foreach (User user in db.Users)
             {
-                UserListDTO dto = new UserListDTO();
-                dto.Id = user.Id;
-                dto.Identifier = user.Identifier;
-                dto.Name = user.Name;
-                result.Add(dto);
+                result.Add(new UserListDTO()
+                {
+                    Id = user.Id,
+                    Identifier = user.Identifier,
+                    Name = user.Name
+                });
             }
             return Ok(result);
         }
