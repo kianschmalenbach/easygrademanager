@@ -26,6 +26,7 @@ namespace EasyGradeManager.Models
         }
 
         public DbSet<Course> Courses { get; set; }
+        public DbSet<GradingScheme> GradingSchemes { get; set; }
 
         public DbSet<Assignment> Assignments { get; set; }
 

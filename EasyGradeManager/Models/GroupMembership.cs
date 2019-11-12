@@ -11,5 +11,13 @@ namespace EasyGradeManager.Models
         [Required]
         public int GroupId { get; set; }
         public virtual Group Group { get; set; }
+        public override bool Equals(object other)
+        {
+            return other != null && other is GroupMembership && Id == ((GroupMembership)other).Id;
+        }
+        public override int GetHashCode()
+        {
+            return Id;
+        }
     }
 }

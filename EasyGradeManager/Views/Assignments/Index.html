@@ -56,14 +56,14 @@
     <table class="centerTable" id="LessonTable">
         <tr>
             <th>Lesson</th>
-            <th>Dates</th>
+            <th>Date</th>
             <th>Tutor</th>
             <th>Actions</th>
         </tr>
         <!-- ALSO POSSIBLE: order="Lesson.Tutor.User.Name DESC" -->
         <tr datalist="Lesson" order="Lesson.Number ASC" removeonempty="LessonTable">
             <td link="Lesson">Lesson <span data="Lesson.Number"></span></td>
-            <td><span data="Lesson.Dates"></span></td>
+            <td><span data="Lesson.Date"></span></td>
             <td><span data="Lesson.Tutor.User.Name"></span></td>
             <td>
                 <button task="Lesson.Edit">Edit</button>
@@ -75,7 +75,7 @@
         <form data="NewLesson">
             <input size="12" placeholder="Lesson Number" data="NewLesson.Number">
             <input size="15" placeholder="Tutor" data="NewLesson.Tutor">
-            <input size="20" placeholder="Dates" data="NewLesson.Dates">
+            <input size="20" placeholder="Date" data="NewLesson.Date">
             <button task="NewLesson.Add">Add Lesson</button>
         </form>
     </div>

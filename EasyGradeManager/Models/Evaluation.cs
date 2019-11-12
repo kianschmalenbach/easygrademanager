@@ -6,8 +6,7 @@ namespace EasyGradeManager.Models
     {
         public Evaluation()
         {
-            this.Score = 0.0;
-            this.IsFinal = false;
+            Score = 0.0;
         }
         public int Id { get; set; }
         [Required]
@@ -17,6 +16,28 @@ namespace EasyGradeManager.Models
         public int TaskId { get; set; }
         public virtual Task Task { get; set; }
         public double Score { get; set; }
-        public bool IsFinal { get; set; }
+        public override bool Equals(object other)
+        {
+            return other != null && other is Evaluation && Id == ((Evaluation)other).Id;
+        }
+        public override int GetHashCode()
+        {
+            return Id;
+        }
+    }
+
+    public class EvaluationDTO
+    {
+        public int Id { get; set; }
+        public double Score { get; set; }
+        public TaskDTO Task { get; set; }
+        public override bool Equals(object other)
+        {
+            return other != null && other is EvaluationDTO && Id == ((EvaluationDTO)other).Id;
+        }
+        public override int GetHashCode()
+        {
+            return Id;
+        }
     }
 }

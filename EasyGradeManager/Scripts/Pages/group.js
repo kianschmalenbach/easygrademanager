@@ -1,11 +1,11 @@
 function init() {
+    if (typeof authorizedUser !== "undefined")
+        fillPageWithData(authorizedUser, "AuthorizedUser");
     if (typeof entityId !== "undefined") {
         showLoaders();
-        fetchData("/api/Evaluations/" + entityId)
+        fetchData("/api/Groups/" + entityId)
             .then(data => {
                 fillPageWithData(data);
-                if (typeof authorizedUser !== "undefined")
-                    fillPageWithData(authorizedUser, "AuthorizedUser");
                 hideLoaders();
             });
     }

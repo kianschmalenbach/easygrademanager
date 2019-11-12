@@ -10,6 +10,12 @@ namespace EasyGradeManager
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "Init",
+                url: "Init",
+                defaults: new { controller = "Home", action = "Init" }
+            );
+
+            routes.MapRoute(
                 name: "Logout",
                 url: "Logout",
                 defaults: new { controller = "Home", action = "Logout" }

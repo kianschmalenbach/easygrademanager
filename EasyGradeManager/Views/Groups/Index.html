@@ -1,0 +1,67 @@
+﻿<!Doctype html>
+<html lang="en">
+<head>
+    <title>Groups</title>
+    <meta charset="utf-8"/>
+    <script type="text/javascript" src="/Scripts/application.js" defer></script>
+    <script type="text/javascript" src="/Scripts/network.js" defer></script>
+    <script type="text/javascript" src="/Scripts/Pages/group.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="/Content/style.css">
+</head>
+<body onload="init()">
+<header>
+    Logged in as <span data="AuthorizedUser.Name"></span>
+    (<span data="AuthorizedUser.Identifier"></span>) -
+    <span link="AuthorizedUser"><button>Homepage</button></span>
+    <a href="/Logout"><button>Logout</button></a>
+</header>
+<p class="buttonCenter">
+    Course: <span data="Assignment.Course.Name" link="Assignment.Course"></span>
+    (<span data="Assignment.Course.Term"></span>)
+</p>
+<h1>Group <span data="Number"></span> | <span data="Assignment.Name"></span> </h1>
+<div class="box">
+    <h2>Group Details</h2>
+    <table>
+        <tr>
+            <td>Group:</td>
+            <td data="Number"></td>
+        </tr>
+        <tr>
+            <td>Members:</td>
+            <td>
+                <span datalist="GroupMembership">
+                    <span data="GroupMembership.Student.User.Name"></span><br>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td>Lesson:</td>
+            <td>
+                <span link="Lesson">Lesson <span data="Lesson.Number"></span></span>
+                (<span data="Lesson.Tutor.User.Name"></span>)
+            </td>
+        </tr>
+        <tr>
+            <td>Assignment:</td>
+            <td data="Assignment.Name" link="Assignment"></td>
+        </tr>
+    </table>
+</div>
+<div class="box">
+    <h2>Temporary Scores for <span data="Assignment.Name"></span></h2>
+    <table class="centerTable" id="EvaluationTable">
+        <tr>
+            <th>Task</th>
+            <th>Score</th>
+            <th>Max. Score</th>
+        </tr>
+        <tr datalist="Evaluation" order="Evaluation.Task.Number ASC">
+            <td data="Evaluation.Task.Name"></td>
+            <td data="Evaluation.Score">5</td>
+            <td data="Evaluation.Task.MaxScore">8</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

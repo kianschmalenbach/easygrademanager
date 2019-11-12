@@ -2,6 +2,7 @@
 using System;
 using System.Web.Mvc;
 using static EasyGradeManager.Static.Authorize;
+using static EasyGradeManager.Static.Initialize;
 using static EasyGradeManager.Static.Webpage;
 
 namespace EasyGradeManager.Controllers
@@ -14,6 +15,12 @@ namespace EasyGradeManager.Controllers
             string text = GetWebpage("Home", user, id);
             ContentResult result = Content(text, "text/html");
             return result;
+        }
+
+        public ActionResult Init()
+        {
+            InitializeDatabase();
+            return new RedirectResult("/");
         }
 
         public ActionResult Logout()

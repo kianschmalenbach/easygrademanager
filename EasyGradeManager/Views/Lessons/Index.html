@@ -32,15 +32,15 @@
             <td data="Tutor.User.Name"></td>
         </tr>
         <tr>
-            <td>Dates:</td>
-            <td data="Assignment.Dates"></td>
+            <td>Date:</td>
+            <td data="Date"></td>
         </tr>
     </table>
 </div>
 <div class="box" id="GroupBox">
     <h2>Student Groups</h2>
     <div datalist="Group" order="Group.Number ASC" removeonempty="GroupBox">
-        <h3>Group <span data="Group.Id"></span></h3>
+        <h3 link="Group">Group <span data="Group.Id"></span></h3>
         <ul>
             <li datalist="Group.GroupMembership">
                 <span data="Group.GroupMembership.Student.User.Name"></span>

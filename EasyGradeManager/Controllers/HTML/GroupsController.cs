@@ -5,14 +5,14 @@ using static EasyGradeManager.Static.Webpage;
 
 namespace EasyGradeManager.Controllers.HTML
 {
-    public class EvaluationsController : Controller
+    public class GroupsController : Controller
     {
         public ActionResult Details(int? id)
         {
             User user = GetAuthorizedUser(Request.Cookies["user"]);
             if (user == null || id == null)
                 return new RedirectResult("/");
-            string text = GetWebpage("Evaluations", user, (int)id);
+            string text = GetWebpage("Groups", user, (int)id);
             ContentResult result = Content(text, "text/html");
             return result;
         }

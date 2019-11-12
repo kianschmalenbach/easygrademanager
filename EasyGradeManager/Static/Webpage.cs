@@ -20,8 +20,8 @@ namespace EasyGradeManager.Static
                 text += "\n\t\t\tName: \"" + user.Name + "\",";
                 text += "\n\t\t\tRoles: [ ";
                 foreach (Role role in user.Roles)
-                    text += "\"" + role.Name + "\", ";
-                text = text.Remove(text.Length - 2);
+                    text += " \"" + role.Name + "\",";
+                text = text.Remove(text.Length - 1);
                 text += " ]";
                 text += "\n\t\t};";
             }
