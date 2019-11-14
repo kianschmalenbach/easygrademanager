@@ -42,7 +42,7 @@ namespace EasyGradeManager.Controllers.API
             if (accessRole.Equals("Teacher") || accessRole.Equals("Tutor"))
                 return Ok(new AssignmentDetailTeacherDTO(assignment));
             else
-                return Ok(new AssignmentDetailStudentDTO(assignment));
+                return Ok(new AssignmentDetailStudentDTO(assignment, authorizedUser.GetStudent()));
         }
 
         //TODO implement

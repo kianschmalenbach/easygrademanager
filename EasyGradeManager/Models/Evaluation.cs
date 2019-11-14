@@ -33,11 +33,11 @@ namespace EasyGradeManager.Models
             Id = evaluation.Id;
             Score = evaluation.Score;
             if (evaluation.Task != null)
-                Task = new TaskDTO(evaluation.Task);
+                Task = new TaskListDTO(evaluation.Task);
         }
         public int Id { get; set; }
         public double Score { get; set; }
-        public TaskDTO Task { get; set; }
+        public TaskListDTO Task { get; set; }
         public override bool Equals(object other)
         {
             return other != null && other is EvaluationDTO && Id == ((EvaluationDTO)other).Id;

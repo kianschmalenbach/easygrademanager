@@ -47,33 +47,33 @@
             <td><span data="MinGroupSize"></span>-<span data="MaxGroupSize"></span></td>
         </tr>
     </table>
-    <p>
+    <p roles="Teacher">
         <button>Set Assignment Results as Final</button>
         <button task="Edit">Edit Assignment Details</button>
         <button task="Delete">Delete Assignment</button>
     </p>
 </div>
-<div class="box">
+<div class="box" roles="Teacher Tutor">
     <h2>Assignment Lessons</h2>
     <table class="centerTable" id="LessonTable">
         <tr>
             <th>Lesson</th>
             <th>Date</th>
             <th>Tutor</th>
-            <th>Actions</th>
+            <th roles="Teacher">Actions</th>
         </tr>
-        <!-- ALSO POSSIBLE: order="Lesson.Tutor.User.Name DESC" -->
+        <!-- ALSO POSSIBLE: order="Lesson.Tutor.Name DESC" -->
         <tr datalist="Lesson" order="Lesson.Number ASC" removeonempty="LessonTable">
             <td link="Lesson">Lesson <span data="Lesson.Number"></span></td>
             <td><span data="Lesson.Date"></span></td>
-            <td><span data="Lesson.Tutor.User.Name"></span></td>
-            <td>
+            <td><span data="Lesson.Tutor.Name"></span></td>
+            <td roles="Teacher">
                 <button task="Lesson.Edit">Edit</button>
                 <button task="Lesson.Delete">Delete</button>
             </td>
         </tr>
     </table>
-    <div class="buttonCenter">
+    <div class="buttonCenter" roles="Teacher">
         <form data="NewLesson">
             <input size="12" placeholder="Lesson Number" data="NewLesson.Number">
             <input size="15" placeholder="Tutor" data="NewLesson.Tutor">
@@ -82,24 +82,48 @@
         </form>
     </div>
 </div>
+<div class="box" roles="Student">
+    <h2>Assignment Group</h2>
+    <table id="GroupTable">
+        <tr>
+            <td>Group Number:</td>
+            <td data="Group.Number"></td>
+        </tr>
+        <tr>
+            <td>Group Password:</td>
+            <td data="Group.Password"></td>
+        </tr>
+        <tr>
+            <td>Group Members:</td>
+            <td>
+                <span datalist="Group.Student" order="Group.Student.Name ASC" removeonempty="GroupTable">
+                    <span data="Group.Student.Name"></span><br>
+                </span>
+            </td>
+        </tr>
+    </table>
+</div>
 <div class="box">
-    <h2>Assignment Tasks</h2>
+    <h2>Assignment <span roles="Teacher Tutor">Tasks</span><span roles="Student">Results</span></h2>
+    <p class="note" roles="Student">Final Results: <span data="Group.IsFinal"></span></p>
     <table class="centerTable" id="TaskTable">
         <tr>
             <th>Name</th>
-            <th>Maximum Score</th>
-            <th>Actions</th>
+            <th roles="Student">Score</th>
+            <th>Max. Score</th>
+            <th roles="Teacher">Actions</th>
         </tr>
         <tr datalist="Task" order="Task.Number ASC" removeonempty="TaskTable">
             <td><span data="Task.Name"></span></td>
+            <td roles="Student"><span data="Task.Score">t.b.a.</span></td>
             <td><span data="Task.MaxScore"></span></td>
-            <td>
+            <td roles="Teacher">
                 <button task="Task.Edit">Edit</button>
                 <button task="Task.Delete">Delete</button>
             </td>
         </tr>
     </table>
-    <div class="buttonCenter">
+    <div class="buttonCenter" roles="Teacher">
         <form data="NewTask">
             <input size="10" placeholder="Task Number" data="NewTask.Number">
             <input size="20" placeholder="Task Name" data="NewTask.Name">

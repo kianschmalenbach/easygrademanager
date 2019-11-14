@@ -77,11 +77,10 @@ namespace EasyGradeManager.Models
     {
         protected AssignmentDetailDTO(Assignment assignment) : base(assignment)
         {
-            Tasks = new HashSet<TaskDTO>();
-            foreach (Task task in assignment.Tasks)
-                Tasks.Add(new TaskDTO(task));
+            if (assignment.Course != null)
+                Course = new CourseListDTO(assignment.Course);
         }
-        public ICollection<TaskDTO> Tasks { get; }
+        public CourseListDTO Course { get; set; }
         public override bool Equals(object other)
         {
             return other != null && other is AssignmentDetailDTO && Id == ((AssignmentDetailDTO)other).Id;
@@ -97,8 +96,14 @@ namespace EasyGradeManager.Models
         public AssignmentDetailTeacherDTO(Assignment assignment) : base(assignment)
         {
             Lessons = new HashSet<LessonListDTO>();
+            Tasks = new HashSet<TaskListDTO>();
+            foreach (Lesson lesson in assignment.Lessons)
+                Lessons.Add(new LessonListDTO(lesson));
+            foreach (Task task in assignment.Tasks)
+                Tasks.Add(new TaskListDTO(task));
         }
         public ICollection<LessonListDTO> Lessons { get; }
+        public ICollection<TaskListDTO> Tasks { get; }
         public override bool Equals(object other)
         {
             return other != null && other is AssignmentDetailTeacherDTO && Id == ((AssignmentDetailTeacherDTO)other).Id;
@@ -111,13 +116,31 @@ namespace EasyGradeManager.Models
 
     public class AssignmentDetailStudentDTO : AssignmentDetailDTO
     {
-        public AssignmentDetailStudentDTO(Assignment assignment) : base(assignment)
+        public AssignmentDetailStudentDTO(Assignment assignment, Student student) : base(assignment)
         {
-            Evaluations = new HashSet<EvaluationDTO>();
+            Tasks = new HashSet<TaskListDTO>();
+            foreach(GroupMembership membership in student.GroupMemberships)
+            {
+                if(assignment.Equals(membership.Group.Lesson.Assignment))
+                {
+                    Lesson = new LessonListDTO(membership.Group.Lesson);
+                    Group = new GroupDetailDTO(membership.Group);
+                    if (membership.Group.IsFinal) {
+                        foreach (Task task in assignment.Tasks)
+                            Tasks.Add(new TaskListDTO(task));
+                    }
+                    else
+                    {
+                        foreach(Evaluation evaluation in membership.Group.Evaluations)
+                            Tasks.Add(new TaskDetailDTO(evaluation.Task, evaluation));
+                    }
+                    break;
+                }
+            }
         }
         public LessonListDTO Lesson { get; set; }
         public GroupDetailDTO Group { get; set; }
-        public ICollection<EvaluationDTO> Evaluations { get; }
+        public ICollection<TaskListDTO> Tasks { get; }
         public override bool Equals(object other)
         {
             return other != null && other is AssignmentDetailStudentDTO && Id == ((AssignmentDetailStudentDTO)other).Id;

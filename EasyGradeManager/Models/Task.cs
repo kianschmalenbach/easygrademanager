@@ -30,9 +30,9 @@ namespace EasyGradeManager.Models
         }
     }
 
-    public class TaskDTO
+    public class TaskListDTO
     {
-        public TaskDTO(Task task)
+        public TaskListDTO(Task task)
         {
             Id = task.Id;
             Number = task.Number;
@@ -45,11 +45,20 @@ namespace EasyGradeManager.Models
         public double MaxScore { get; set; }
         public override bool Equals(object other)
         {
-            return other != null && other is TaskDTO && Id == ((TaskDTO)other).Id;
+            return other != null && other is TaskListDTO && Id == ((TaskListDTO)other).Id;
         }
         public override int GetHashCode()
         {
             return Id;
         }
+    }
+
+    public class TaskDetailDTO : TaskListDTO
+    {
+        public TaskDetailDTO(Task task, Evaluation evaluation) : base(task)
+        {
+            Score = evaluation.Score;
+        }
+        public double Score { get; set; }
     }
 }

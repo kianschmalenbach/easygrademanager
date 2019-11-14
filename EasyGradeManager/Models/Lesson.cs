@@ -44,14 +44,11 @@ namespace EasyGradeManager.Models
             Date = lesson.Date;
             if(lesson.Tutor != null)
                 Tutor = new UserListDTO(lesson.Tutor.User);
-            if(lesson.DerivedFrom != null)
-                DerivedFrom = new LessonListDTO(lesson.DerivedFrom);
         }
         public int Id { get; set; }
         public int Number { get; set; }
         public DateTime Date { get; set; }
         public UserListDTO Tutor { get; set; }
-        public LessonListDTO DerivedFrom { get; set; }
         public override bool Equals(object other)
         {
             return other != null && other is LessonListDTO && Id == ((LessonListDTO)other).Id;
@@ -69,8 +66,11 @@ namespace EasyGradeManager.Models
             Groups = new HashSet<GroupDetailDTO>();
             foreach (Group group in lesson.Groups)
                 Groups.Add(new GroupDetailDTO(group));
+            if (lesson.DerivedFrom != null)
+                DerivedFrom = new LessonListDTO(lesson.DerivedFrom);
         }
         public ICollection<GroupDetailDTO> Groups { get; }
+        public LessonListDTO DerivedFrom { get; set; }
         public override bool Equals(object other)
         {
             return other != null && other is LessonDetailDTO && Id == ((LessonDetailDTO)other).Id;
