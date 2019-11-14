@@ -39,10 +39,10 @@ namespace EasyGradeManager.Controllers.API
             string accessRole = GetAccessRole(authorizedUser, course);
             if (accessRole == null)
                 return Unauthorized();
-            if (accessRole.Equals("Teacher") || accessRole.Equals("Tutor"))
-                return Ok(new AssignmentDetailTeacherDTO(assignment));
-            else
+            if (accessRole.Equals("Student"))
                 return Ok(new AssignmentDetailStudentDTO(assignment, authorizedUser.GetStudent()));
+            else
+                return Ok(new AssignmentDetailTeacherDTO(assignment));
         }
 
         //TODO implement
