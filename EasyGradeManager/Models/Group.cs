@@ -35,6 +35,12 @@ namespace EasyGradeManager.Models
 
     public class GroupListDTO
     {
+        public GroupListDTO(Group group)
+        {
+            Id = group.Id;
+            Number = group.Number;
+            IsFinal = group.IsFinal;
+        }
         public int Id { get; set; }
         public int Number { get; set; }
         public bool IsFinal { get; set; }
@@ -47,11 +53,15 @@ namespace EasyGradeManager.Models
             return Id;
         }
     }
+
     public class GroupDetailDTO : GroupListDTO
     {
-        public GroupDetailDTO()
+        public GroupDetailDTO(Group group) : base(group)
         {
+            Password = group.Password;
             Students = new HashSet<UserListDTO>();
+            foreach (GroupMembership membership in group.GroupMemberships)
+                Students.Add(new UserListDTO(membership.Student.User));
         }
         public string Password { get; }
         public ICollection<UserListDTO> Students { get; }

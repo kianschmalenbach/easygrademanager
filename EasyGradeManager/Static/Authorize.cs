@@ -49,5 +49,34 @@ namespace EasyGradeManager.Static
                 return null;
             return credentials[1];
         }
+
+        public static string GetAccessRole(User user, Course course)
+        {
+            if (user.Equals(course.Teacher.User))
+                return "Teacher";
+            if (user.GetTutor() != null)
+            {
+                Tutor authorizedTutor = user.GetTutor();
+                foreach (Lesson lesson in authorizedTutor.Lessons)
+                {
+                    if (course.Equals(lesson.Assignment.Course))
+                    {
+                        return "Tutor";
+                    }
+                }
+            }
+            if (user.GetStudent() != null)
+            {
+                Student authorizedStudent = user.GetStudent();
+                foreach (GroupMembership membership in authorizedStudent.GroupMemberships)
+                {
+                    if (course.Equals(membership.Group.Lesson.Assignment.Course))
+                    {
+                        return "Student";
+                    }
+                }
+            }
+            return null;
+        }
     }
 }

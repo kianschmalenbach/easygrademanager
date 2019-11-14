@@ -80,9 +80,10 @@ namespace EasyGradeManager.Models
 
     public class RoleDTO
     {
-        public RoleDTO()
+        public RoleDTO(Role role)
         {
             Courses = new HashSet<CourseListDTO>();
+            Id = role.Id;
         }
         public int Id { get; set; }
         public ICollection<CourseListDTO> Courses { get; }
@@ -98,6 +99,11 @@ namespace EasyGradeManager.Models
 
     public class TeacherDTO : RoleDTO
     {
+        public TeacherDTO(Teacher teacher) : base(teacher)
+        {
+            foreach (Course course in teacher.Courses)
+                Courses.Add(new CourseListDTO(course));
+        }
         public override bool Equals(object other)
         {
             return other != null && other is TeacherDTO && Id == ((TeacherDTO)other).Id;
@@ -110,9 +116,14 @@ namespace EasyGradeManager.Models
 
     public class TutorDTO : RoleDTO
     {
-        public TutorDTO()
+        public TutorDTO(Tutor tutor) : base(tutor)
         {
             Lessons = new HashSet<LessonListDTO>();
+            foreach (Lesson lesson in tutor.Lessons)
+            {
+                Lessons.Add(new LessonListDTO(lesson));
+                Courses.Add(new CourseListDTO(lesson.Assignment.Course));
+            }
         }
         public ICollection<LessonListDTO> Lessons { get; }
         public override bool Equals(object other)
@@ -127,9 +138,14 @@ namespace EasyGradeManager.Models
 
     public class StudentDTO : RoleDTO
     {
-        public StudentDTO()
+        public StudentDTO(Student student) : base(student)
         {
             Groups = new HashSet<GroupListDTO>();
+            foreach (GroupMembership membership in student.GroupMemberships)
+            {
+                Groups.Add(new GroupListDTO(membership.Group));
+                Courses.Add(new CourseListDTO(membership.Group.Lesson.Assignment.Course));
+            }
         }
         public ICollection<GroupListDTO> Groups { get; }
         public override bool Equals(object other)

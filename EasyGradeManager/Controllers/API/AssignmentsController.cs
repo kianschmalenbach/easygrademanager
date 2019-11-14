@@ -1,42 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Description;
 using EasyGradeManager.Models;
+using static EasyGradeManager.Static.Authorize;
 
 namespace EasyGradeManager.Controllers.API
 {
     public class AssignmentsController : ApiController
     {
-        private EasyGradeManagerContext db = new EasyGradeManagerContext();
+        private readonly EasyGradeManagerContext db = new EasyGradeManagerContext();
 
-        // GET: api/Assignments
-        public IQueryable<Assignment> GetAssignments()
+        public IHttpActionResult GetAssignments()
         {
-            return db.Assignments;
+            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            if (authorizedUser == null)
+                return Unauthorized();
+            var result = new List<AssignmentListDTO>();
+            foreach (Assignment assignment in db.Assignments)
+                result.Add(new AssignmentListDTO(assignment));
+            return Ok(result);
         }
 
-        // GET: api/Assignments/5
-        [ResponseType(typeof(Assignment))]
         public IHttpActionResult GetAssignment(int id)
         {
+            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            if (authorizedUser == null)
+                return Unauthorized();
             Assignment assignment = db.Assignments.Find(id);
             if (assignment == null)
-            {
                 return NotFound();
-            }
-
-            return Ok(assignment);
+            Course course = assignment.Course;
+            if (course == null)
+                return InternalServerError();
+            string accessRole = GetAccessRole(authorizedUser, course);
+            if (accessRole == null)
+                return Unauthorized();
+            if (accessRole.Equals("Teacher") || accessRole.Equals("Tutor"))
+                return Ok(new AssignmentDetailTeacherDTO(assignment));
+            else
+                return Ok(new AssignmentDetailStudentDTO(assignment));
         }
 
-        // PUT: api/Assignments/5
-        [ResponseType(typeof(void))]
+        //TODO implement
         public IHttpActionResult PutAssignment(int id, Assignment assignment)
         {
             if (!ModelState.IsValid)
@@ -70,8 +79,7 @@ namespace EasyGradeManager.Controllers.API
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Assignments
-        [ResponseType(typeof(Assignment))]
+        //TODO implement
         public IHttpActionResult PostAssignment(Assignment assignment)
         {
             if (!ModelState.IsValid)
@@ -85,8 +93,7 @@ namespace EasyGradeManager.Controllers.API
             return CreatedAtRoute("DefaultApi", new { id = assignment.Id }, assignment);
         }
 
-        // DELETE: api/Assignments/5
-        [ResponseType(typeof(Assignment))]
+        //TODO implement
         public IHttpActionResult DeleteAssignment(int id)
         {
             Assignment assignment = db.Assignments.Find(id);

@@ -60,6 +60,12 @@ namespace EasyGradeManager.Models
 
     public class UserListDTO
     {
+        public UserListDTO(User user)
+        {
+            Id = user.Id;
+            Identifier = user.Identifier;
+            Name = user.Name;
+        }
         public int Id { get; set; }
         public string Identifier { get; set; }
         public string Name { get; set; }
@@ -75,6 +81,16 @@ namespace EasyGradeManager.Models
 
     public class UserDetailDTO : UserListDTO
     {
+        public UserDetailDTO(User user) : base(user)
+        {
+            Email = user.Email;
+            if (user.GetTeacher() != null)
+                Teacher = new TeacherDTO(user.GetTeacher());
+            if (user.GetTutor() != null)
+                Tutor = new TutorDTO(user.GetTutor());
+            if (user.GetStudent() != null)
+                Student = new StudentDTO(user.GetStudent());
+        }
         public string Email { get; set; }
         public string NewPassword { get; set; }
         public string NewRole { get; set; }
@@ -106,6 +122,44 @@ namespace EasyGradeManager.Models
             }
             user.Name = Name;
             return logoutNecessary;
+        }
+        internal void UpdateRole(User user, EasyGradeManagerContext db)
+        {
+            
+            bool[] roles = { false, false, false };
+            foreach (Role role in user.Roles)
+            {
+                if (role.Name == "Teacher")
+                    roles[0] = true;
+                else if (role.Name == "Tutor")
+                    roles[1] = true;
+                else if (role.Name == "Student")
+                    roles[2] = true;
+            }
+            switch (NewRole)
+            {
+                case "Teacher":
+                    if (!roles[0])
+                        db.Teachers.Add(new Teacher()
+                        {
+                            UserId = user.Id
+                        });
+                    break;
+                case "Tutor":
+                    if (!roles[1])
+                        db.Tutors.Add(new Tutor()
+                        {
+                            UserId = user.Id
+                        });
+                    break;
+                case "Student":
+                    if (!roles[2])
+                        db.Students.Add(new Student()
+                        {
+                            UserId = user.Id
+                        });
+                    break;
+            }
         }
     }
 }

@@ -28,6 +28,13 @@ namespace EasyGradeManager.Models
 
     public class EvaluationDTO
     {
+        public EvaluationDTO(Evaluation evaluation)
+        {
+            Id = evaluation.Id;
+            Score = evaluation.Score;
+            if (evaluation.Task != null)
+                Task = new TaskDTO(evaluation.Task);
+        }
         public int Id { get; set; }
         public double Score { get; set; }
         public TaskDTO Task { get; set; }

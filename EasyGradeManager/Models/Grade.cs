@@ -19,6 +19,12 @@
 
     public class GradeDTO
     {
+        public GradeDTO(Grade grade)
+        {
+            Id = grade.Id;
+            Name = grade.Name;
+            MinPercentage = grade.MinPercentage;
+        }
         public int Id { get; set; }
         public string Name { get; set; }
         public double MinPercentage { get; set; }

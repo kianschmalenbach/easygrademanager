@@ -40,6 +40,19 @@ namespace EasyGradeManager.Models
 
     public class AssignmentListDTO
     {
+        public AssignmentListDTO (Assignment assignment)
+        {
+            Id = assignment.Id;
+            Deadline = assignment.Deadline;
+            IsFinal = assignment.IsFinal;
+            Mandatory = assignment.Mandatory;
+            MaxGroupSize = assignment.MaxGroupSize;
+            MinGroupSize = assignment.MinGroupSize;
+            MinRequiredScore = assignment.MinRequiredScore;
+            Name = assignment.Name;
+            Number = assignment.Number;
+            Weight = assignment.Weight;
+        }
         public int Id { get; set; }
         public int Number { get; set; }
         public string Name { get; set; }
@@ -62,9 +75,11 @@ namespace EasyGradeManager.Models
 
     public abstract class AssignmentDetailDTO : AssignmentListDTO
     {
-        protected AssignmentDetailDTO()
+        protected AssignmentDetailDTO(Assignment assignment) : base(assignment)
         {
             Tasks = new HashSet<TaskDTO>();
+            foreach (Task task in assignment.Tasks)
+                Tasks.Add(new TaskDTO(task));
         }
         public ICollection<TaskDTO> Tasks { get; }
         public override bool Equals(object other)
@@ -79,7 +94,7 @@ namespace EasyGradeManager.Models
 
     public class AssignmentDetailTeacherDTO : AssignmentDetailDTO
     {
-        public AssignmentDetailTeacherDTO()
+        public AssignmentDetailTeacherDTO(Assignment assignment) : base(assignment)
         {
             Lessons = new HashSet<LessonListDTO>();
         }
@@ -96,7 +111,7 @@ namespace EasyGradeManager.Models
 
     public class AssignmentDetailStudentDTO : AssignmentDetailDTO
     {
-        public AssignmentDetailStudentDTO()
+        public AssignmentDetailStudentDTO(Assignment assignment) : base(assignment)
         {
             Evaluations = new HashSet<EvaluationDTO>();
         }

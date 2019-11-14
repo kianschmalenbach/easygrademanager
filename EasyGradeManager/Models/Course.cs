@@ -36,6 +36,13 @@ namespace EasyGradeManager.Models
 
     public class CourseListDTO
     {
+        public CourseListDTO(Course course)
+        {
+            Id = course.Id;
+            Name = course.Name;
+            Term = course.Term;
+            Archived = course.Archived;
+        }
         public int Id { get; set; }
         public string Name { get; set; }
         public string Term { get; set; }
@@ -52,9 +59,17 @@ namespace EasyGradeManager.Models
 
     public class CourseDetailDTO : CourseListDTO
     {
-        public CourseDetailDTO()
+        public CourseDetailDTO(Course course) : base(course)
         {
             Assignments = new HashSet<AssignmentListDTO>();
+            MinRequiredAssignments = course.MinRequiredAssignments;
+            MinRequiredScore = course.MinRequiredScore;
+            if(course.GradingScheme != null)
+                GradingScheme = new GradingSchemeDTO(course.GradingScheme);
+            if (course.Teacher != null)
+                Teacher = new UserListDTO(course.Teacher.User);
+            foreach (Assignment assignment in course.Assignments)
+                Assignments.Add(new AssignmentListDTO(assignment));
         }
         public int MinRequiredAssignments { get; set; }
         public int MinRequiredScore { get; set; }

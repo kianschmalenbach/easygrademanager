@@ -32,6 +32,13 @@ namespace EasyGradeManager.Models
 
     public class TaskDTO
     {
+        public TaskDTO(Task task)
+        {
+            Id = task.Id;
+            Number = task.Number;
+            Name = task.Name;
+            MaxScore = task.MaxScore;
+        }
         public int Id { get; set; }
         public int Number { get; set; }
         public string Name { get; set; }
