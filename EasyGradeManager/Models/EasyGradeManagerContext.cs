@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace EasyGradeManager.Models
@@ -23,6 +24,20 @@ namespace EasyGradeManager.Models
             //    .HasKey(evaluation => new { evaluation.GroupId, evaluation.TaskId });
             //modelBuilder.Entity<GroupMembership>()
             //    .HasKey(membership => new { membership.GroupId, membership.StudentId });
+        }
+
+        public string Update(object entity)
+        {
+            Entry(entity).State = EntityState.Modified;
+            try
+            {
+                SaveChanges();
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+            return null;
         }
 
         public DbSet<Course> Courses { get; set; }

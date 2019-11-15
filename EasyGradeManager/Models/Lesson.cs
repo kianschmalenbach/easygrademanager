@@ -39,11 +39,14 @@ namespace EasyGradeManager.Models
     {
         public LessonListDTO(Lesson lesson)
         {
-            Id = lesson.Id;
-            Number = lesson.Number;
-            Date = lesson.Date;
-            if(lesson.Tutor != null)
-                Tutor = new UserListDTO(lesson.Tutor.User);
+            if(lesson != null)
+            {
+                Id = lesson.Id;
+                Number = lesson.Number;
+                Date = lesson.Date;
+                if (lesson.Tutor != null)
+                    Tutor = new UserListDTO(lesson.Tutor.User);
+            }
         }
         public int Id { get; set; }
         public int Number { get; set; }
@@ -63,15 +66,18 @@ namespace EasyGradeManager.Models
     {
         public LessonDetailDTO(Lesson lesson) : base(lesson)
         {
-            if (lesson.Assignment != null)
-                Assignment = new AssignmentListDTO(lesson.Assignment);
-            if (lesson.Assignment.Course != null)
-                Course = new CourseListDTO(lesson.Assignment.Course);
-            Groups = new HashSet<GroupDetailTeacherDTO>();
-            foreach (Group group in lesson.Groups)
-                Groups.Add(new GroupDetailTeacherDTO(group));
-            if (lesson.DerivedFrom != null)
-                DerivedFrom = new LessonListDTO(lesson.DerivedFrom);
+            if (lesson != null)
+            {
+                if (lesson.Assignment != null)
+                    Assignment = new AssignmentListDTO(lesson.Assignment);
+                if (lesson.Assignment.Course != null)
+                    Course = new CourseListDTO(lesson.Assignment.Course);
+                Groups = new HashSet<GroupDetailTeacherDTO>();
+                foreach (Group group in lesson.Groups)
+                    Groups.Add(new GroupDetailTeacherDTO(group));
+                if (lesson.DerivedFrom != null)
+                    DerivedFrom = new LessonListDTO(lesson.DerivedFrom);
+            }
         }
         public CourseListDTO Course { get; set; }
         public AssignmentListDTO Assignment { get; set; }

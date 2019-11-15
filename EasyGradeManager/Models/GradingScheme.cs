@@ -29,11 +29,14 @@ namespace EasyGradeManager.Models
     {
         public GradingSchemeDTO(GradingScheme gradingScheme)
         {
-            Grades = new HashSet<GradeDTO>();
-            Id = gradingScheme.Id;
-            Name = gradingScheme.Name;
-            foreach (Grade grade in gradingScheme.Grades)
-                Grades.Add(new GradeDTO(grade));
+            if (gradingScheme != null)
+            {
+                Grades = new HashSet<GradeDTO>();
+                Id = gradingScheme.Id;
+                Name = gradingScheme.Name;
+                foreach (Grade grade in gradingScheme.Grades)
+                    Grades.Add(new GradeDTO(grade));
+            }
         }
         public int Id { get; set; }
         public string Name { get; set; }

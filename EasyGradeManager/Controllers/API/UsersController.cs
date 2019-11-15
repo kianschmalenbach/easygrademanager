@@ -43,14 +43,16 @@ namespace EasyGradeManager.Controllers.API
             if (userDTO == null || user == null || !ModelState.IsValid || id != userDTO.Id)
                 return BadRequest(ModelState);
             bool logoutNecessary = userDTO.Update(user);
-            db.Entry(user).State = EntityState.Modified;
-            db.SaveChanges();
+            string error = db.Update(user);
+            if (error != null)
+                return BadRequest(error);
             if (userDTO.NewRole != null)
             {
                 user = db.Users.Find(id);
                 userDTO.UpdateRole(user, db);
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
+                error = db.Update(user);
+                if (error != null)
+                    return BadRequest(error);
             }
             if (logoutNecessary)
                 return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Logout");
@@ -99,11 +101,6 @@ namespace EasyGradeManager.Controllers.API
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private bool UserExists(int id)
-        {
-            return db.Users.Count(e => e.Id == id) > 0;
         }
     }
 }

@@ -42,16 +42,19 @@ namespace EasyGradeManager.Models
     {
         public AssignmentListDTO (Assignment assignment)
         {
-            Id = assignment.Id;
-            Deadline = assignment.Deadline;
-            IsFinal = assignment.IsFinal;
-            Mandatory = assignment.Mandatory;
-            MaxGroupSize = assignment.MaxGroupSize;
-            MinGroupSize = assignment.MinGroupSize;
-            MinRequiredScore = assignment.MinRequiredScore;
-            Name = assignment.Name;
-            Number = assignment.Number;
-            Weight = assignment.Weight;
+            if(assignment != null)
+            {
+                Id = assignment.Id;
+                Deadline = assignment.Deadline;
+                IsFinal = assignment.IsFinal;
+                Mandatory = assignment.Mandatory;
+                MaxGroupSize = assignment.MaxGroupSize;
+                MinGroupSize = assignment.MinGroupSize;
+                MinRequiredScore = assignment.MinRequiredScore;
+                Name = assignment.Name;
+                Number = assignment.Number;
+                Weight = assignment.Weight;
+            }
         }
         public int Id { get; set; }
         public int Number { get; set; }
@@ -77,8 +80,11 @@ namespace EasyGradeManager.Models
     {
         protected AssignmentDetailDTO(Assignment assignment) : base(assignment)
         {
-            if (assignment.Course != null)
-                Course = new CourseListDTO(assignment.Course);
+            if(assignment != null)
+            {
+                if (assignment.Course != null)
+                    Course = new CourseListDTO(assignment.Course);
+            }
         }
         public CourseListDTO Course { get; set; }
         public override bool Equals(object other)
@@ -95,12 +101,15 @@ namespace EasyGradeManager.Models
     {
         public AssignmentDetailTeacherDTO(Assignment assignment) : base(assignment)
         {
-            Lessons = new HashSet<LessonListDTO>();
-            Tasks = new HashSet<TaskListDTO>();
-            foreach (Lesson lesson in assignment.Lessons)
-                Lessons.Add(new LessonListDTO(lesson));
-            foreach (Task task in assignment.Tasks)
-                Tasks.Add(new TaskListDTO(task));
+            if(assignment != null)
+            {
+                Lessons = new HashSet<LessonListDTO>();
+                Tasks = new HashSet<TaskListDTO>();
+                foreach (Lesson lesson in assignment.Lessons)
+                    Lessons.Add(new LessonListDTO(lesson));
+                foreach (Task task in assignment.Tasks)
+                    Tasks.Add(new TaskListDTO(task));
+            }
         }
         public ICollection<LessonListDTO> Lessons { get; }
         public ICollection<TaskListDTO> Tasks { get; }
@@ -118,23 +127,27 @@ namespace EasyGradeManager.Models
     {
         public AssignmentDetailStudentDTO(Assignment assignment, Student student) : base(assignment)
         {
-            Tasks = new HashSet<TaskListDTO>();
-            foreach(GroupMembership membership in student.GroupMemberships)
+            if (assignment != null && student != null)
             {
-                if(assignment.Equals(membership.Group.Lesson.Assignment))
+                Tasks = new HashSet<TaskListDTO>();
+                foreach (GroupMembership membership in student.GroupMemberships)
                 {
-                    Lesson = new LessonListDTO(membership.Group.Lesson);
-                    Group = new GroupDetailStudentDTO(membership.Group);
-                    if (membership.Group.IsFinal) {
-                        foreach (Task task in assignment.Tasks)
-                            Tasks.Add(new TaskListDTO(task));
-                    }
-                    else
+                    if (assignment.Equals(membership.Group.Lesson.Assignment))
                     {
-                        foreach(Evaluation evaluation in membership.Group.Evaluations)
-                            Tasks.Add(new TaskDetailDTO(evaluation.Task, evaluation));
+                        Lesson = new LessonListDTO(membership.Group.Lesson);
+                        Group = new GroupDetailStudentDTO(membership.Group);
+                        if (membership.Group.IsFinal)
+                        {
+                            foreach (Task task in assignment.Tasks)
+                                Tasks.Add(new TaskListDTO(task));
+                        }
+                        else
+                        {
+                            foreach (Evaluation evaluation in membership.Group.Evaluations)
+                                Tasks.Add(new TaskDetailDTO(evaluation.Task, evaluation));
+                        }
+                        break;
                     }
-                    break;
                 }
             }
         }

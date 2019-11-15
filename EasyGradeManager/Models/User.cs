@@ -62,9 +62,12 @@ namespace EasyGradeManager.Models
     {
         public UserListDTO(User user)
         {
-            Id = user.Id;
-            Identifier = user.Identifier;
-            Name = user.Name;
+            if (user != null)
+            {
+                Id = user.Id;
+                Identifier = user.Identifier;
+                Name = user.Name;
+            }
         }
         public int Id { get; set; }
         public string Identifier { get; set; }
@@ -83,13 +86,16 @@ namespace EasyGradeManager.Models
     {
         public UserDetailDTO(User user) : base(user)
         {
-            Email = user.Email;
-            if (user.GetTeacher() != null)
-                Teacher = new TeacherDTO(user.GetTeacher());
-            if (user.GetTutor() != null)
-                Tutor = new TutorDTO(user.GetTutor());
-            if (user.GetStudent() != null)
-                Student = new StudentDTO(user.GetStudent());
+            if (user != null)
+            {
+                Email = user.Email;
+                if (user.GetTeacher() != null)
+                    Teacher = new TeacherDTO(user.GetTeacher());
+                if (user.GetTutor() != null)
+                    Tutor = new TutorDTO(user.GetTutor());
+                if (user.GetStudent() != null)
+                    Student = new StudentDTO(user.GetStudent());
+            }
         }
         public string Email { get; set; }
         public string NewPassword { get; set; }

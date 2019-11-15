@@ -34,10 +34,13 @@ namespace EasyGradeManager.Models
     {
         public TaskListDTO(Task task)
         {
-            Id = task.Id;
-            Number = task.Number;
-            Name = task.Name;
-            MaxScore = task.MaxScore;
+            if (task != null)
+            {
+                Id = task.Id;
+                Number = task.Number;
+                Name = task.Name;
+                MaxScore = task.MaxScore;
+            }
         }
         public int Id { get; set; }
         public int Number { get; set; }
@@ -57,7 +60,10 @@ namespace EasyGradeManager.Models
     {
         public TaskDetailDTO(Task task, Evaluation evaluation) : base(task)
         {
-            Score = evaluation.Score;
+            if (task != null)
+            {
+                Score = evaluation.Score;
+            }
         }
         public double Score { get; set; }
     }

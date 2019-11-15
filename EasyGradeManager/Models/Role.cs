@@ -82,8 +82,11 @@ namespace EasyGradeManager.Models
     {
         public RoleDTO(Role role)
         {
-            Courses = new HashSet<CourseListDTO>();
-            Id = role.Id;
+            if (role != null)
+            {
+                Courses = new HashSet<CourseListDTO>();
+                Id = role.Id;
+            }
         }
         public int Id { get; set; }
         public ICollection<CourseListDTO> Courses { get; }
@@ -101,8 +104,11 @@ namespace EasyGradeManager.Models
     {
         public TeacherDTO(Teacher teacher) : base(teacher)
         {
-            foreach (Course course in teacher.Courses)
-                Courses.Add(new CourseListDTO(course));
+            if (teacher != null)
+            {
+                foreach (Course course in teacher.Courses)
+                    Courses.Add(new CourseListDTO(course));
+            }
         }
         public override bool Equals(object other)
         {
@@ -118,11 +124,14 @@ namespace EasyGradeManager.Models
     {
         public TutorDTO(Tutor tutor) : base(tutor)
         {
-            Lessons = new HashSet<LessonListDTO>();
-            foreach (Lesson lesson in tutor.Lessons)
+            if (tutor != null)
             {
-                Lessons.Add(new LessonListDTO(lesson));
-                Courses.Add(new CourseListDTO(lesson.Assignment.Course));
+                Lessons = new HashSet<LessonListDTO>();
+                foreach (Lesson lesson in tutor.Lessons)
+                {
+                    Lessons.Add(new LessonListDTO(lesson));
+                    Courses.Add(new CourseListDTO(lesson.Assignment.Course));
+                }
             }
         }
         public ICollection<LessonListDTO> Lessons { get; }
@@ -140,11 +149,14 @@ namespace EasyGradeManager.Models
     {
         public StudentDTO(Student student) : base(student)
         {
-            Groups = new HashSet<GroupListDTO>();
-            foreach (GroupMembership membership in student.GroupMemberships)
+            if (student != null)
             {
-                Groups.Add(new GroupListDTO(membership.Group));
-                Courses.Add(new CourseListDTO(membership.Group.Lesson.Assignment.Course));
+                Groups = new HashSet<GroupListDTO>();
+                foreach (GroupMembership membership in student.GroupMemberships)
+                {
+                    Groups.Add(new GroupListDTO(membership.Group));
+                    Courses.Add(new CourseListDTO(membership.Group.Lesson.Assignment.Course));
+                }
             }
         }
         public ICollection<GroupListDTO> Groups { get; }

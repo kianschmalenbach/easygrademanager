@@ -38,10 +38,13 @@ namespace EasyGradeManager.Models
     {
         public CourseListDTO(Course course)
         {
-            Id = course.Id;
-            Name = course.Name;
-            Term = course.Term;
-            Archived = course.Archived;
+            if (course != null)
+            {
+                Id = course.Id;
+                Name = course.Name;
+                Term = course.Term;
+                Archived = course.Archived;
+            }
         }
         public int Id { get; set; }
         public string Name { get; set; }
@@ -61,15 +64,18 @@ namespace EasyGradeManager.Models
     {
         public CourseDetailDTO(Course course) : base(course)
         {
-            Assignments = new HashSet<AssignmentListDTO>();
-            MinRequiredAssignments = course.MinRequiredAssignments;
-            MinRequiredScore = course.MinRequiredScore;
-            if(course.GradingScheme != null)
-                GradingScheme = new GradingSchemeDTO(course.GradingScheme);
-            if (course.Teacher != null)
-                Teacher = new UserListDTO(course.Teacher.User);
-            foreach (Assignment assignment in course.Assignments)
-                Assignments.Add(new AssignmentListDTO(assignment));
+            if (course != null)
+            {
+                Assignments = new HashSet<AssignmentListDTO>();
+                MinRequiredAssignments = course.MinRequiredAssignments;
+                MinRequiredScore = course.MinRequiredScore;
+                if (course.GradingScheme != null)
+                    GradingScheme = new GradingSchemeDTO(course.GradingScheme);
+                if (course.Teacher != null)
+                    Teacher = new UserListDTO(course.Teacher.User);
+                foreach (Assignment assignment in course.Assignments)
+                    Assignments.Add(new AssignmentListDTO(assignment));
+            }
         }
         public int MinRequiredAssignments { get; set; }
         public int MinRequiredScore { get; set; }

@@ -37,9 +37,12 @@ namespace EasyGradeManager.Models
     {
         public GroupListDTO(Group group)
         {
-            Id = group.Id;
-            Number = group.Number;
-            IsFinal = group.IsFinal;
+            if (group != null)
+            {
+                Id = group.Id;
+                Number = group.Number;
+                IsFinal = group.IsFinal;
+            }
         }
         public int Id { get; set; }
         public int Number { get; set; }
@@ -58,9 +61,12 @@ namespace EasyGradeManager.Models
     {
         public GroupDetailDTO(Group group) : base(group)
         {
-            Students = new HashSet<UserListDTO>();
-            foreach (GroupMembership membership in group.GroupMemberships)
-                Students.Add(new UserListDTO(membership.Student.User));
+            if (group != null)
+            {
+                Students = new HashSet<UserListDTO>();
+                foreach (GroupMembership membership in group.GroupMemberships)
+                    Students.Add(new UserListDTO(membership.Student.User));
+            }
         }
         public ICollection<UserListDTO> Students { get; }
         public override bool Equals(object other)
@@ -77,15 +83,18 @@ namespace EasyGradeManager.Models
     {
         public GroupDetailTeacherDTO(Group group) : base(group)
         {
-            Tasks = new HashSet<TaskDetailDTO>();
-            if (group.Lesson != null)
-                Lesson = new LessonListDTO(group.Lesson);
-            if (group.Lesson.Assignment != null)
-                Assignment = new AssignmentListDTO(group.Lesson.Assignment);
-            if (group.Lesson.Assignment.Course != null)
-                Course = new CourseListDTO(group.Lesson.Assignment.Course);
-            foreach (Evaluation evaluation in group.Evaluations)
-                Tasks.Add(new TaskDetailDTO(evaluation.Task, evaluation));
+            if (group != null)
+            {
+                Tasks = new HashSet<TaskDetailDTO>();
+                if (group.Lesson != null)
+                    Lesson = new LessonListDTO(group.Lesson);
+                if (group.Lesson.Assignment != null)
+                    Assignment = new AssignmentListDTO(group.Lesson.Assignment);
+                if (group.Lesson.Assignment.Course != null)
+                    Course = new CourseListDTO(group.Lesson.Assignment.Course);
+                foreach (Evaluation evaluation in group.Evaluations)
+                    Tasks.Add(new TaskDetailDTO(evaluation.Task, evaluation));
+            }
         }
         public CourseListDTO Course { get; set; }
         public AssignmentListDTO Assignment { get; set; }
@@ -105,7 +114,10 @@ namespace EasyGradeManager.Models
     {
         public GroupDetailStudentDTO(Group group) : base(group)
         {
-            Password = group.Password;
+            if (group != null)
+            {
+                Password = group.Password;
+            }
         }
         public string Password { get; }
         public override bool Equals(object other)
