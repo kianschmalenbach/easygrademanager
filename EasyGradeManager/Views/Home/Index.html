@@ -2,48 +2,72 @@
 <html lang="en">
 <head>
     <title>EasyGradeManager</title>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <script type="text/javascript" src="/Scripts/application.js" defer></script>
     <script type="text/javascript" src="/Scripts/network.js" defer></script>
     <script type="text/javascript" src="/Scripts/Pages/home.js" defer></script>
+    <script type="text/javascript" src="/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/Content/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body onload="init()">
-<header id="header">
-    Logged in as <span data="AuthorizedUser.Name"></span>
-    (<span data="AuthorizedUser.Identifier"></span>) -
-    <span link="AuthorizedUser"><button>Homepage</button></span>
-    <a href="/Logout">
-        <button>Logout</button>
-    </a>
-</header>
-<h1>Welcome to EasyGradeManager!</h1>
-<p class="buttonCenter">Authentication is required to continue.</p>
-<div class="box">
-    <h2>User Login</h2>
-    <p class="note">Please log in below:</p>
-    <div class="buttonCenter">
-        <form onsubmit="return login()">
-            <input id="identifier" type="text" placeholder="Identifier" autofocus required>
-            <input id="password" type="password" placeholder="Password" required>
-            <input type="submit" value="Login">
-        </form>
+    <!--<header id="header">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a link="AuthorizedUser" class="navbar-brand">Homepage</a>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span data="AuthorizedUser.Name"></span>
+                                (<span data="AuthorizedUser.Identifier"></span>)
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/Logout">Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>-->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-lg-12 mt-2 mb-5">
+                <h1 class="font-weight-bold">EasyGradeManager</h1>
+                <p class="text-center">Authentication is required to continue</p>
+            </div>
+            <div class="col-md-12 col-lg-6">
+                <h4>User Login</h4>
+                <p class="font-italic">Please log in below:</p>
+                <form class="form-row" onsubmit="return login()">
+                    <label class="control-label" for="identifier">Identifier</label>
+                    <input class="form-control" id="identifier" type="text" autofocus required>
+                    <label class="control-label" for="password">Password</label>
+                    <input class="form-control" id="password" type="password" required>
+                    <input class="btn btn-default mx-auto" type="submit" value="Login">
+                </form>
+                <p class="font-italic" id="Login.status"></p>
+            </div>
+            <div class="col-md-12 col-lg-6">
+                <h4>User Registration</h4>
+                <p class="font-italic">Alternatively, you can create a new user account:</p>
+                <form class="form-row" onsubmit="return postData('NewUser')">
+                    <label class="control-label" for="Identifier">Identifier</label>
+                    <input class="form-control" data="NewUser.Identifier" type="text" autofocus required>
+                    <label class="control-label" for="Name">Name</label>
+                    <input class="form-control" data="NewUser.Name" type="text" autofocus required>
+                    <label class="control-label" for="Password">Password</label>
+                    <input class="form-control" data="NewUser.Password" type="password" required>
+                    <label class="control-label" for="PasswordConfirm">Confirm password</label>
+                    <input class="form-control" data="NewUser.PasswordConfirm" type="password" required>
+                    <input class="btn btn-default mx-auto" type="submit" value="Register">
+                </form>
+                <p class="font-italic" id="NewUser.status"></p>
+            </div>
+        </div>
     </div>
-    <p class="note" id="Login.status"></p>
-</div>
-<div class="box">
-    <h2>User Registration</h2>
-    <p class="note">Alternatively, you can create a new user account:</p>
-    <div class="buttonCenter">
-        <form onsubmit="return postData('NewUser')">
-            <input data="NewUser.Identifier" type="text" placeholder="Identifier" autofocus required>
-            <input data="NewUser.Name" type="text" placeholder="Your Name" autofocus required>
-            <input data="NewUser.Password" type="password" placeholder="Password" required>
-            <input data="NewUser.PasswordConfirm" type="password" placeholder="Confirm Password" required>
-            <input type="submit" value="Register">
-        </form>
-    </div>
-    <p class="note" id="NewUser.status"></p>
-</div>
 </body>
 </html>
