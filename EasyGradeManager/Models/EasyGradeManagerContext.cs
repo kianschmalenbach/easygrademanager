@@ -12,7 +12,7 @@ namespace EasyGradeManager.Models
         // automatically whenever you change your model schema, please use data migrations.
         // For more information refer to the documentation:
         // http://msdn.microsoft.com/en-us/data/jj591621.aspx
-    
+
         public EasyGradeManagerContext() : base("name=EasyGradeManagerContext")
         {
         }
@@ -26,15 +26,17 @@ namespace EasyGradeManager.Models
             //    .HasKey(membership => new { membership.GroupId, membership.StudentId });
         }
 
-        public string Update(object entity)
+        public string Update(object entity, EntityState state)
         {
-            Entry(entity).State = EntityState.Modified;
+            Entry(entity).State = state;
             try
             {
                 SaveChanges();
             }
             catch (Exception e)
             {
+                while (e.InnerException != null)
+                    e = e.InnerException;
                 return e.Message;
             }
             return null;
@@ -54,7 +56,7 @@ namespace EasyGradeManager.Models
 
         public DbSet<Lesson> Lessons { get; set; }
 
-        public DbSet<Role> Persons{ get; set; }
+        public DbSet<Role> Persons { get; set; }
 
         public DbSet<Task> Tasks { get; set; }
 

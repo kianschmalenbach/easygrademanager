@@ -10,7 +10,7 @@ namespace EasyGradeManager.Controllers.API
 {
     public class AuthController : ApiController
     {
-        
+
         public HttpResponseMessage Post([FromBody]string value)
         {
             User user = GetAuthorizedUser(value);

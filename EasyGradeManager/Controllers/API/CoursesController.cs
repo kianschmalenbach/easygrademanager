@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using EasyGradeManager.Models;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using EasyGradeManager.Models;
 using static EasyGradeManager.Static.Authorize;
 
 namespace EasyGradeManager.Controllers.API

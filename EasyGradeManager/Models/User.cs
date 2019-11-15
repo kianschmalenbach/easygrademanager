@@ -31,7 +31,7 @@ namespace EasyGradeManager.Models
         }
         public Teacher GetTeacher()
         {
-            foreach(Role role in Roles)
+            foreach (Role role in Roles)
             {
                 if (role.Name == "Teacher")
                     return (Teacher)role;
@@ -55,6 +55,28 @@ namespace EasyGradeManager.Models
                     return (Student)role;
             }
             return null;
+        }
+        public bool DeleteRoles(EasyGradeManagerContext db)
+        {
+            if (GetTeacher() != null)
+            {
+                if (GetTeacher().Courses.Count != 0)
+                    return false;
+                db.Teachers.Remove(GetTeacher());
+            }
+            if (GetTutor() != null)
+            {
+                if (GetTutor().Lessons.Count != 0)
+                    return false;
+                db.Tutors.Remove(GetTutor());
+            }
+            if (GetStudent() != null)
+            {
+                if (GetStudent().GroupMemberships.Count != 0)
+                    return false;
+                db.Students.Remove(GetStudent());
+            }
+            return true;
         }
     }
 
@@ -111,12 +133,11 @@ namespace EasyGradeManager.Models
         {
             return Id;
         }
-
-        internal bool Update(User user)
+        public bool Update(User user)
         {
             bool logoutNecessary = false;
             user.Email = Email;
-            if (NewPassword != null) 
+            if (NewPassword != null)
             {
                 logoutNecessary = true;
                 user.Password = SecurePasswordHasher.Hash(NewPassword);
@@ -129,9 +150,25 @@ namespace EasyGradeManager.Models
             user.Name = Name;
             return logoutNecessary;
         }
-        internal void UpdateRole(User user, EasyGradeManagerContext db)
+        public User Create()
         {
-            
+            User user = new User();
+            Update(user);
+            return user;
+        }
+        public bool Validate(bool create)
+        {
+            bool updateProof =
+                Email != null && Identifier != null && Name != null && !Identifier.Contains("&") &&
+                (NewPassword == null || !NewPassword.Contains("&")) &&
+                (NewRole == null || NewRole.Equals("Teacher") || NewRole.Equals("Tutor") || NewRole.Equals("Student"));
+            bool createProof =
+                updateProof && NewPassword != null && NewRole != null;
+            return create ? createProof : updateProof;
+        }
+        public void UpdateRole(User user, EasyGradeManagerContext db)
+        {
+
             bool[] roles = { false, false, false };
             foreach (Role role in user.Roles)
             {

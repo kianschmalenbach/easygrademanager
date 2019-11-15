@@ -39,7 +39,7 @@ namespace EasyGradeManager.Models
     {
         public LessonListDTO(Lesson lesson)
         {
-            if(lesson != null)
+            if (lesson != null)
             {
                 Id = lesson.Id;
                 Number = lesson.Number;

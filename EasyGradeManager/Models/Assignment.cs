@@ -40,9 +40,9 @@ namespace EasyGradeManager.Models
 
     public class AssignmentListDTO
     {
-        public AssignmentListDTO (Assignment assignment)
+        public AssignmentListDTO(Assignment assignment)
         {
-            if(assignment != null)
+            if (assignment != null)
             {
                 Id = assignment.Id;
                 Deadline = assignment.Deadline;
@@ -80,7 +80,7 @@ namespace EasyGradeManager.Models
     {
         protected AssignmentDetailDTO(Assignment assignment) : base(assignment)
         {
-            if(assignment != null)
+            if (assignment != null)
             {
                 if (assignment.Course != null)
                     Course = new CourseListDTO(assignment.Course);
@@ -101,7 +101,7 @@ namespace EasyGradeManager.Models
     {
         public AssignmentDetailTeacherDTO(Assignment assignment) : base(assignment)
         {
-            if(assignment != null)
+            if (assignment != null)
             {
                 Lessons = new HashSet<LessonListDTO>();
                 Tasks = new HashSet<TaskListDTO>();

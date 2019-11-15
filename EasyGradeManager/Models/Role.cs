@@ -21,7 +21,7 @@ namespace EasyGradeManager.Models
         }
     }
 
-    [Table ("Teachers")]
+    [Table("Teachers")]
     public class Teacher : Role
     {
         public Teacher()
