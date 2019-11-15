@@ -1,42 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Description;
 using EasyGradeManager.Models;
+using static EasyGradeManager.Static.Authorize;
 
 namespace EasyGradeManager.Controllers.API
 {
     public class GroupsController : ApiController
     {
-        private EasyGradeManagerContext db = new EasyGradeManagerContext();
+        private readonly EasyGradeManagerContext db = new EasyGradeManagerContext();
 
-        // GET: api/Groups
-        public IQueryable<Group> GetGroups()
+        public IHttpActionResult GetGroups()
         {
-            return db.Groups;
+            return BadRequest();
         }
 
-        // GET: api/Groups/5
-        [ResponseType(typeof(Group))]
         public IHttpActionResult GetGroup(int id)
         {
+            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            if (authorizedUser == null)
+                return Unauthorized();
             Group group = db.Groups.Find(id);
             if (group == null)
-            {
                 return NotFound();
-            }
-
-            return Ok(group);
+            if (group.Lesson == null || group.Lesson.Assignment == null || group.Lesson.Assignment.Course == null)
+                return InternalServerError();
+            Course course = group.Lesson.Assignment.Course;
+            string accessRole = GetAccessRole(authorizedUser, course);
+            if (accessRole == null || accessRole.Equals("Student"))
+                return Unauthorized();
+            return Ok(new GroupDetailTeacherDTO(group));
         }
 
-        // PUT: api/Groups/5
-        [ResponseType(typeof(void))]
+        //TODO implement
         public IHttpActionResult PutGroup(int id, Group group)
         {
             if (!ModelState.IsValid)
@@ -70,8 +69,7 @@ namespace EasyGradeManager.Controllers.API
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Groups
-        [ResponseType(typeof(Group))]
+        //TODO implement
         public IHttpActionResult PostGroup(Group group)
         {
             if (!ModelState.IsValid)
@@ -85,8 +83,7 @@ namespace EasyGradeManager.Controllers.API
             return CreatedAtRoute("DefaultApi", new { id = group.Id }, group);
         }
 
-        // DELETE: api/Groups/5
-        [ResponseType(typeof(Group))]
+        //TODO implement
         public IHttpActionResult DeleteGroup(int id)
         {
             Group group = db.Groups.Find(id);

@@ -25,26 +25,4 @@ namespace EasyGradeManager.Models
             return Id;
         }
     }
-
-    public class EvaluationDTO
-    {
-        public EvaluationDTO(Evaluation evaluation)
-        {
-            Id = evaluation.Id;
-            Score = evaluation.Score;
-            if (evaluation.Task != null)
-                Task = new TaskListDTO(evaluation.Task);
-        }
-        public int Id { get; set; }
-        public double Score { get; set; }
-        public TaskListDTO Task { get; set; }
-        public override bool Equals(object other)
-        {
-            return other != null && other is EvaluationDTO && Id == ((EvaluationDTO)other).Id;
-        }
-        public override int GetHashCode()
-        {
-            return Id;
-        }
-    }
 }

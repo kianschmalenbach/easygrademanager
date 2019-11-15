@@ -18,8 +18,8 @@
     </a>
 </header>
 <p class="buttonCenter">
-    Course: <span data="Assignment.Course.Name" link="Assignment.Course"></span>
-    (<span data="Assignment.Course.Term"></span>)
+    Course: <span data="Course.Name" link="Course"></span>
+    (<span data="Course.Term"></span>)
 </p>
 <h1>Group <span data="Number"></span> | <span data="Assignment.Name"></span></h1>
 <div class="box">
@@ -32,8 +32,8 @@
         <tr>
             <td>Members:</td>
             <td>
-                <span datalist="GroupMembership">
-                    <span data="GroupMembership.Student.User.Name"></span><br>
+                <span datalist="Student">
+                    <span data="Student.Name"></span><br>
                 </span>
             </td>
         </tr>
@@ -41,7 +41,7 @@
             <td>Lesson:</td>
             <td>
                 <span link="Lesson">Lesson <span data="Lesson.Number"></span></span>
-                (<span data="Lesson.Tutor.User.Name"></span>)
+                (<span data="Lesson.Tutor.Name"></span>)
             </td>
         </tr>
         <tr>
@@ -58,10 +58,10 @@
             <th>Score</th>
             <th>Max. Score</th>
         </tr>
-        <tr datalist="Evaluation" order="Evaluation.Task.Number ASC">
-            <td data="Evaluation.Task.Name"></td>
-            <td data="Evaluation.Score">5</td>
-            <td data="Evaluation.Task.MaxScore">8</td>
+        <tr datalist="Task" order="Task.Number ASC">
+            <td data="Task.Name"></td>
+            <td data="Task.Score">5</td>
+            <td data="Task.MaxScore">8</td>
         </tr>
     </table>
 </div>

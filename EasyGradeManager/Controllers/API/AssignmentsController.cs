@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
@@ -16,13 +15,7 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult GetAssignments()
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
-            if (authorizedUser == null)
-                return Unauthorized();
-            var result = new List<AssignmentListDTO>();
-            foreach (Assignment assignment in db.Assignments)
-                result.Add(new AssignmentListDTO(assignment));
-            return Ok(result);
+            return BadRequest();
         }
 
         public IHttpActionResult GetAssignment(int id)
