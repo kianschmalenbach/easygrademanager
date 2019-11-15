@@ -133,6 +133,16 @@ namespace EasyGradeManager.Models
         {
             return Id;
         }
+        public bool Validate(bool create)
+        {
+            bool updateProof =
+                Email != null && Identifier != null && Name != null && !Identifier.Contains("&") &&
+                (NewPassword == null || !NewPassword.Contains("&")) &&
+                (NewRole == null || NewRole.Equals("Teacher") || NewRole.Equals("Tutor") || NewRole.Equals("Student"));
+            bool createProof =
+                updateProof && NewPassword != null && NewRole != null;
+            return create ? createProof : updateProof;
+        }
         public bool Update(User user)
         {
             bool logoutNecessary = false;
@@ -155,16 +165,6 @@ namespace EasyGradeManager.Models
             User user = new User();
             Update(user);
             return user;
-        }
-        public bool Validate(bool create)
-        {
-            bool updateProof =
-                Email != null && Identifier != null && Name != null && !Identifier.Contains("&") &&
-                (NewPassword == null || !NewPassword.Contains("&")) &&
-                (NewRole == null || NewRole.Equals("Teacher") || NewRole.Equals("Tutor") || NewRole.Equals("Student"));
-            bool createProof =
-                updateProof && NewPassword != null && NewRole != null;
-            return create ? createProof : updateProof;
         }
         public void UpdateRole(User user, EasyGradeManagerContext db)
         {
