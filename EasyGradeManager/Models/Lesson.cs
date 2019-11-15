@@ -63,13 +63,19 @@ namespace EasyGradeManager.Models
     {
         public LessonDetailDTO(Lesson lesson) : base(lesson)
         {
-            Groups = new HashSet<GroupDetailDTO>();
+            if (lesson.Assignment != null)
+                Assignment = new AssignmentListDTO(lesson.Assignment);
+            if (lesson.Assignment.Course != null)
+                Course = new CourseListDTO(lesson.Assignment.Course);
+            Groups = new HashSet<GroupDetailTeacherDTO>();
             foreach (Group group in lesson.Groups)
-                Groups.Add(new GroupDetailDTO(group));
+                Groups.Add(new GroupDetailTeacherDTO(group));
             if (lesson.DerivedFrom != null)
                 DerivedFrom = new LessonListDTO(lesson.DerivedFrom);
         }
-        public ICollection<GroupDetailDTO> Groups { get; }
+        public CourseListDTO Course { get; set; }
+        public AssignmentListDTO Assignment { get; set; }
+        public ICollection<GroupDetailTeacherDTO> Groups { get; }
         public LessonListDTO DerivedFrom { get; set; }
         public override bool Equals(object other)
         {

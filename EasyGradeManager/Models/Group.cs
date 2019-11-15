@@ -58,16 +58,59 @@ namespace EasyGradeManager.Models
     {
         public GroupDetailDTO(Group group) : base(group)
         {
-            Password = group.Password;
             Students = new HashSet<UserListDTO>();
             foreach (GroupMembership membership in group.GroupMemberships)
                 Students.Add(new UserListDTO(membership.Student.User));
         }
-        public string Password { get; }
         public ICollection<UserListDTO> Students { get; }
         public override bool Equals(object other)
         {
             return other != null && other is GroupDetailDTO && Id == ((GroupDetailDTO)other).Id;
+        }
+        public override int GetHashCode()
+        {
+            return Id;
+        }
+    }
+
+    public class GroupDetailTeacherDTO : GroupDetailDTO
+    {
+        public GroupDetailTeacherDTO(Group group) : base(group)
+        {
+            Tasks = new HashSet<TaskDetailDTO>();
+            if (group.Lesson != null)
+                Lesson = new LessonListDTO(group.Lesson);
+            if (group.Lesson.Assignment != null)
+                Assignment = new AssignmentListDTO(group.Lesson.Assignment);
+            if (group.Lesson.Assignment.Course != null)
+                Course = new CourseListDTO(group.Lesson.Assignment.Course);
+            foreach (Evaluation evaluation in group.Evaluations)
+                Tasks.Add(new TaskDetailDTO(evaluation.Task, evaluation));
+        }
+        public CourseListDTO Course { get; set; }
+        public AssignmentListDTO Assignment { get; set; }
+        public LessonListDTO Lesson { get; set; }
+        public ICollection<TaskDetailDTO> Tasks { get; }
+        public override bool Equals(object other)
+        {
+            return other != null && other is GroupDetailTeacherDTO && Id == ((GroupDetailTeacherDTO)other).Id;
+        }
+        public override int GetHashCode()
+        {
+            return Id;
+        }
+    }
+
+    public class GroupDetailStudentDTO : GroupDetailDTO
+    {
+        public GroupDetailStudentDTO(Group group) : base(group)
+        {
+            Password = group.Password;
+        }
+        public string Password { get; }
+        public override bool Equals(object other)
+        {
+            return other != null && other is GroupDetailStudentDTO && Id == ((GroupDetailStudentDTO)other).Id;
         }
         public override int GetHashCode()
         {

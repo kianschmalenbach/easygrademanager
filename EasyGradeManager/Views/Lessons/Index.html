@@ -18,8 +18,8 @@
     </a>
 </header>
 <p class="buttonCenter">
-    Course: <span data="Assignment.Course.Name" link="Assignment.Course"></span>
-    (<span data="Assignment.Course.Term"></span>)
+    Course: <span data="Course.Name" link="Course"></span>
+    (<span data="Course.Term"></span>)
 </p>
 <h1>Lesson <span data="Number"></span></h1>
 <div class="box">
@@ -31,7 +31,7 @@
         </tr>
         <tr>
             <td>Tutor:</td>
-            <td data="Tutor.User.Name"></td>
+            <td data="Tutor.Name"></td>
         </tr>
         <tr>
             <td>Date:</td>
@@ -42,10 +42,10 @@
 <div class="box" id="GroupBox">
     <h2>Student Groups</h2>
     <div datalist="Group" order="Group.Number ASC" removeonempty="GroupBox">
-        <h3 link="Group">Group <span data="Group.Id"></span></h3>
+        <h3 link="Group">Group <span data="Group.Number"></span></h3>
         <ul>
-            <li datalist="Group.GroupMembership">
-                <span data="Group.GroupMembership.Student.User.Name"></span>
+            <li datalist="Group.Student">
+                <span data="Group.Student.Name"></span>
             </li>
         </ul>
     </div>

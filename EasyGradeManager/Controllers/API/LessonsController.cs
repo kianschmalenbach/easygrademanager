@@ -1,42 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Description;
 using EasyGradeManager.Models;
+using static EasyGradeManager.Static.Authorize;
 
 namespace EasyGradeManager.Controllers.API
 {
     public class LessonsController : ApiController
     {
-        private EasyGradeManagerContext db = new EasyGradeManagerContext();
+        private readonly EasyGradeManagerContext db = new EasyGradeManagerContext();
 
-        // GET: api/Lessons
-        public IQueryable<Lesson> GetLessons()
+        public IHttpActionResult GetLessons()
         {
-            return db.Lessons;
+            return BadRequest();
         }
 
-        // GET: api/Lessons/5
-        [ResponseType(typeof(Lesson))]
         public IHttpActionResult GetLesson(int id)
         {
+            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            if (authorizedUser == null)
+                return Unauthorized();
             Lesson lesson = db.Lessons.Find(id);
             if (lesson == null)
-            {
                 return NotFound();
-            }
-
-            return Ok(lesson);
+            if (lesson.Assignment == null || lesson.Assignment.Course == null)
+                return InternalServerError();
+            Course course = lesson.Assignment.Course;
+            string accessRole = GetAccessRole(authorizedUser, course);
+            if (accessRole == null || accessRole.Equals("Student"))
+                return Unauthorized();
+            return Ok(new LessonDetailDTO(lesson));
         }
 
-        // PUT: api/Lessons/5
-        [ResponseType(typeof(void))]
+        //TODO implement
         public IHttpActionResult PutLesson(int id, Lesson lesson)
         {
             if (!ModelState.IsValid)
@@ -70,8 +69,7 @@ namespace EasyGradeManager.Controllers.API
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Lessons
-        [ResponseType(typeof(Lesson))]
+        //TODO implement
         public IHttpActionResult PostLesson(Lesson lesson)
         {
             if (!ModelState.IsValid)
@@ -85,8 +83,7 @@ namespace EasyGradeManager.Controllers.API
             return CreatedAtRoute("DefaultApi", new { id = lesson.Id }, lesson);
         }
 
-        // DELETE: api/Lessons/5
-        [ResponseType(typeof(Lesson))]
+        //TODO implement
         public IHttpActionResult DeleteLesson(int id)
         {
             Lesson lesson = db.Lessons.Find(id);
