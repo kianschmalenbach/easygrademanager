@@ -103,8 +103,8 @@ body {
 }
 
 .navbar-brand > a:hover, .nav-link:hover {
-    color: #ececec;
-    text-decoration: none;
+    color: #ececec !important;
+    text-decoration: none !important;
 }
 
 h1{
