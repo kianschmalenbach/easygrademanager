@@ -56,28 +56,6 @@ namespace EasyGradeManager.Models
             }
             return null;
         }
-        public bool DeleteRoles(EasyGradeManagerContext db)
-        {
-            if (GetTeacher() != null)
-            {
-                if (GetTeacher().Courses.Count != 0)
-                    return false;
-                db.Teachers.Remove(GetTeacher());
-            }
-            if (GetTutor() != null)
-            {
-                if (GetTutor().Lessons.Count != 0)
-                    return false;
-                db.Tutors.Remove(GetTutor());
-            }
-            if (GetStudent() != null)
-            {
-                if (GetStudent().GroupMemberships.Count != 0)
-                    return false;
-                db.Students.Remove(GetStudent());
-            }
-            return true;
-        }
     }
 
     public class UserListDTO

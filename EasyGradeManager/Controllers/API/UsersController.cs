@@ -34,6 +34,7 @@ namespace EasyGradeManager.Controllers.API
             return Ok(user.Equals(authorizedUser) ? new UserDetailDTO(user) : new UserListDTO(user));
         }
 
+        //TODO: Prevent people from turning themselves into Tutors and Teachers
         public IHttpActionResult PutUser(int id, UserDetailDTO userDTO)
         {
             User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
@@ -43,23 +44,18 @@ namespace EasyGradeManager.Controllers.API
             if (userDTO == null || user == null || !ModelState.IsValid || id != userDTO.Id || !userDTO.Validate(false))
                 return BadRequest(ModelState);
             bool logoutNecessary = userDTO.Update(user);
+            if (userDTO.NewRole != null)
+                userDTO.UpdateRole(user, db);
             string error = db.Update(user, Modified);
             if (error != null)
                 return BadRequest(error);
-            if (userDTO.NewRole != null)
-            {
-                user = db.Users.Find(id);
-                userDTO.UpdateRole(user, db);
-                error = db.Update(user, Modified);
-                if (error != null)
-                    return BadRequest(error);
-            }
             if (logoutNecessary)
                 return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Logout");
             else
                 return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Users/" + authorizedUser.Id);
         }
 
+        //TODO: Enable creation of Student accounts for unauthorized users
         public IHttpActionResult PostUser(UserDetailDTO userDTO)
         {
             User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
@@ -68,20 +64,10 @@ namespace EasyGradeManager.Controllers.API
             if (!ModelState.IsValid || !userDTO.Validate(true))
                 return BadRequest();
             User user = userDTO.Create();
-            db.Users.Add(user);
+            userDTO.UpdateRole(user, db);
             string error = db.Update(user, Added);
             if (error != null)
-                return BadRequest(error);
-            userDTO.UpdateRole(user, db);
-            error = db.Update(user, Modified);
-            if (error != null)
-            {
-                db.Users.Remove(user);
-                string error2 = db.Update(user, Deleted);
-                if (error2 != null)
-                    return BadRequest(error + '\n' + error2);
-                return BadRequest(error);
-            }
+               return BadRequest(error);
             UserListDTO result = new UserListDTO(user);
             return CreatedAtRoute("DefaultApi", new { id = userDTO.Id }, result);
         }
@@ -94,13 +80,15 @@ namespace EasyGradeManager.Controllers.API
             User user = db.Users.Find(id);
             if (user == null)
                 return NotFound();
-            if (!user.DeleteRoles(db))
+            if ((user.GetTeacher() != null && user.GetTeacher().Courses.Count > 0) ||
+                (user.GetTutor() != null && user.GetTutor().Lessons.Count > 0) ||
+                (user.GetStudent() != null && user.GetStudent().GroupMemberships.Count > 0))
                 return BadRequest();
-            string error = db.Update(user, Modified);
-            if (error != null)
-                return BadRequest(error);
-            db.Users.Remove(user);
-            error = db.Update(user, Deleted);
+            ICollection<object> entities = new HashSet<object>();
+            foreach (Role role in user.Roles)
+                entities.Add(role);
+            entities.Add(user);
+            string error = db.UpdateAll(entities, Deleted);
             if (error != null)
                 return BadRequest(error);
             return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Logout");

@@ -61,7 +61,6 @@ namespace EasyGradeManager.Controllers.API
             if (!ModelState.IsValid || !courseDTO.Validate(null))
                 return BadRequest();
             Course course = courseDTO.Create(authorizedUser.GetTeacher().Id);
-            db.Courses.Add(course);
             string error = db.Update(course, Added);
             if (error != null)
                 return BadRequest(error);
@@ -78,7 +77,6 @@ namespace EasyGradeManager.Controllers.API
                 return NotFound();
             if (!"Teacher".Equals(GetAccessRole(authorizedUser, course)))
                 return Unauthorized();
-            db.Courses.Remove(course);
             string error = db.Update(course, Deleted);
             if (error != null)
                 return BadRequest(error);
