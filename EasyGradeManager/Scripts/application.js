@@ -1,8 +1,18 @@
-﻿function fillPageWithData(data, type = "") {
+﻿const pageType = window.location.href.split("/")[3]
+    .substring(0, window.location.href.split("/")[3].length-1);
+let pageData = null;
+const addButtons = [];
+const editButtons = [];
+const deleteButtons = [];
+
+function fillPageWithData(data, type = "") {
+    if(pageData === null && type === "")
+        pageData = data;
     removeRoleSpecificElements();
     generateLinks(data, type);
     if (type !== "")
         type += ".";
+    initializeButtons(type, data);
     const datalists = [];
     for (let key in data) {
         const element = data[key];
@@ -158,13 +168,41 @@ function handleArray(key, type, array, rootElement) {
     function modifyChildDataAttrs(root, oldValue, newValue) {
         const childElements = root.getElementsByTagName("*");
         for (let i = 0; i < childElements.length; ++i) {
-            ["data", "datalist", "link", "task"].forEach(attr => {
+            ["id", "data", "datalist", "link", "task"].forEach(attr => {
                 if (childElements[i].hasAttribute(attr)) {
                     const data = childElements[i].getAttribute(attr).replace(oldValue, newValue);
                     childElements[i].setAttribute(attr, data);
                 }
             });
         }
+    }
+}
+
+function initializeButtons(type, data) {
+    let entityType = type;
+    if(/[[0-9]+].$/.test(type))
+        entityType = entityType.split("[")[0] + ".";
+    const addType = entityType;
+    if(entityType !== "")
+        entityType = entityType.substring(0, entityType.length-1);
+    else
+        entityType = pageType;
+    let buttons = document.querySelectorAll("*[task=\"" + type + "Edit\"]");
+    for(let i=0; i<buttons.length; ++i) {
+        buttons[i].setAttribute("onclick",
+            "editElement('" + entityType + "', " + data.Id + ", this)");
+        editButtons.push(buttons[i]);
+    }
+    buttons = document.querySelectorAll("*[task=\"" + type + "Delete\"]");
+    for(let i=0; i<buttons.length; ++i) {
+        buttons[i].setAttribute("onclick",
+            "deleteElement('" + entityType + "', " + data.Id + ", this)");
+        deleteButtons.push(buttons[i]);
+    }
+    buttons = document.querySelectorAll("*[task=\"New" + addType + "Add\"]");
+    for(let i=0; i<buttons.length; ++i) {
+        buttons[i].setAttribute("onclick", "addElement('" + entityType + "', this)");
+        addButtons.push(buttons[i]);
     }
 }
 
@@ -188,4 +226,121 @@ function hideLoaders() {
     const loaders = document.querySelectorAll("div[class=\"loaderWrapper\"]");
     for(let i=0; i<loaders.length; ++i)
         loaders[i].remove();
+}
+
+function addElement(type) {
+    disableButtons();
+    let data = null;
+    switch(type) {
+        case "Assignment":
+            data = addAssignment();
+            break;
+        case "Course":
+            data = addCourse();
+            break;
+        case "GradingScheme":
+            data = addGradingScheme();
+            break;
+        case "Group":
+            data = addGroup();
+            break;
+        case "Lesson":
+            data = addLesson();
+            break;
+        case "Task":
+            data = addTask();
+            break;
+        case "User":
+            data = addUser();
+            break;
+    }
+    if(data !== null)
+        sendData("POST", type, data);
+    enableButtons();
+}
+
+function editElement(type, id, button) {
+    disableButtons();
+    switch(type) {
+        case "Assignment":
+            editAssignment(id);
+            break;
+        case "Course":
+            editCourse(id);
+            break;
+        case "GradingScheme":
+            editGradingScheme(id);
+            break;
+        case "Group":
+            editGroup(id);
+            break;
+        case "Lesson":
+            editLesson(id);
+            break;
+        case "Task":
+            editTask(id);
+            break;
+        case "User":
+            editUser(id);
+            break;
+    }
+    button.innerText = button.innerText.replace("Edit", "Save");
+    button.setAttribute("onclick", button.getAttribute("onclick")
+        .replace("edit", "save"));
+    button.removeAttribute("disabled");
+}
+
+function saveElement(type, id, button) {
+    disableButtons();
+    let data = null;
+    switch(type) {
+        case "Assignment":
+            data = saveAssignment(id);
+            break;
+        case "Course":
+            data = saveCourse(id);
+            break;
+        case "GradingScheme":
+            data = saveGradingScheme(id);
+            break;
+        case "Group":
+            data = saveGroup(id);
+            break;
+        case "Lesson":
+            data = saveLesson(id);
+            break;
+        case "Task":
+            data = saveTask(id);
+            break;
+        case "User":
+            data = saveUser(id);
+            break;
+    }
+    if(data !== null)
+        sendData("PUT", type, data, id);
+    button.innerText = button.innerText.replace("Save", "Edit");
+    button.setAttribute("onclick", button.getAttribute("onclick").replace("save", "edit"));
+    enableButtons();
+}
+
+function deleteElement(type, id) {
+    sendData("DELETE", type, {}, id);
+}
+
+function enableButtons() {
+    for(let i=0; i<editButtons.length; ++i)
+        editButtons[i].removeAttribute("disabled");
+    for(let i=0; i<deleteButtons.length; ++i)
+        deleteButtons[i].removeAttribute("disabled");
+    for(let i=0; i<addButtons.length; ++i)
+        addButtons[i].removeAttribute("disabled");
+}
+
+function disableButtons() {
+    for(let i=0; i<editButtons.length; ++i)
+        editButtons[i].setAttribute("disabled", "true");
+    for(let i=0; i<deleteButtons.length; ++i)
+        deleteButtons[i].setAttribute("disabled", "true");
+    for(let i=0; i<addButtons.length; ++i)
+        addButtons[i].setAttribute("disabled", "true");
 }

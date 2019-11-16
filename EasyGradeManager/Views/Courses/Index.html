@@ -6,7 +6,7 @@
     <script type="text/javascript" src="/Scripts/application.js" defer></script>
     <script type="text/javascript" src="/Scripts/network.js" defer></script>
     <script type="text/javascript" src="/Scripts/Pages/course.js" defer></script>
-    <link rel="stylesheet" type="text/css" href="/Content/style.css">
+    <link rel="stylesheet" type="text/css" href="/Content/style-old.css">
 </head>
 <body onload="init()">
 <header>
@@ -78,7 +78,7 @@
         </tr>
     </table>
     <div class="buttonCenter" roles="Teacher">
-        <input type="text" placeholder="Assignment Name">
+        <input type="text" data="NewAssignment.Name" placeholder="Assignment Name">
         <input type="checkbox"> Derive from
         <select>
             <option>Sheet 1</option>
@@ -86,7 +86,7 @@
         </select>
         <input type="checkbox"> copy groups
         and include <input type="text" size="1" placeholder="0"> days offset
-        <button>Add Assignment</button>
+        <button task="NewAssignment.Add">Add Assignment</button>
     </div>
 </div>
 <div class="box">
