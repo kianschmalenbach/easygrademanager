@@ -144,41 +144,31 @@ namespace EasyGradeManager.Models
             Update(user);
             return user;
         }
-        public void UpdateRole(User user, EasyGradeManagerContext db)
+        public void UpdateRole(User user)
         {
-
             bool[] roles = { false, false, false };
             foreach (Role role in user.Roles)
             {
-                if (role.Name == "Teacher")
+                if (role.Name.Equals("Teacher"))
                     roles[0] = true;
-                else if (role.Name == "Tutor")
+                else if (role.Name.Equals("Tutor"))
                     roles[1] = true;
-                else if (role.Name == "Student")
+                else if (role.Name.Equals("Student"))
                     roles[2] = true;
             }
             switch (NewRole)
             {
                 case "Teacher":
                     if (!roles[0])
-                        db.Teachers.Add(new Teacher()
-                        {
-                            UserId = user.Id
-                        });
+                        user.Roles.Add(new Teacher());
                     break;
                 case "Tutor":
                     if (!roles[1])
-                        db.Tutors.Add(new Tutor()
-                        {
-                            UserId = user.Id
-                        });
+                        user.Roles.Add(new Tutor());
                     break;
                 case "Student":
                     if (!roles[2])
-                        db.Students.Add(new Student()
-                        {
-                            UserId = user.Id
-                        });
+                        user.Roles.Add(new Student());
                     break;
             }
         }

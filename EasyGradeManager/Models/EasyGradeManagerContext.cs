@@ -29,7 +29,7 @@ namespace EasyGradeManager.Models
 
         public string Update(object entity, EntityState state)
         {
-            if(entity != null)
+            if (entity != null)
                 Entry(entity).State = state;
             try
             {

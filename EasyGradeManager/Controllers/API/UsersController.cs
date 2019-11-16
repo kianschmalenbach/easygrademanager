@@ -34,7 +34,6 @@ namespace EasyGradeManager.Controllers.API
             return Ok(user.Equals(authorizedUser) ? new UserDetailDTO(user) : new UserListDTO(user));
         }
 
-        //TODO: Prevent people from turning themselves into Tutors and Teachers
         public IHttpActionResult PutUser(int id, UserDetailDTO userDTO)
         {
             User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
@@ -45,7 +44,11 @@ namespace EasyGradeManager.Controllers.API
                 return BadRequest(ModelState);
             bool logoutNecessary = userDTO.Update(user);
             if (userDTO.NewRole != null)
-                userDTO.UpdateRole(user, db);
+            {
+                if (authorizedUser.GetTeacher() == null)
+                    return BadRequest();
+                userDTO.UpdateRole(user);
+            }
             string error = db.Update(user, Modified);
             if (error != null)
                 return BadRequest(error);
@@ -55,19 +58,18 @@ namespace EasyGradeManager.Controllers.API
                 return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Users/" + authorizedUser.Id);
         }
 
-        //TODO: Enable creation of Student accounts for unauthorized users
         public IHttpActionResult PostUser(UserDetailDTO userDTO)
         {
             User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
-            if (authorizedUser == null)
-                return Unauthorized();
             if (!ModelState.IsValid || !userDTO.Validate(true))
                 return BadRequest();
+            if (authorizedUser == null && !userDTO.NewRole.Equals("Student"))
+                return Unauthorized();
             User user = userDTO.Create();
-            userDTO.UpdateRole(user, db);
+            userDTO.UpdateRole(user);
             string error = db.Update(user, Added);
             if (error != null)
-               return BadRequest(error);
+                return BadRequest(error);
             UserListDTO result = new UserListDTO(user);
             return CreatedAtRoute("DefaultApi", new { id = userDTO.Id }, result);
         }

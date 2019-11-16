@@ -62,8 +62,8 @@ namespace EasyGradeManager.Models
                 percentages.Add(gradeDTO.MinPercentage);
                 names.Add(gradeDTO.Name);
             }
-            return 
-                Name != null && Name.Length <= 25 && GetCourse(teacher) != null && 
+            return
+                Name != null && Name.Length <= 25 && GetCourse(teacher) != null &&
                 percentages.Count == Grades.Count && names.Count == Grades.Count;
         }
         private void Update(GradingScheme scheme)

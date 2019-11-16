@@ -94,14 +94,15 @@ namespace EasyGradeManager.Models
         {
             int maxAssignments = 0;
             double maxScore = 0;
-            if (course != null) {
+            if (course != null)
+            {
                 maxAssignments = course.Assignments.Count;
                 foreach (Assignment assignment in course.Assignments)
                     foreach (Task task in assignment.Tasks)
                         maxScore += task.MaxScore;
             }
             return
-                Name != null && Term != null && 
+                Name != null && Term != null &&
                 MinRequiredAssignments >= 0 && MinRequiredAssignments <= maxAssignments &&
                 MinRequiredScore >= 0 && MinRequiredScore <= maxScore;
         }

@@ -9,7 +9,7 @@
         public virtual GradingScheme GradingScheme { get; set; }
         public override bool Equals(object other)
         {
-            return other != null && other is Grade && Id == ((Grade)other).Id && 
+            return other != null && other is Grade && Id == ((Grade)other).Id &&
                 (Id != 0 || MinPercentage == ((Grade)other).MinPercentage);
         }
         public override int GetHashCode()
