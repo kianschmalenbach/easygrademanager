@@ -40,7 +40,7 @@ namespace EasyGradeManager.Controllers.API
             if (authorizedUser == null || authorizedUser.Id != id)
                 return Unauthorized();
             User user = db.Users.Find(id);
-            if (userDTO == null || user == null || !ModelState.IsValid || id != userDTO.Id || !userDTO.Validate(false))
+            if (userDTO == null || user == null || !ModelState.IsValid || !userDTO.Validate(false))
                 return BadRequest(ModelState);
             bool logoutNecessary = userDTO.Update(user);
             if (userDTO.NewRole != null)

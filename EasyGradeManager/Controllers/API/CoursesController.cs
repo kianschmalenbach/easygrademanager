@@ -40,7 +40,7 @@ namespace EasyGradeManager.Controllers.API
             if (authorizedUser == null)
                 return Unauthorized();
             Course course = db.Courses.Find(id);
-            if (courseDTO == null || course == null || !ModelState.IsValid || id != courseDTO.Id)
+            if (courseDTO == null || course == null || !ModelState.IsValid)
                 return BadRequest(ModelState);
             if (!"Teacher".Equals(GetAccessRole(authorizedUser, course)))
                 return Unauthorized();
@@ -50,7 +50,7 @@ namespace EasyGradeManager.Controllers.API
             string error = db.Update(course, Modified);
             if (error != null)
                 return BadRequest(error);
-            return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Courses/" + authorizedUser.Id);
+            return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Courses/" + course.Id);
         }
 
         public IHttpActionResult PostCourse(CourseDetailDTO courseDTO)
@@ -67,6 +67,7 @@ namespace EasyGradeManager.Controllers.API
             return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Courses/" + course.Id);
         }
 
+        //TODO Delete Assignments, Lessons, and Tasks if there are no groups yet
         public IHttpActionResult DeleteCourse(int id)
         {
             User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());

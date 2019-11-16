@@ -1,11 +1,9 @@
 ﻿using EasyGradeManager.Models;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using static EasyGradeManager.Static.Authorize;
+using static System.Data.Entity.EntityState;
 
 namespace EasyGradeManager.Controllers.API
 {
@@ -38,67 +36,61 @@ namespace EasyGradeManager.Controllers.API
                 return Ok(new AssignmentDetailTeacherDTO(assignment));
         }
 
-        //TODO implement
-        public IHttpActionResult PutAssignment(int id, Assignment assignment)
+        public IHttpActionResult PutAssignment(int id, AssignmentDetailTeacherDTO assignmentDTO)
         {
-            if (!ModelState.IsValid)
-            {
+            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            if (authorizedUser == null || authorizedUser.GetTeacher() == null)
+                return Unauthorized();
+            Assignment assignment = db.Assignments.Find(id);
+            if (assignmentDTO == null || assignment == null || assignment.Course == null || !ModelState.IsValid)
                 return BadRequest(ModelState);
-            }
-
-            if (id != assignment.Id)
-            {
+            Course course = assignment.Course;
+            if (!"Teacher".Equals(GetAccessRole(authorizedUser, course)))
+                return Unauthorized();
+            if (!assignmentDTO.Validate(assignment))
                 return BadRequest();
-            }
-
-            db.Entry(assignment).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AssignmentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
+            assignmentDTO.Update(assignment);
+            string error = db.Update(assignment, Modified);
+            if (error != null)
+                return BadRequest(error);
+            return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Assignments/" + assignment.Id);
         }
 
-        //TODO implement
-        public IHttpActionResult PostAssignment(Assignment assignment)
+        public IHttpActionResult PostAssignment(AssignmentDetailTeacherDTO assignmentDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Assignments.Add(assignment);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = assignment.Id }, assignment);
+            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            if (authorizedUser == null || authorizedUser.GetTeacher() == null)
+                return Unauthorized();
+            Course course = db.Courses.Find(assignmentDTO.NewCourseId);
+            if (!ModelState.IsValid || course == null || !assignmentDTO.Validate(null))
+                return BadRequest();
+            if (!"Teacher".Equals(GetAccessRole(authorizedUser, course)))
+                return Unauthorized();
+            Assignment assignment = assignmentDTO.Create();
+            string error = db.Update(assignment, Added);
+            if (error != null)
+                return BadRequest(error);
+            return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Assignments/" + assignment.Id);
         }
 
-        //TODO implement
+        //TODO Delete Tasks if there are no groups yet
         public IHttpActionResult DeleteAssignment(int id)
         {
+            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            if (authorizedUser == null)
+                return Unauthorized();
             Assignment assignment = db.Assignments.Find(id);
             if (assignment == null)
-            {
                 return NotFound();
-            }
-
-            db.Assignments.Remove(assignment);
-            db.SaveChanges();
-
-            return Ok(assignment);
+            Course course = assignment.Course;
+            if (course == null)
+                return BadRequest();
+            if (!"Teacher".Equals(GetAccessRole(authorizedUser, course)))
+                return Unauthorized();
+            string error = db.Update(assignment, Deleted);
+            if (error != null)
+                return BadRequest(error);
+            return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Courses/" + course.Id);
         }
 
         protected override void Dispose(bool disposing)
@@ -108,11 +100,6 @@ namespace EasyGradeManager.Controllers.API
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private bool AssignmentExists(int id)
-        {
-            return db.Assignments.Count(e => e.Id == id) > 0;
         }
     }
 }
