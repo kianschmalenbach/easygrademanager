@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -16,7 +17,7 @@ namespace EasyGradeManager.Models
         public int Number { get; set; }
         [Required]
         public string Name { get; set; }
-        public string Deadline { get; set; }
+        public DateTime Deadline { get; set; }
         public double MinRequiredScore { get; set; }
         public bool Mandatory { get; set; }
         public double Weight { get; set; }
@@ -59,7 +60,7 @@ namespace EasyGradeManager.Models
         public int Id { get; set; }
         public int Number { get; set; }
         public string Name { get; set; }
-        public string Deadline { get; set; }
+        public DateTime Deadline { get; set; }
         public double MinRequiredScore { get; set; }
         public bool Mandatory { get; set; }
         public double Weight { get; set; }

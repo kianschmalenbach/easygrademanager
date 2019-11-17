@@ -5,10 +5,25 @@ const addButtons = [];
 const editButtons = [];
 const deleteButtons = [];
 
-function fillPageWithData(data, type = "") {
-    if(pageData === null && type === "")
-        pageData = data;
+function init() {
     removeRoleSpecificElements();
+    showModeSpecificElements("show");
+    if (typeof authorizedUser !== "undefined")
+        fillPageWithData(authorizedUser, "AuthorizedUser");
+    else
+        document.getElementById("header").remove();
+    if (typeof entityId !== "undefined") {
+        showLoaders();
+        fetchData("/api/" + pageType + "s/" + entityId)
+            .then(data => {
+                pageData = data;
+                fillPageWithData(data);
+                hideLoaders();
+            });
+    }
+}
+
+function fillPageWithData(data, type = "") {
     generateLinks(data, type);
     if (type !== "")
         type += ".";
@@ -31,6 +46,9 @@ function fillPageWithData(data, type = "") {
                 const elementList = document.querySelectorAll("*[data=\"" + type + key + "\"]");
                 for (let index = 0; index < elementList.length; ++index)
                     handleElement(key, type, element, elementList[index]);
+                const inputList = document.querySelectorAll("*[autoValue=\"" + type + key + "\"]");
+                for (let index = 0; index < inputList.length; ++index)
+                    inputList[index].setAttribute("value", element.toString());
         }
     }
     datalists.forEach(entry => {
@@ -88,7 +106,10 @@ function generateLinks(data, type) {
 
 function handleElement(key, type, element, htmlElement) {
     if (htmlElement !== null) {
-        htmlElement.innerText = element.toString();
+        if(htmlElement.tagName.toLowerCase() === "input")
+            htmlElement.setAttribute("value", element.toString());
+        else
+            htmlElement.innerText = element.toString();
     }
 }
 
@@ -111,7 +132,7 @@ function handleArray(key, type, array, rootElement) {
         if (!element.hasOwnProperty("Id"))
             continue;
         const newElement = rootElement.cloneNode(true);
-        newElement.setAttribute("data", type + key + "[" + element.Id + "]");
+        newElement.setAttribute("entity", type + key + "[" + element.Id + "]");
         newElement.removeAttribute("datalist");
         newElement.removeAttribute("order");
         newElement.removeAttribute("removeonempty");
@@ -180,17 +201,24 @@ function handleArray(key, type, array, rootElement) {
 
 function initializeButtons(type, data) {
     let entityType = type;
-    if(/[[0-9]+].$/.test(type))
+    let arrayType = false;
+    if(/[[0-9]+].$/.test(type)) {
         entityType = entityType.split("[")[0] + ".";
-    const addType = entityType;
+        arrayType = true;
+    }
     if(entityType !== "")
         entityType = entityType.substring(0, entityType.length-1);
     else
         entityType = pageType;
+    let addType = "";
+    const array = entityType.split(".");
+    for(let i=0; i<array.length-1; ++i)
+        addType += array[i] + ".";
+    addType += "New" + array[array.length-1] + ".";
     let buttons = document.querySelectorAll("*[task=\"" + type + "Edit\"]");
     for(let i=0; i<buttons.length; ++i) {
         buttons[i].setAttribute("onclick",
-            "editElement('" + entityType + "', " + data.Id + ", this)");
+            "editElement('" + entityType + "', " + data.Id + ", " + arrayType + ", this)");
         editButtons.push(buttons[i]);
     }
     buttons = document.querySelectorAll("*[task=\"" + type + "Delete\"]");
@@ -199,9 +227,9 @@ function initializeButtons(type, data) {
             "deleteElement('" + entityType + "', " + data.Id + ", this)");
         deleteButtons.push(buttons[i]);
     }
-    buttons = document.querySelectorAll("*[task=\"New" + addType + "Add\"]");
+    buttons = document.querySelectorAll("*[task=\"" + addType + "Add\"]");
     for(let i=0; i<buttons.length; ++i) {
-        buttons[i].setAttribute("onclick", "addElement('" + entityType + "', this)");
+        buttons[i].setAttribute("onclick", "addElement('" + array[array.length-1] + "')");
         addButtons.push(buttons[i]);
     }
 }
@@ -230,97 +258,127 @@ function hideLoaders() {
 
 function addElement(type) {
     disableButtons();
-    let data = null;
-    switch(type) {
-        case "Assignment":
-            data = addAssignment();
-            break;
-        case "Course":
-            data = addCourse();
-            break;
-        case "GradingScheme":
-            data = addGradingScheme();
-            break;
-        case "Group":
-            data = addGroup();
-            break;
-        case "Lesson":
-            data = addLesson();
-            break;
-        case "Task":
-            data = addTask();
-            break;
-        case "User":
-            data = addUser();
-            break;
-    }
+    const dataFields = findDataFields("New" + type);
+    createInputFields(dataFields);
+    const data = getInputData();
     if(data !== null)
         sendData("POST", type, data);
+    removeInputFields();
     enableButtons();
+    return false;
 }
 
-function editElement(type, id, button) {
+function editElement(type, id, isArray, button) {
     disableButtons();
-    switch(type) {
-        case "Assignment":
-            editAssignment(id);
-            break;
-        case "Course":
-            editCourse(id);
-            break;
-        case "GradingScheme":
-            editGradingScheme(id);
-            break;
-        case "Group":
-            editGroup(id);
-            break;
-        case "Lesson":
-            editLesson(id);
-            break;
-        case "Task":
-            editTask(id);
-            break;
-        case "User":
-            editUser(id);
-            break;
-    }
+    showModeSpecificElements("edit", type);
+    const dataFields = findDataFields(type, isArray, id);
+    console.log(dataFields);
+    createInputFields(dataFields);
     button.innerText = button.innerText.replace("Edit", "Save");
     button.setAttribute("onclick", button.getAttribute("onclick")
         .replace("edit", "save"));
     button.removeAttribute("disabled");
 }
 
-function saveElement(type, id, button) {
+function saveElement(type, id, isArray, button) {
     disableButtons();
-    let data = null;
-    switch(type) {
-        case "Assignment":
-            data = saveAssignment(id);
-            break;
-        case "Course":
-            data = saveCourse(id);
-            break;
-        case "GradingScheme":
-            data = saveGradingScheme(id);
-            break;
-        case "Group":
-            data = saveGroup(id);
-            break;
-        case "Lesson":
-            data = saveLesson(id);
-            break;
-        case "Task":
-            data = saveTask(id);
-            break;
-        case "User":
-            data = saveUser(id);
-            break;
-    }
+    const data = getInputData(type + isArray ? ("[" + id + "]") : "");
     if(data !== null)
         sendData("PUT", type, data, id);
+    removeInputFields();
     button.innerText = button.innerText.replace("Save", "Edit");
     button.setAttribute("onclick", button.getAttribute("onclick").replace("save", "edit"));
+    showModeSpecificElements("show");
     enableButtons();
+    return false;
+}
+
+function findDataFields(type, isArray=false, id=0) {
+    const allFields = document.querySelectorAll("*[data]");
+    const dataFields = {};
+    for (let i = 0; i < allFields.length; ++i) {
+        const fieldData = allFields[i].getAttribute("data");
+        if ((allFields[i].hasAttribute("edit") &&
+            allFields[i].getAttribute("edit") === "false") ||
+            allFields[i].tagName.toLowerCase() === "button")
+            continue;
+        let match = false;
+        if (type === pageType && fieldData.split(".").length === 1) {
+            dataFields[fieldData] = allFields[i];
+            match = true;
+        }
+        else {
+            const array = fieldData.split(".");
+            let matchString = "";
+            let matchType = type;
+            if (isArray)
+                matchType += "[" + id + "]";
+            for (let j = 0; j < array.length - 1; ++j)
+                matchString += array[j] + ".";
+            if (matchType + "." === matchString) {
+                dataFields[array[array.length - 1]] = allFields[i];
+                match = true;
+            }
+        }
+        if(match) {
+            allFields[i].setAttribute("flag", "editField");
+            allFields[i].setAttribute("previousValue", allFields[i].innerText);
+        }
+    }
+    return dataFields;
+}
+
+function createInputFields(dataFields) {
+    for (const field in dataFields) {
+        let inputElement = dataFields[field];
+        let inputType = "text";
+        if (dataFields[field].hasAttribute("type"))
+            inputType = dataFields[field].getAttribute("type");
+        if (inputElement.tagName.toLowerCase() !== "input") {
+            inputElement = document.createElement("input");
+            if (inputType === "checkbox" && dataFields[field].innerText === "true")
+                inputElement.setAttribute("checked", "checked");
+            else if (inputType === "date")
+                inputElement.setAttribute("value", "");
+            inputElement.setAttribute("value", dataFields[field].innerText);
+            dataFields[field].innerText = "";
+            dataFields[field].appendChild(inputElement);
+            inputElement.setAttribute("type", inputType);
+            ["min", "max", "step", "size", "maxlength", "required"].forEach(attr => {
+                if (dataFields[field].hasAttribute(attr))
+                    inputElement.setAttribute(attr, dataFields[field].getAttribute(attr));
+            });
+            inputElement.setAttribute("placeholder", field);
+        }
+        inputElement.setAttribute("data", field);
+    }
+}
+
+function getInputData() {
+    const data = {};
+    const fields = document.querySelectorAll("*[flag=\"editField\"]");
+    for(let i=0; i<fields.length; ++i) {
+        let inputField = fields[i];
+        if(inputField.tagName.toLowerCase() !== "input")
+            inputField = fields[i].getElementsByTagName("input")[0];
+        data[inputField.getAttribute("data")] = inputField.value;
+    }
+    console.log(data);
+    return data;
+}
+
+function removeInputFields() {
+    const fields = document.querySelectorAll("*[flag=\"editField\"]");
+    for(let i=0; i<fields.length; ++i) {
+        const value = fields[i].getAttribute("previousValue");
+        if(fields[i].getElementsByTagName("input").length > 0)
+            fields[i].getElementsByTagName("input")[0].remove();
+        else if(fields[i].tagName.toLowerCase() === "input")
+            fields[i].value = fields[i].getAttribute("previousValue");
+        fields[i].innerText = value;
+        fields[i].removeAttribute("flag");
+        fields[i].removeAttribute("previousValue");
+    }
 }
 
 function deleteElement(type, id) {
@@ -343,4 +401,24 @@ function disableButtons() {
         deleteButtons[i].setAttribute("disabled", "true");
     for(let i=0; i<addButtons.length; ++i)
         addButtons[i].setAttribute("disabled", "true");
+}
+
+function showModeSpecificElements(mode, scope=null) {
+    let elements = document.querySelectorAll("*[mode]");
+    if(scope !== null) {
+        const filteredElements = [];
+        for(let i=0; i<elements.length; ++i) {
+            if(!elements[i].hasAttribute("scope") ||
+                elements[i].getAttribute("scope") === scope)
+                filteredElements.push(elements[i]);
+        }
+        elements = filteredElements;
+    }
+    for(let i=0; i<elements.length; ++i) {
+        const modes = elements[i].getAttribute("mode").split(" ");
+        if(modes.includes(mode))
+            elements[i].removeAttribute("hidden");
+        else
+            elements[i].setAttribute("hidden", "hidden");
+    }
 }

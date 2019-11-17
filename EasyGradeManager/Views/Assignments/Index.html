@@ -74,12 +74,11 @@
         </tr>
     </table>
     <div class="buttonCenter" roles="Teacher">
-        <form data="NewLesson">
-            <input size="12" placeholder="Lesson Number" data="NewLesson.Number">
-            <input size="15" placeholder="Tutor" data="NewLesson.Tutor">
-            <input size="20" placeholder="Date" data="NewLesson.Date">
-            <button task="NewLesson.Add">Add Lesson</button>
-        </form>
+        <input type="text" size="12" placeholder="Lesson Number" data="NewLesson.Number">
+        <input type="number" min="1" placeholder="TutorId" data="NewLesson.NewTutorId">
+        <input type="date" placeholder="Date" data="NewLesson.Date">
+        <input type="hidden" data="NewLesson.NewAssignmentId" autoValue="Id">
+        <button task="NewLesson.Add">Add Lesson</button>
     </div>
 </div>
 <div class="box" roles="Student">
@@ -124,12 +123,10 @@
         </tr>
     </table>
     <div class="buttonCenter" roles="Teacher">
-        <form data="NewTask">
-            <input size="10" placeholder="Task Number" data="NewTask.Number">
-            <input size="20" placeholder="Task Name" data="NewTask.Name">
-            <input size="10" placeholder="Max. Score" data="NewTask.MaxScore">
-            <button task="NewTask.Add">Add Task</button>
-        </form>
+        <input size="10" placeholder="Task Number" data="NewTask.Number">
+        <input size="20" placeholder="Task Name" data="NewTask.Name">
+        <input size="10" placeholder="Max. Score" data="NewTask.MaxScore">
+        <button task="NewTask.Add">Add Task</button>
     </div>
 </div>
 </body>

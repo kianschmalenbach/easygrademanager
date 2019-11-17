@@ -52,14 +52,26 @@ function sendData(method, type, data, id=0) {
         }
     })
         .then(data => {
-            if(data.status !== 200)
-                handleError(data.statusText);
-            else
-                window.location.href = data.url;
+            switch(data.status) {
+                case 200:
+                    window.location.href = data.url;
+                    break;
+                case 201:
+                    alert("The account has been created successfully. Please log in now.");
+                    break;
+                default:
+                    handleError(data);
+            }
         });
     return false;
 }
 
 function handleError(error) {
-    alert("The last request was not performed because of the following error:\n\n" + error);
+    switch(error.status) {
+        case 401:
+            alert("The last request was not performed because you do not have the rights to perform this action.");
+            break;
+        default:
+            alert("The last request was not performed because of the following error:\n\n" + error.statusText);
+    }
 }

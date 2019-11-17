@@ -187,7 +187,7 @@ namespace EasyGradeManager.Static
             db.Assignments.Add(new Assignment()
             {
                 CourseId = 1,
-                Deadline = "2019/10/25",
+                Deadline = new DateTime(2019, 10, 25),
                 IsFinal = false,
                 Mandatory = false,
                 MinRequiredScore = 10,
@@ -201,7 +201,7 @@ namespace EasyGradeManager.Static
             db.Assignments.Add(new Assignment()
             {
                 CourseId = 1,
-                Deadline = "2019/11/01",
+                Deadline = new DateTime(2019, 11, 01),
                 IsFinal = false,
                 Mandatory = false,
                 MinRequiredScore = 10,
@@ -215,7 +215,7 @@ namespace EasyGradeManager.Static
             db.Assignments.Add(new Assignment()
             {
                 CourseId = 1,
-                Deadline = "2019/11/08",
+                Deadline = new DateTime(2019, 11, 08),
                 IsFinal = false,
                 Mandatory = false,
                 MinRequiredScore = 10,
@@ -229,7 +229,7 @@ namespace EasyGradeManager.Static
             db.Assignments.Add(new Assignment()
             {
                 CourseId = 1,
-                Deadline = "2019/11/22",
+                Deadline = new DateTime(2019, 11, 22),
                 IsFinal = false,
                 Mandatory = true,
                 MinRequiredScore = 40,
