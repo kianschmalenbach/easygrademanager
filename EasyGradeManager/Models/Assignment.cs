@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -16,7 +17,7 @@ namespace EasyGradeManager.Models
         public int Number { get; set; }
         [Required]
         public string Name { get; set; }
-        public string Deadline { get; set; }
+        public DateTime Deadline { get; set; }
         public double MinRequiredScore { get; set; }
         public bool Mandatory { get; set; }
         public double Weight { get; set; }
@@ -59,7 +60,7 @@ namespace EasyGradeManager.Models
         public int Id { get; set; }
         public int Number { get; set; }
         public string Name { get; set; }
-        public string Deadline { get; set; }
+        public DateTime Deadline { get; set; }
         public double MinRequiredScore { get; set; }
         public bool Mandatory { get; set; }
         public double Weight { get; set; }
@@ -113,6 +114,7 @@ namespace EasyGradeManager.Models
         }
         public ICollection<LessonListDTO> Lessons { get; }
         public ICollection<TaskListDTO> Tasks { get; }
+        public int NewCourseId { get; set; }
         public override bool Equals(object other)
         {
             return other != null && other is AssignmentDetailTeacherDTO && Id == ((AssignmentDetailTeacherDTO)other).Id;
@@ -120,6 +122,55 @@ namespace EasyGradeManager.Models
         public override int GetHashCode()
         {
             return Id;
+        }
+        public bool Validate(Assignment assignment)
+        {
+            bool finalOk = true;
+            double maxScore = 0;
+            HashSet<string> names = new HashSet<string>();
+            HashSet<int> numbers = new HashSet<int>();
+            if (assignment != null)
+            {
+                finalOk = IsFinal || !assignment.IsFinal;
+                if (assignment.Tasks != null)
+                {
+                    foreach (Task task in assignment.Tasks)
+                        maxScore += task.MaxScore;
+                }
+                if (assignment.Course != null && assignment.Course.Assignments != null)
+                {
+                    foreach (Assignment otherAssignment in assignment.Course.Assignments)
+                    {
+                        names.Add(otherAssignment.Name);
+                        numbers.Add(otherAssignment.Number);
+                    }
+                }
+                names.Remove(assignment.Name);
+                numbers.Remove(assignment.Number);
+            }
+            return
+                Name != null && Number > 0 && !names.Contains(Name) && !numbers.Contains(Number) &&
+                MinGroupSize > 0 && MaxGroupSize > 0 && MinGroupSize <= MaxGroupSize &&
+                MinRequiredScore >= 0 && MinRequiredScore <= maxScore && Weight >= 0 && finalOk;
+        }
+        public void Update(Assignment assignment)
+        {
+            assignment.Name = Name;
+            assignment.Number = Number;
+            assignment.Deadline = Deadline;
+            assignment.IsFinal = IsFinal;
+            assignment.Mandatory = Mandatory;
+            assignment.MinGroupSize = MinGroupSize;
+            assignment.MaxGroupSize = MaxGroupSize;
+            assignment.MinRequiredScore = MinRequiredScore;
+            assignment.Weight = Weight;
+        }
+        public Assignment Create()
+        {
+            Assignment assignment = new Assignment();
+            Update(assignment);
+            assignment.CourseId = NewCourseId;
+            return assignment;
         }
     }
 

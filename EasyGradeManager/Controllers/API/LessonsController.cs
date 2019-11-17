@@ -1,11 +1,9 @@
 ﻿using EasyGradeManager.Models;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using static EasyGradeManager.Static.Authorize;
+using static System.Data.Entity.EntityState;
 
 namespace EasyGradeManager.Controllers.API
 {
@@ -35,67 +33,62 @@ namespace EasyGradeManager.Controllers.API
             return Ok(new LessonDetailDTO(lesson));
         }
 
-        //TODO implement
-        public IHttpActionResult PutLesson(int id, Lesson lesson)
+        public IHttpActionResult PutLesson(int id, LessonDetailDTO lessonDTO)
         {
-            if (!ModelState.IsValid)
-            {
+            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            if (authorizedUser == null || authorizedUser.GetTeacher() == null)
+                return Unauthorized();
+            Lesson lesson = db.Lessons.Find(id);
+            if (lessonDTO == null || lesson == null || lesson.Assignment == null || lesson.Assignment.Course == null ||
+                !ModelState.IsValid)
                 return BadRequest(ModelState);
-            }
-
-            if (id != lesson.Id)
-            {
+            Course course = lesson.Assignment.Course;
+            if (!"Teacher".Equals(GetAccessRole(authorizedUser, course)))
+                return Unauthorized();
+            if (!lessonDTO.Validate(lesson, null, null, db.Tutors))
                 return BadRequest();
-            }
-
-            db.Entry(lesson).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LessonExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
+            lessonDTO.Update(lesson, null);
+            string error = db.Update(lesson, Modified);
+            if (error != null)
+                return BadRequest(error);
+            return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Lessons/" + lesson.Id);
         }
 
-        //TODO implement
-        public IHttpActionResult PostLesson(Lesson lesson)
+        public IHttpActionResult PostLesson(LessonDetailDTO lessonDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Lessons.Add(lesson);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = lesson.Id }, lesson);
+            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            if (authorizedUser == null || authorizedUser.GetTeacher() == null)
+                return Unauthorized();
+            Assignment assignment = db.Assignments.Find(lessonDTO.NewAssignmentId);
+            if (!ModelState.IsValid || assignment == null || assignment.Course == null ||
+                !lessonDTO.Validate(null, db.Lessons, assignment, db.Tutors))
+                return BadRequest();
+            if (!"Teacher".Equals(GetAccessRole(authorizedUser, assignment.Course)))
+                return Unauthorized();
+            Lesson lesson = lessonDTO.Create(db.Lessons);
+            string error = db.Update(lesson, Added);
+            if (error != null)
+                return BadRequest(error);
+            return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Lessons/" + lesson.Id);
         }
 
-        //TODO implement
         public IHttpActionResult DeleteLesson(int id)
         {
+            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            if (authorizedUser == null)
+                return Unauthorized();
             Lesson lesson = db.Lessons.Find(id);
             if (lesson == null)
-            {
                 return NotFound();
-            }
-
-            db.Lessons.Remove(lesson);
-            db.SaveChanges();
-
-            return Ok(lesson);
+            if (lesson.Assignment == null || lesson.Assignment.Course == null)
+                return BadRequest();
+            if (!"Teacher".Equals(GetAccessRole(authorizedUser, lesson.Assignment.Course)))
+                return Unauthorized();
+            int assignmentId = lesson.Assignment.Id;
+            string error = db.Update(lesson, Deleted);
+            if (error != null)
+                return BadRequest(error);
+            return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Assignments/" + assignmentId);
         }
 
         protected override void Dispose(bool disposing)
@@ -105,11 +98,6 @@ namespace EasyGradeManager.Controllers.API
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private bool LessonExists(int id)
-        {
-            return db.Lessons.Count(e => e.Id == id) > 0;
         }
     }
 }

@@ -42,11 +42,15 @@ namespace EasyGradeManager.Models
                 Id = group.Id;
                 Number = group.Number;
                 IsFinal = group.IsFinal;
+                Students = new HashSet<UserListDTO>();
+                foreach (GroupMembership membership in group.GroupMemberships)
+                    Students.Add(new UserListDTO(membership.Student.User));
             }
         }
         public int Id { get; set; }
         public int Number { get; set; }
         public bool IsFinal { get; set; }
+        public ICollection<UserListDTO> Students { get; }
         public override bool Equals(object other)
         {
             return other != null && other is GroupListDTO && Id == ((GroupListDTO)other).Id;
@@ -57,29 +61,7 @@ namespace EasyGradeManager.Models
         }
     }
 
-    public class GroupDetailDTO : GroupListDTO
-    {
-        public GroupDetailDTO(Group group) : base(group)
-        {
-            if (group != null)
-            {
-                Students = new HashSet<UserListDTO>();
-                foreach (GroupMembership membership in group.GroupMemberships)
-                    Students.Add(new UserListDTO(membership.Student.User));
-            }
-        }
-        public ICollection<UserListDTO> Students { get; }
-        public override bool Equals(object other)
-        {
-            return other != null && other is GroupDetailDTO && Id == ((GroupDetailDTO)other).Id;
-        }
-        public override int GetHashCode()
-        {
-            return Id;
-        }
-    }
-
-    public class GroupDetailTeacherDTO : GroupDetailDTO
+    public class GroupDetailTeacherDTO : GroupListDTO
     {
         public GroupDetailTeacherDTO(Group group) : base(group)
         {
@@ -110,7 +92,7 @@ namespace EasyGradeManager.Models
         }
     }
 
-    public class GroupDetailStudentDTO : GroupDetailDTO
+    public class GroupDetailStudentDTO : GroupListDTO
     {
         public GroupDetailStudentDTO(Group group) : base(group)
         {

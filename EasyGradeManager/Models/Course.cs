@@ -18,7 +18,7 @@ namespace EasyGradeManager.Models
         public bool Archived { get; set; }
         public int MinRequiredAssignments { get; set; }
         public int MinRequiredScore { get; set; }
-        public int GradingSchemeId { get; set; }
+        public int? GradingSchemeId { get; set; }
         public virtual GradingScheme GradingScheme { get; set; }
         [Required]
         public int TeacherId { get; set; }
@@ -89,6 +89,37 @@ namespace EasyGradeManager.Models
         public override int GetHashCode()
         {
             return Id;
+        }
+        public bool Validate(Course course)
+        {
+            int maxAssignments = 0;
+            double maxScore = 0;
+            if (course != null)
+            {
+                maxAssignments = course.Assignments.Count;
+                foreach (Assignment assignment in course.Assignments)
+                    foreach (Task task in assignment.Tasks)
+                        maxScore += task.MaxScore;
+            }
+            return
+                Name != null && Term != null &&
+                MinRequiredAssignments >= 0 && MinRequiredAssignments <= maxAssignments &&
+                MinRequiredScore >= 0 && MinRequiredScore <= maxScore;
+        }
+        public void Update(Course course)
+        {
+            course.Name = Name;
+            course.Term = Term;
+            course.Archived = Archived;
+            course.MinRequiredAssignments = MinRequiredAssignments;
+            course.MinRequiredScore = MinRequiredScore;
+        }
+        public Course Create(int teacherId)
+        {
+            Course course = new Course();
+            Update(course);
+            course.TeacherId = teacherId;
+            return course;
         }
     }
 }

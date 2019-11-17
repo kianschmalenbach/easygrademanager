@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 
@@ -28,7 +29,8 @@ namespace EasyGradeManager.Models
 
         public string Update(object entity, EntityState state)
         {
-            Entry(entity).State = state;
+            if (entity != null)
+                Entry(entity).State = state;
             try
             {
                 SaveChanges();
@@ -40,6 +42,13 @@ namespace EasyGradeManager.Models
                 return e.Message;
             }
             return null;
+        }
+
+        public string UpdateAll(ICollection<object> entities, EntityState state)
+        {
+            foreach (object entity in entities)
+                Entry(entity).State = state;
+            return Update(null, state);
         }
 
         public DbSet<Course> Courses { get; set; }

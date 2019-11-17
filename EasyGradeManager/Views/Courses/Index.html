@@ -6,7 +6,7 @@
     <script type="text/javascript" src="/Scripts/application.js" defer></script>
     <script type="text/javascript" src="/Scripts/network.js" defer></script>
     <script type="text/javascript" src="/Scripts/Pages/course.js" defer></script>
-    <link rel="stylesheet" type="text/css" href="/Content/style.css">
+    <link rel="stylesheet" type="text/css" href="/Content/style-old.css">
 </head>
 <body onload="init()">
 <header>
@@ -17,18 +17,30 @@
         <button>Logout</button>
     </a>
 </header>
-<h1>Course "<span data="Name"></span>"</h1>
-<p class="buttonCenter" data="Term"></p>
+<h1>Course "<span data="Name" edit="false"></span>"</h1>
+<p class="buttonCenter" data="Term" edit="false"></p>
 <div class="box">
     <h2>Course Details</h2>
     <table>
+        <tr mode="edit" scope="Course">
+            <td>Name:</td>
+            <td data="Name"></td>
+        </tr>
+        <tr mode="edit" scope="Course">
+            <td>Term:</td>
+            <td data="Term"></td>
+        </tr>
         <tr>
             <td>Min. req. Assignments:</td>
-            <td data="MinRequiredAssignments"></td>
+            <td data="MinRequiredAssignments" type="number" min="0" step="1"></td>
         </tr>
         <tr>
             <td>Min. req. Score:</td>
-            <td data="MinRequiredScore"></td>
+            <td data="MinRequiredScore" type="number" min="0" step="any"></td>
+        </tr>
+        <tr>
+            <td>Archived</td>
+            <td data="Archived" type="checkbox"></td>
         </tr>
     </table>
     <p roles="Teacher">
@@ -65,12 +77,15 @@
         </tr>
         <tr datalist="Assignment" order="Assignment.Number ASC" removeonempty="AssignmentTable">
             <td><span data="Assignment.Name" link="Assignment"></span></td>
-            <td><span data="Assignment.Deadline"></span></td>
-            <td><span data="Assignment.IsFinal"></span></td>
-            <td><span data="Assignment.MinRequiredScore"></span></td>
-            <td><span data="Assignment.Mandatory"></span></td>
-            <td><span data="Assignment.Weight"></span></td>
-            <td><span data="Assignment.MinGroupSize"></span>-<span data="Assignment.MaxGroupSize"></span></td>
+            <td><span data="Assignment.Deadline" type="date"></span></td>
+            <td><span data="Assignment.IsFinal" type="checkbox"></span></td>
+            <td><span data="Assignment.MinRequiredScore" type="number" min="0" step="any"></span></td>
+            <td><span data="Assignment.Mandatory" type="checkbox"></span></td>
+            <td><span data="Assignment.Weight" type="number" min="0" max="1" step="any"></span></td>
+            <td>
+                <span data="Assignment.MinGroupSize" type="number" min="1">
+                </span>-<span data="Assignment.MaxGroupSize" type="number" min="1"></span>
+            </td>
             <td roles="Teacher">
                 <button task="Assignment.Edit">Edit</button>
                 <button task="Assignment.Delete">Delete</button>
@@ -78,7 +93,7 @@
         </tr>
     </table>
     <div class="buttonCenter" roles="Teacher">
-        <input type="text" placeholder="Assignment Name">
+        <input type="text" data="NewAssignment.Name" placeholder="Assignment Name">
         <input type="checkbox"> Derive from
         <select>
             <option>Sheet 1</option>
@@ -86,7 +101,7 @@
         </select>
         <input type="checkbox"> copy groups
         and include <input type="text" size="1" placeholder="0"> days offset
-        <button>Add Assignment</button>
+        <button task="NewAssignment.Add">Add Assignment</button>
     </div>
 </div>
 <div class="box">

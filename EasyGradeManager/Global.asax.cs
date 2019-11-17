@@ -24,6 +24,9 @@ namespace EasyGradeManager
             config.Formatters.JsonFormatter
                         .SerializerSettings
                         .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            config.Formatters.JsonFormatter
+                        .SerializerSettings
+                        .DateFormatString = "yyyy-MM-dd";
         }
     }
 }

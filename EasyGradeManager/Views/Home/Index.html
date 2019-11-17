@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body onload="init()">
-    <!--<header id="header">
+    <header id="header">
         <nav class="navbar navbar-expand-lg">
             <div class="container">
                 <a link="AuthorizedUser" class="navbar-brand">Homepage</a>
@@ -32,7 +32,7 @@
                 </div>
             </div>
         </nav>
-    </header>-->
+    </header>
     <div class="container">
         <div class="row">
             <div class="col-md-12 col-lg-12 mt-2 mb-5">
@@ -54,18 +54,18 @@
             <div class="col-md-12 col-lg-6">
                 <h4>User Registration</h4>
                 <p class="font-italic">Alternatively, you can create a new user account:</p>
-                <form class="form-row" onsubmit="return postData('NewUser')">
-                    <label class="control-label" for="Identifier">Identifier</label>
-                    <input class="form-control" data="NewUser.Identifier" type="text" autofocus required>
-                    <label class="control-label" for="Name">Name</label>
-                    <input class="form-control" data="NewUser.Name" type="text" autofocus required>
-                    <label class="control-label" for="Password">Password</label>
-                    <input class="form-control" data="NewUser.Password" type="password" required>
-                    <label class="control-label" for="PasswordConfirm">Confirm password</label>
-                    <input class="form-control" data="NewUser.PasswordConfirm" type="password" required>
-                    <input class="btn btn-default mx-auto" type="submit" value="Register">
-                </form>
-                <p class="font-italic" id="NewUser.status"></p>
+                <div class="form-row">
+                    <label class="control-label" for="NewIdentifier">Identifier</label>
+                    <input id="NewIdentifier" class="form-control" data="NewUser.Identifier" type="text" required>
+                    <label class="control-label" for="NewName">Name</label>
+                    <input id="NewName" class="form-control" data="NewUser.Name" type="text" required>
+                    <label class="control-label" for="NewEmail">Email</label>
+                    <input id="NewEmail" class="form-control" data="NewUser.Email" type="text" required>
+                    <label class="control-label" for="NewPassword">Password</label>
+                    <input id="NewPassword" class="form-control" data="NewUser.NewPassword" type="password" required>
+                    <input data="NewUser.NewRole" value="Student" type="hidden" required>
+                    <button class="btn btn-default mx-auto" task="NewUser.Add">Register</button>
+                </div>
             </div>
         </div>
     </div>
