@@ -18,6 +18,8 @@ function init() {
             .then(data => {
                 pageData = data;
                 fillPageWithData(data);
+                //initPage();
+                insertCustomElements();
                 hideLoaders();
             });
     }
@@ -189,7 +191,7 @@ function handleArray(key, type, array, rootElement) {
     function modifyChildDataAttrs(root, oldValue, newValue) {
         const childElements = root.getElementsByTagName("*");
         for (let i = 0; i < childElements.length; ++i) {
-            ["id", "data", "datalist", "link", "task"].forEach(attr => {
+            ["id", "data", "datalist", "link", "task", "scope"].forEach(attr => {
                 if (childElements[i].hasAttribute(attr)) {
                     const data = childElements[i].getAttribute(attr).replace(oldValue, newValue);
                     childElements[i].setAttribute(attr, data);
@@ -232,6 +234,35 @@ function initializeButtons(type, data) {
         buttons[i].setAttribute("onclick", "addElement('" + array[array.length-1] + "')");
         addButtons.push(buttons[i]);
     }
+}
+
+function insertCustomElements() {
+    /*const tables = document.querySelectorAll("table");
+    const tablesToModify = [];
+    for(let i=0; i<tables.length; ++i) {
+        const rows = tables[i].querySelectorAll("tr");
+        if(rows.length <= 1)
+            tablesToModify.push(tables[i]);
+    }
+    for(let i=0; i<tablesToModify.length; ++i) {
+        const text = document.createTextNode("This table is empty.");
+        const wrapper = document.createElement("div");
+        wrapper.appendChild(text);
+        const parent = tablesToModify[i].parentElement;
+        console.log(parent);
+        let index;
+        for(let j=0; j<parent.children.length; ++j) {
+            if(parent.children.item(j) === tablesToModify[i]) {
+                index = j;
+                break;
+            }
+        }
+        for(let j=0; j<tablesToModify[i].attributes.length; ++j) {
+            wrapper.setAttribute(tablesToModify[i].attributes[j].name, tablesToModify[i].attributes[j].value);
+        }
+        tablesToModify[i].remove();
+        parent.insertBefore(wrapper, parent.children[index]);
+    }*/
 }
 
 function showLoaders() {
