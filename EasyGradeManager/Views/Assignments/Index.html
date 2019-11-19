@@ -43,6 +43,10 @@
             <td data="Weight"></td>
         </tr>
         <tr>
+            <td>Final Results:</td>
+            <td data="IsFinal" type="checkbox"></td>
+        </tr>
+        <tr>
             <td>Group Size:</td>
             <td><span data="MinGroupSize"></span>-<span data="MaxGroupSize"></span></td>
         </tr>
@@ -64,9 +68,12 @@
         </tr>
         <!-- ALSO POSSIBLE: order="Lesson.Tutor.Name DESC" -->
         <tr datalist="Lesson" order="Lesson.Number ASC" removeonempty="LessonTable">
-            <td link="Lesson">Lesson <span data="Lesson.Number"></span></td>
-            <td><span data="Lesson.Date"></span></td>
-            <td><span data="Lesson.Tutor.Name"></span></td>
+            <td link="Lesson">Lesson <span data="Lesson.Number" type="number" min="1"></span></td>
+            <td><span data="Lesson.Date" type="date"></span></td>
+            <td>
+                <span mode="show" data="Lesson.Tutor.Name"></span>
+                <span mode="edit" data="Lesson.Tutor.Name"></span>
+            </td>
             <td roles="Teacher">
                 <button task="Lesson.Edit">Edit</button>
                 <button task="Lesson.Delete">Delete</button>

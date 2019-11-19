@@ -1,1 +1,3 @@
-fillPageWithData({}, "User");
+function initPage() {
+    fillPageWithData({}, "User");
+}
