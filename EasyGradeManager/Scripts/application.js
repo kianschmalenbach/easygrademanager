@@ -392,9 +392,12 @@ function getInputData() {
         let inputField = fields[i];
         if(inputField.tagName.toLowerCase() !== "input")
             inputField = fields[i].getElementsByTagName("input")[0];
-        data[inputField.getAttribute("data")] = inputField.value;
+        if(inputField.hasAttribute("type") && inputField.getAttribute("type") === "number" &&
+            inputField.value === "")
+            data[inputField.getAttribute("data")] = 0;
+        else
+            data[inputField.getAttribute("data")] = inputField.value;
     }
-    console.log(data);
     return data;
 }
 
