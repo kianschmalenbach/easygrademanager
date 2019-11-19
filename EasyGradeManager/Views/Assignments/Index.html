@@ -43,6 +43,10 @@
             <td data="Weight"></td>
         </tr>
         <tr>
+            <td>Final Results:</td>
+            <td data="IsFinal" type="checkbox"></td>
+        </tr>
+        <tr>
             <td>Group Size:</td>
             <td><span data="MinGroupSize"></span>-<span data="MaxGroupSize"></span></td>
         </tr>
@@ -64,9 +68,12 @@
         </tr>
         <!-- ALSO POSSIBLE: order="Lesson.Tutor.Name DESC" -->
         <tr datalist="Lesson" order="Lesson.Number ASC" removeonempty="LessonTable">
-            <td link="Lesson">Lesson <span data="Lesson.Number"></span></td>
-            <td><span data="Lesson.Date"></span></td>
-            <td><span data="Lesson.Tutor.Name"></span></td>
+            <td link="Lesson">Lesson <span data="Lesson.Number" type="number" min="1"></span></td>
+            <td><span data="Lesson.Date" type="date"></span></td>
+            <td>
+                <span mode="show" data="Lesson.Tutor.Name"></span>
+                <span mode="edit" data="Lesson.NewTutorId" type="number" min="1"></span>
+            </td>
             <td roles="Teacher">
                 <button task="Lesson.Edit">Edit</button>
                 <button task="Lesson.Delete">Delete</button>
@@ -107,12 +114,14 @@
     <p class="note" roles="Student">Final Results: <span data="Group.IsFinal"></span></p>
     <table class="centerTable" id="TaskTable">
         <tr>
+            <th mode="edit" scope="Task">Number</th>
             <th>Name</th>
             <th roles="Student">Score</th>
             <th>Max. Score</th>
             <th roles="Teacher">Actions</th>
         </tr>
         <tr datalist="Task" order="Task.Number ASC" removeonempty="TaskTable">
+            <td mode="edit" scope="Task"><span data="Task.Number" type="number" min="1"></span></td>
             <td><span data="Task.Name"></span></td>
             <td roles="Student"><span data="Task.Score">t.b.a.</span></td>
             <td><span data="Task.MaxScore"></span></td>
@@ -126,6 +135,7 @@
         <input size="10" placeholder="Task Number" data="NewTask.Number">
         <input size="20" placeholder="Task Name" data="NewTask.Name">
         <input size="10" placeholder="Max. Score" data="NewTask.MaxScore">
+        <input type="hidden" autovalue="Id" data="NewTask.NewAssignmentId">
         <button task="NewTask.Add">Add Task</button>
     </div>
 </div>

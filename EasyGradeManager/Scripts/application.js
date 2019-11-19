@@ -191,7 +191,7 @@ function handleArray(key, type, array, rootElement) {
     function modifyChildDataAttrs(root, oldValue, newValue) {
         const childElements = root.getElementsByTagName("*");
         for (let i = 0; i < childElements.length; ++i) {
-            ["id", "data", "datalist", "link", "task", "scope"].forEach(attr => {
+            ["id", "data", "datalist", "link", "task"].forEach(attr => {
                 if (childElements[i].hasAttribute(attr)) {
                     const data = childElements[i].getAttribute(attr).replace(oldValue, newValue);
                     childElements[i].setAttribute(attr, data);
@@ -392,9 +392,12 @@ function getInputData() {
         let inputField = fields[i];
         if(inputField.tagName.toLowerCase() !== "input")
             inputField = fields[i].getElementsByTagName("input")[0];
-        data[inputField.getAttribute("data")] = inputField.value;
+        if(inputField.hasAttribute("type") && inputField.getAttribute("type") === "number" &&
+            inputField.value === "")
+            data[inputField.getAttribute("data")] = 0;
+        else
+            data[inputField.getAttribute("data")] = inputField.value;
     }
-    console.log(data);
     return data;
 }
 
