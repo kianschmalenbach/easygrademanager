@@ -191,7 +191,7 @@ function handleArray(key, type, array, rootElement) {
     function modifyChildDataAttrs(root, oldValue, newValue) {
         const childElements = root.getElementsByTagName("*");
         for (let i = 0; i < childElements.length; ++i) {
-            ["id", "data", "datalist", "link", "task", "scope"].forEach(attr => {
+            ["id", "data", "datalist", "link", "task"].forEach(attr => {
                 if (childElements[i].hasAttribute(attr)) {
                     const data = childElements[i].getAttribute(attr).replace(oldValue, newValue);
                     childElements[i].setAttribute(attr, data);
