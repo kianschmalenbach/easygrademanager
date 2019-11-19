@@ -44,9 +44,9 @@
                 <p class="font-italic">Please log in below:</p>
                 <form class="form-row" onsubmit="return login()">
                     <label class="control-label" for="identifier">Identifier</label>
-                    <input class="form-control" id="identifier" type="text" autofocus required>
+                    <input class="w-100" id="identifier" type="text" autofocus required>
                     <label class="control-label" for="password">Password</label>
-                    <input class="form-control" id="password" type="password" required>
+                    <input class="w-100" id="password" type="password" required>
                     <input class="btn btn-default mx-auto" type="submit" value="Login">
                 </form>
                 <p class="font-italic" id="Login.status"></p>
@@ -56,13 +56,13 @@
                 <p class="font-italic">Alternatively, you can create a new user account:</p>
                 <div class="form-row">
                     <label class="control-label" for="NewIdentifier">Identifier</label>
-                    <input id="NewIdentifier" class="form-control" data="NewUser.Identifier" type="text" required>
+                    <input id="NewIdentifier" class="w-100" data="NewUser.Identifier" type="text" required>
                     <label class="control-label" for="NewName">Name</label>
-                    <input id="NewName" class="form-control" data="NewUser.Name" type="text" required>
+                    <input id="NewName" class="w-100" data="NewUser.Name" type="text" required>
                     <label class="control-label" for="NewEmail">Email</label>
-                    <input id="NewEmail" class="form-control" data="NewUser.Email" type="text" required>
+                    <input id="NewEmail" class="w-100" data="NewUser.Email" type="text" required>
                     <label class="control-label" for="NewPassword">Password</label>
-                    <input id="NewPassword" class="form-control" data="NewUser.NewPassword" type="password" required>
+                    <input id="NewPassword" class="w-100" data="NewUser.NewPassword" type="password" required>
                     <input data="NewUser.NewRole" value="Student" type="hidden" required>
                     <button class="btn btn-default mx-auto" task="NewUser.Add">Register</button>
                 </div>

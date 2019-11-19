@@ -48,13 +48,9 @@
                             <p class="mb-0"><span class="font-weight-bold">Name: </span><span data="Name"></span></p>
                             <p><span class="font-weight-bold">Email: </span><span data="Email"></span></p>
                         </div>
-                        <div class="col-md-12 col-lg-3 px-3 ml-auto">
-                            <button class="btn btn-default float-right" task="Edit">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="btn btn-default float-right" task="Delete">
-                                Delete Account
-                            </button>
+                        <div class="col-md-12 col-lg-3">
+                            <button class="btn btn-default float-right ml-2" task="Edit">Edit</button>
+                            <button class="btn btn-default float-right" task="Delete">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -97,13 +93,13 @@
                             </ul>
                         </div>
                         <div class="col-md-12 col-lg-6 px-3">
-                            <div class="row mx-0">
-                                <input class="form-control col-md-12 col-lg-8" data="NewCourse.Name" type="text" placeholder="Course Name">
-                                <input class="form-control col-md-12 col-lg-8" data="NewCourse.Term" type="text" placeholder="Course Term">
-                                <button class="btn btn-default ml-auto" task="Teacher.NewCourse.Add">
-                                    <i class="far fa-plus-square"></i> Add Course
-                                </button>                               
-                            </div>                           
+                            <label class="control-label" for="CourseName">Course Name</label>
+                            <input class="w-100" data="NewCourse.Name" type="text">
+                            <label class="control-label" for="CourseTerm">Course Term</label>
+                            <input class="w-100" data="NewCourse.Term" type="text">
+                            <button class="btn btn-default float-right" task="Teacher.NewCourse.Add">
+                                <i class="far fa-plus-square"></i> Add Course
+                            </button>                         
                         </div>
                     </div>
 

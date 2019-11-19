@@ -2,128 +2,158 @@
 <html lang="en">
 <head>
     <title>Courses</title>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <script type="text/javascript" src="/Scripts/application.js" defer></script>
     <script type="text/javascript" src="/Scripts/network.js" defer></script>
     <script type="text/javascript" src="/Scripts/Pages/course.js" defer></script>
-    <link rel="stylesheet" type="text/css" href="/Content/style-old.css">
+    <script type="text/javascript" src="/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/Content/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
 </head>
 <body onload="init()">
-<header>
-    Logged in as <span data="AuthorizedUser.Name"></span>
-    (<span data="AuthorizedUser.Identifier"></span>) -
-    <span link="AuthorizedUser"><button>Homepage</button></span>
-    <a href="/Logout">
-        <button>Logout</button>
-    </a>
-</header>
-<h1>Course "<span data="Name" edit="false"></span>"</h1>
-<p class="buttonCenter" data="Term" edit="false"></p>
-<div class="box">
-    <h2>Course Details</h2>
-    <table>
-        <tr mode="edit" scope="Course">
-            <td>Name:</td>
-            <td data="Name"></td>
-        </tr>
-        <tr mode="edit" scope="Course">
-            <td>Term:</td>
-            <td data="Term"></td>
-        </tr>
-        <tr>
-            <td>Min. req. Assignments:</td>
-            <td data="MinRequiredAssignments" type="number" min="0" step="1"></td>
-        </tr>
-        <tr>
-            <td>Min. req. Score:</td>
-            <td data="MinRequiredScore" type="number" min="0" step="any"></td>
-        </tr>
-        <tr>
-            <td>Archived</td>
-            <td data="Archived" type="checkbox"></td>
-        </tr>
-    </table>
-    <p roles="Teacher">
-        <button task="Edit">Edit Course Details</button>
-        <button>Archive Course</button>
-        <button task="Delete">Delete Course</button>
-    </p>
-</div>
-<div class="box">
-    <h2>Teacher Details</h2>
-    <table>
-        <tr>
-            <td>User ID:</td>
-            <td data="Teacher.Identifier"></td>
-        </tr>
-        <tr class="big">
-            <td>Name:</td>
-            <td data="Teacher.Name"></td>
-        </tr>
-    </table>
-</div>
-<div class="box">
-    <h2>Course Assignments</h2>
-    <table class="centerTable" id="AssignmentTable">
-        <tr>
-            <th>Name</th>
-            <th>Deadline</th>
-            <th>Final</th>
-            <th>Min. Required Score</th>
-            <th>Mandatory</th>
-            <th>Weight</th>
-            <th>Group Size</th>
-            <th roles="Teacher">Actions</th>
-        </tr>
-        <tr datalist="Assignment" order="Assignment.Number ASC" removeonempty="AssignmentTable">
-            <td><span data="Assignment.Name" link="Assignment"></span></td>
-            <td><span data="Assignment.Deadline" type="date"></span></td>
-            <td><span data="Assignment.IsFinal" type="checkbox"></span></td>
-            <td><span data="Assignment.MinRequiredScore" type="number" min="0" step="any"></span></td>
-            <td><span data="Assignment.Mandatory" type="checkbox"></span></td>
-            <td><span data="Assignment.Weight" type="number" min="0" max="1" step="any"></span></td>
-            <td>
-                <span data="Assignment.MinGroupSize" type="number" min="1">
-                </span>-<span data="Assignment.MaxGroupSize" type="number" min="1"></span>
-            </td>
-            <td roles="Teacher">
-                <button task="Assignment.Edit">Edit</button>
-                <button task="Assignment.Delete">Delete</button>
-            </td>
-        </tr>
-    </table>
-    <div class="buttonCenter" roles="Teacher">
-        <input type="text" data="NewAssignment.Name" placeholder="Assignment Name">
-        <input type="checkbox"> Derive from
-        <select>
-            <option>Sheet 1</option>
-            <option>Exam</option>
-        </select>
-        <input type="checkbox"> copy groups
-        and include <input type="text" size="1" placeholder="0"> days offset
-        <button task="NewAssignment.Add">Add Assignment</button>
+    <header id="header">
+        <nav class="navbar navbar-expand">
+            <div class="container">
+                <a link="AuthorizedUser" class="navbar-brand">Homepage</a>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span data="AuthorizedUser.Name"></span>
+                                (<span data="AuthorizedUser.Identifier"></span>)
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/Logout">Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-lg-12 mt-2 mb-5">
+                <h1 class="font-weight-bold">Course "<span data="Name" edit="false"></span>"</h1>
+                <p class="text-center" data="Term" edit="false"></p>
+            </div>
+            <div class="col-md-12 col-lg-6">
+                <div class="card pb-1 mb-4">
+                    <h4>Course Details</h4>
+                    <div class="row mx-0">
+                        <div class="col-md-12 col-lg-9 px-3">
+                            <p class="mb-0" mode="edit" scope="Course"><span class="font-weight-bold">Name: </span><span data="Name"></span></p>
+                            <p class="mb-0" mode="edit" scope="Course"><span class="font-weight-bold">Term: </span><span data="Term"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Min. req. Assignments: </span><span data="MinRequiredAssignments" type="number" min="0" step="1"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Min. req. Score: </span><span data="MinRequiredScore" type="number" min="0" step="any"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Archived: </span><span data="Archived" type="checkbox"</span></p>
+                        </div>
+                        <div class="col-md-12 col-lg-3" roles="Teacher">
+                            <button class="btn btn-default float-right ml-2" task="Edit">Edit</button>
+                            <button class="btn btn-default float-right ml-2">Archive</button>
+                            <button class="btn btn-default float-right " task="Delete">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+                <div class="card pb-1 mb-4">
+                    <h4>Teacher Details</h4>
+                    <div class="row mx-0">
+                        <div class="col-md-12 col-lg-12 px-3">
+                            <p class="mb-0"><span class="font-weight-bold">User ID: </span><span data="Teacher.Identifier"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Name: </span><span data="Teacher.Name"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-12">
+                <div class="card pb-1 mb-4">
+                    <h4>Course Assignments</h4>
+                    <div class="px-3 table-responsive">
+                        <table class="table table-striped table-bordered table-hover table-sm" id="AssignmentTable">
+                            <thead class="thead-dark text-center">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Deadline</th>
+                                    <th>Final</th>
+                                    <th>Min. Required Score</th>
+                                    <th>Mandatory</th>
+                                    <th>Weight</th>
+                                    <th>Group Size</th>
+                                    <th roles="Teacher">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <tr datalist="Assignment" order="Assignment.Number ASC" removeonempty="AssignmentTable">
+                                    <td><span data="Assignment.Name" link="Assignment"></span></td>
+                                    <td><span data="Assignment.Deadline" type="date"></span></td>
+                                    <td><span data="Assignment.IsFinal" type="checkbox"></span></td>
+                                    <td><span data="Assignment.MinRequiredScore" type="number" min="0" step="any"></span></td>
+                                    <td><span data="Assignment.Mandatory" type="checkbox"></span></td>
+                                    <td><span data="Assignment.Weight" type="number" min="0" max="1" step="any"></span></td>
+                                    <td>
+                                        <span data="Assignment.MinGroupSize" type="number" min="1">
+                                        </span>-<span data="Assignment.MaxGroupSize" type="number" min="1"></span>
+                                    </td>
+                                    <td roles="Teacher">
+                                        <button class="btn btn-default my-0" task="Assignment.Edit">Edit</button>
+                                        <button class="btn btn-default my-0" task="Assignment.Delete">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-inline mx-0 px-3" roles="Teacher">
+                        <input type="text" data="NewAssignment.Name" placeholder="Assignment Name">
+                        <div class="custom-control custom-checkbox ml-3">
+                            <input type="checkbox" class="custom-control-input" id="derive-checkbox">
+                            <label class="custom-control-label" for="derive-checkbox">Derive from</label>
+                        </div>
+                        <select class="custom-select mr-3">
+                            <option>Sheet 1</option>
+                            <option>Exam</option>
+                        </select>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="copy-groups">
+                            <label class="custom-control-label" for="copy-groups">Copy groups and include</label>
+                        </div>
+                        <input class="mx-2" type="text" size="1" placeholder="0"> days offset
+                        <button class="btn btn-default ml-auto" task="NewAssignment.Add"><i class="far fa-plus-square"></i> Add Assignment</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-12">
+                <div class="card pb-1 mb-4">
+                    <h4>Grading Scheme: <span data="GradingScheme.Name"></span></h4>
+                    <div class="px-3 table-responsive">
+                        <table class="table table-striped table-bordered table-hover table-sm" id="GradingSchemeTable">
+                            <tbody class="text-center">
+                                <tr>
+                                    <th>Grade</th>
+                                    <td datalist="GradingScheme.Grade" order="GradingScheme.Grade.MinPercentage DESC"
+                                        removeonempty="GradingSchemeTable">
+                                        <span data="GradingScheme.Grade.Name"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Required Percentage</th>
+                                    <td datalist="GradingScheme.Grade" order="GradingScheme.Grade.MinPercentage DESC">
+                                        <span data="GradingScheme.Grade.MinPercentage"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="col-md-12 col-lg-12" roles="Teacher">
+                            <button class="btn btn-default float-right" task="GradingScheme.Edit">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-<div class="box">
-    <h2>Grading Scheme: <span data="GradingScheme.Name"></span></h2>
-    <table class="centerTable" id="GradingSchemeTable">
-        <tr>
-            <th>Grade</th>
-            <td datalist="GradingScheme.Grade" order="GradingScheme.Grade.MinPercentage DESC"
-                removeonempty="GradingSchemeTable">
-                <span data="GradingScheme.Grade.Name"></span>
-            </td>
-        </tr>
-        <tr>
-            <th>Required Percentage</th>
-            <td datalist="GradingScheme.Grade" order="GradingScheme.Grade.MinPercentage DESC">
-                <span data="GradingScheme.Grade.MinPercentage"></span>
-            </td>
-        </tr>
-    </table>
-    <p class="buttonCenter" roles="Teacher">
-        <button task="GradingScheme.Edit">Edit Grading Scheme</button>
-    </p>
-</div>
 </body>
 </html>
