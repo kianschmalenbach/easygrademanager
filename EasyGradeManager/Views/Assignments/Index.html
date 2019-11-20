@@ -2,142 +2,172 @@
 <html lang="en">
 <head>
     <title>Assignments</title>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <script type="text/javascript" src="/Scripts/application.js" defer></script>
     <script type="text/javascript" src="/Scripts/network.js" defer></script>
     <script type="text/javascript" src="/Scripts/Pages/assignment.js" defer></script>
-    <link rel="stylesheet" type="text/css" href="/Content/style-old.css">
+    <script type="text/javascript" src="/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/Content/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
 </head>
 <body onload="init()">
-<header>
-    Logged in as <span data="AuthorizedUser.Name"></span>
-    (<span data="AuthorizedUser.Identifier"></span>) -
-    <span link="AuthorizedUser"><button>Homepage</button></span>
-    <a href="/Logout">
-        <button>Logout</button>
-    </a>
-</header>
-<p class="buttonCenter">Course: <span data="Course.Name" link="Course"></span> (<span data="Course.Term"></span>)</p>
-<h1>Assignment "<span data="Name"></span>"</h1>
-<div class="box">
-    <h2>Assignment Details</h2>
-    <table>
-        <tr>
-            <td>Number:</td>
-            <td data="Number"></td>
-        </tr>
-        <tr>
-            <td>Deadline:</td>
-            <td data="Deadline"></td>
-        </tr>
-        <tr>
-            <td>Min. required Score:</td>
-            <td data="MinRequiredScore"></td>
-        </tr>
-        <tr>
-            <td>Mandatory:</td>
-            <td data="Mandatory"></td>
-        </tr>
-        <tr>
-            <td>Weight:</td>
-            <td data="Weight"></td>
-        </tr>
-        <tr>
-            <td>Final Results:</td>
-            <td data="IsFinal" type="checkbox"></td>
-        </tr>
-        <tr>
-            <td>Group Size:</td>
-            <td><span data="MinGroupSize"></span>-<span data="MaxGroupSize"></span></td>
-        </tr>
-    </table>
-    <p roles="Teacher">
-        <button>Set Assignment Results as Final</button>
-        <button task="Edit">Edit Assignment Details</button>
-        <button task="Delete">Delete Assignment</button>
-    </p>
-</div>
-<div class="box" roles="Teacher Tutor">
-    <h2>Assignment Lessons</h2>
-    <table class="centerTable" id="LessonTable">
-        <tr>
-            <th>Lesson</th>
-            <th>Date</th>
-            <th>Tutor</th>
-            <th roles="Teacher">Actions</th>
-        </tr>
-        <!-- ALSO POSSIBLE: order="Lesson.Tutor.Name DESC" -->
-        <tr datalist="Lesson" order="Lesson.Number ASC" removeonempty="LessonTable">
-            <td link="Lesson">Lesson <span data="Lesson.Number" type="number" min="1"></span></td>
-            <td><span data="Lesson.Date" type="date"></span></td>
-            <td>
-                <span mode="show" data="Lesson.Tutor.Name"></span>
-                <span mode="edit" data="Lesson.NewTutorId" type="number" min="1"></span>
-            </td>
-            <td roles="Teacher">
-                <button task="Lesson.Edit">Edit</button>
-                <button task="Lesson.Delete">Delete</button>
-            </td>
-        </tr>
-    </table>
-    <div class="buttonCenter" roles="Teacher">
-        <input type="text" size="12" placeholder="Lesson Number" data="NewLesson.Number">
-        <input type="number" min="1" placeholder="TutorId" data="NewLesson.NewTutorId">
-        <input type="date" placeholder="Date" data="NewLesson.Date">
-        <input type="hidden" data="NewLesson.NewAssignmentId" autoValue="Id">
-        <button task="NewLesson.Add">Add Lesson</button>
+    <header id="header">
+        <nav class="navbar navbar-expand">
+            <div class="container">
+                <a link="AuthorizedUser" class="navbar-brand">Homepage</a>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span data="AuthorizedUser.Name"></span>
+                                (<span data="AuthorizedUser.Identifier"></span>)
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/Logout">Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-lg-12 mt-2 mb-5">
+                <h1 class="font-weight-bold">Assignment "<span data="Name"></span>"</h1>
+                <p class="text-center">Course: <span data="Course.Name" link="Course"></span> (<span data="Course.Term"></span>)</p>
+            </div>
+            <div class="col-md-12 col-lg-12">
+                <div class="card pb-1 mb-4">
+                    <h4>Assignment Details</h4>
+                    <div class="row mx-0">
+                        <div class="col-md-12 col-lg-6 px-3">
+                            <p class="mb-0"><span class="font-weight-bold">Number: </span><span data="Number"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Deadline: </span><span data="Deadline"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Min. req. Score: </span><span data="MinRequiredScore"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Mandatory: </span><span data="Mandatory"></span></p>
+                        </div>
+                        <div class="col-md-12 col-lg-6 px-3">
+                            <p class="mb-0"><span class="font-weight-bold">Weight: </span><span data="Weight"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Final Results: </span><span data="IsFinal" type="checkbox"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Group Size: </span><span data="MinGroupSize"></span>-<span data="MaxGroupSize"></span></p>
+                        </div>
+                        <div class="col-md-12 col-lg-12" roles="Teacher">
+                            <button class="btn btn-default float-right ml-2">Set Results as Final</button>
+                            <button class="btn btn-default float-right ml-2" task="Edit">Edit</button>
+                            <button class="btn btn-default float-right " task="Delete">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-12" roles="Teacher Tutor">
+                <div class="card pb-1 mb-4">
+                    <h4>Assignment Lessons</h4>
+                    <div class="px-3 table-responsive">
+                        <table class="table table-striped table-bordered table-hover table-sm" id="LessonTable">
+                            <thead class="thead-dark text-center">
+                                <tr>
+                                    <th>Lesson</th>
+                                    <th>Date</th>
+                                    <th>Tutor</th>
+                                    <th roles="Teacher">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <!-- ALSO POSSIBLE: order="Lesson.Tutor.Name DESC" -->
+                                <tr datalist="Lesson" order="Lesson.Number ASC" removeonempty="LessonTable">
+                                    <td link="Lesson">Lesson <span data="Lesson.Number" type="number" min="1"></span></td>
+                                    <td><span data="Lesson.Date" type="date"></span></td>
+                                    <td>
+                                        <span mode="show" data="Lesson.Tutor.Name"></span>
+                                        <span mode="edit" data="Lesson.NewTutorId" type="number" min="1"></span>
+                                    </td>
+                                    <td roles="Teacher">
+                                        <button class="btn btn-default" task="Lesson.Edit">Edit</button>
+                                        <button class="btn btn-default" task="Lesson.Delete">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-inline mx-0 px-3" roles="Teacher">
+                        <input type="number" size="12" placeholder="Lesson Number" data="NewLesson.Number">
+                        <input class="mx-2" type="number" min="1" placeholder="TutorId" data="NewLesson.NewTutorId">
+                        <input type="date" placeholder="Date" data="NewLesson.Date">
+                        <input type="hidden" data="NewLesson.NewAssignmentId" autoValue="Id">
+                        <button class="btn btn-default mx-2" task="NewLesson.Add">Add Lesson</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-12" roles="Student">
+                <div class="card pb-1 mb-4">
+                    <h4>Assignment Group</h4>
+                    <div class="px-3 table-responsive">
+                        <table class="table table-striped table-bordered table-hover table-sm" id="GroupTable">
+                            <tbody class="text-center">
+                                <tr>
+                                    <th>Group Number:</th>
+                                    <td data="Group.Number"></td>
+                                </tr>
+                                <tr>
+                                    <th>Group Password:</th>
+                                    <td data="Group.Password"></td>
+                                </tr>
+                                <tr>
+                                    <th>Group Members:</th>
+                                    <td>
+                                        <span datalist="Group.Student" order="Group.Student.Name ASC" removeonempty="GroupTable">
+                                            <span data="Group.Student.Name"></span><br>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-12">
+                <div class="card pb-1 mb-4">
+                    <h4>Assignment <span roles="Teacher Tutor">Tasks</span><span roles="Student">Results</span></h4>
+                    <p class="font-italic text-center" roles="Student">Final Results: <span data="Group.IsFinal"></span></p>
+                    <div class="px-3 table-responsive">
+                        <table class="table table-striped table-bordered table-hover table-sm" id="TaskTable">
+                            <thead class="thead-dark text-center">
+                                <tr>
+                                    <th mode="edit" scope="Task">Number</th>
+                                    <th>Name</th>
+                                    <th roles="Student">Score</th>
+                                    <th>Max. Score</th>
+                                    <th roles="Teacher">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <tr datalist="Task" order="Task.Number ASC" removeonempty="TaskTable">
+                                    <td mode="edit" scope="Task"><span data="Task.Number" type="number" min="1"></span></td>
+                                    <td><span data="Task.Name"></span></td>
+                                    <td roles="Student"><span data="Task.Score">t.b.a.</span></td>
+                                    <td><span data="Task.MaxScore"></span></td>
+                                    <td roles="Teacher">
+                                        <button class="btn btn-default" task="Task.Edit">Edit</button>
+                                        <button class="btn btn-default" task="Task.Delete">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-inline mx-0 px-3" roles="Teacher">
+                        <input type="number" size="10" placeholder="Task Number" data="NewTask.Number">
+                        <input class="mx-2" type="text" size="20" placeholder="Task Name" data="NewTask.Name">
+                        <input type="text" size="10" placeholder="Max. Score" data="NewTask.MaxScore">
+                        <input type="hidden" autovalue="Id" data="NewTask.NewAssignmentId">
+                        <button class="btn btn-default mx-2" task="NewTask.Add">Add Task</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-<div class="box" roles="Student">
-    <h2>Assignment Group</h2>
-    <table id="GroupTable">
-        <tr>
-            <td>Group Number:</td>
-            <td data="Group.Number"></td>
-        </tr>
-        <tr>
-            <td>Group Password:</td>
-            <td data="Group.Password"></td>
-        </tr>
-        <tr>
-            <td>Group Members:</td>
-            <td>
-                <span datalist="Group.Student" order="Group.Student.Name ASC" removeonempty="GroupTable">
-                    <span data="Group.Student.Name"></span><br>
-                </span>
-            </td>
-        </tr>
-    </table>
-</div>
-<div class="box">
-    <h2>Assignment <span roles="Teacher Tutor">Tasks</span><span roles="Student">Results</span></h2>
-    <p class="note" roles="Student">Final Results: <span data="Group.IsFinal"></span></p>
-    <table class="centerTable" id="TaskTable">
-        <tr>
-            <th mode="edit" scope="Task">Number</th>
-            <th>Name</th>
-            <th roles="Student">Score</th>
-            <th>Max. Score</th>
-            <th roles="Teacher">Actions</th>
-        </tr>
-        <tr datalist="Task" order="Task.Number ASC" removeonempty="TaskTable">
-            <td mode="edit" scope="Task"><span data="Task.Number" type="number" min="1"></span></td>
-            <td><span data="Task.Name"></span></td>
-            <td roles="Student"><span data="Task.Score">t.b.a.</span></td>
-            <td><span data="Task.MaxScore"></span></td>
-            <td roles="Teacher">
-                <button task="Task.Edit">Edit</button>
-                <button task="Task.Delete">Delete</button>
-            </td>
-        </tr>
-    </table>
-    <div class="buttonCenter" roles="Teacher">
-        <input size="10" placeholder="Task Number" data="NewTask.Number">
-        <input size="20" placeholder="Task Name" data="NewTask.Name">
-        <input size="10" placeholder="Max. Score" data="NewTask.MaxScore">
-        <input type="hidden" autovalue="Id" data="NewTask.NewAssignmentId">
-        <button task="NewTask.Add">Add Task</button>
-    </div>
-</div>
 </body>
 </html>

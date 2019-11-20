@@ -58,6 +58,7 @@ input[type=text], input[type=password] {
     box-shadow: none !important;
     background-color: transparent !important;
     padding-left: 0 !important;
+    padding-bottom: 1px !important;
 }
 
 input[type=text]:focus, input[type=password]:focus {
@@ -92,14 +93,15 @@ li{
     list-style: circle;
 }
 
-.custom-select, input[type=number] {
+.custom-select, input[type=number], input[type=date] {
     border: 0 !important;
     background-color: transparent !important;
     border-bottom: 1px solid #41698E !important;
     border-radius: 0 !important;
+    padding-bottom: 1px !important;
 }
 
-.custom-select:focus, input[type=number]:focus {
+.custom-select:focus, input[type=number]:focus, input[type=date]: focus {
     box-shadow: none !important;
 }
 
