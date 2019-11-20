@@ -94,14 +94,16 @@ namespace EasyGradeManager.Models
 
     public class GroupDetailStudentDTO : GroupListDTO
     {
-        public GroupDetailStudentDTO(Group group) : base(group)
+        public GroupDetailStudentDTO(Group group, int membershipId) : base(group)
         {
             if (group != null)
             {
                 Password = group.Password;
             }
+            GroupMembershipId = membershipId;
         }
         public string Password { get; }
+        public int GroupMembershipId { get; set; }
         public override bool Equals(object other)
         {
             return other != null && other is GroupDetailStudentDTO && Id == ((GroupDetailStudentDTO)other).Id;
