@@ -43,24 +43,26 @@
             <div class="col-md-12 col-lg-12">
                 <div class="card pb-1 mb-4">
                     <h4>Lesson Details</h4>
-                    <div class="row mx-0">
-                        <div class="col-md-12 col-lg-6 px-3">
-                            <p class="mb-0"><span class="font-weight-bold">Assignment: </span><span data="Assignment.Name" link="Assignment"></span></p>
-                            <p class="mb-0"><span class="font-weight-bold">Tutor: </span><span data="Tutor.Name"></span></p>
-                            <p class="mb-0"><span class="font-weight-bold">Date: </span><span data="Date"></span></p>
-                        </div>
+                    <div class="col-md-12 col-lg-6 px-3">
+                        <p class="mb-0"><span class="font-weight-bold">Assignment: </span><span data="Assignment.Name" link="Assignment"></span></p>
+                        <p class="mb-0"><span class="font-weight-bold">Tutor: </span><span data="Tutor.Name"></span></p>
+                        <p class="mb-0"><span class="font-weight-bold">Date: </span><span data="Date"></span></p>
                     </div>
                 </div>
             </div>
-            <div class="box" id="GroupBox">
-                <h2>Student Groups</h2>
-                <div datalist="Group" order="Group.Number ASC" removeonempty="GroupBox">
-                    <h3 link="Group">Group <span data="Group.Number"></span></h3>
-                    <ul>
-                        <li datalist="Group.Student">
-                            <span data="Group.Student.Name"></span>
-                        </li>
-                    </ul>
+            <div class="col-md-12 col-lg-12" id="GroupBox">
+                <div class="card pb-1 mb-4">
+                    <h4>Student Groups</h4>
+                    <div class="row mx-0">
+                        <div class="col-md-12 col-lg-6 px-3" datalist="Group" order="Group.Number ASC" removeonempty="GroupBox">
+                            <h5 link="Group">Group <span data="Group.Number"></span></h5>
+                            <ul>
+                                <li datalist="Group.Student">
+                                    <span data="Group.Student.Name"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
