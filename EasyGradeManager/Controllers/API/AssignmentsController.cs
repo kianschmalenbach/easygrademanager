@@ -1,8 +1,8 @@
 ﻿using EasyGradeManager.Models;
+using EasyGradeManager.Static;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
-using static EasyGradeManager.Static.Authorize;
 using static System.Data.Entity.EntityState;
 
 namespace EasyGradeManager.Controllers.API
@@ -18,7 +18,8 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult GetAssignment(int id)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            Authorize auth = new Authorize();
+            User authorizedUser = auth.GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null)
                 return Unauthorized();
             Assignment assignment = db.Assignments.Find(id);
@@ -27,7 +28,7 @@ namespace EasyGradeManager.Controllers.API
             Course course = assignment.Course;
             if (course == null)
                 return InternalServerError();
-            string accessRole = GetAccessRole(authorizedUser, course);
+            string accessRole = auth.GetAccessRole(authorizedUser, course);
             if (accessRole == null)
                 return Unauthorized();
             if (accessRole.Equals("Student"))
@@ -38,14 +39,15 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult PutAssignment(int id, AssignmentDetailTeacherDTO assignmentDTO)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            Authorize auth = new Authorize();
+            User authorizedUser = auth.GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null || authorizedUser.GetTeacher() == null)
                 return Unauthorized();
             Assignment assignment = db.Assignments.Find(id);
             if (assignmentDTO == null || assignment == null || assignment.Course == null || !ModelState.IsValid)
                 return BadRequest(ModelState);
             Course course = assignment.Course;
-            if (!"Teacher".Equals(GetAccessRole(authorizedUser, course)))
+            if (!"Teacher".Equals(auth.GetAccessRole(authorizedUser, course)))
                 return Unauthorized();
             if (!assignmentDTO.Validate(assignment))
                 return BadRequest();
@@ -58,13 +60,14 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult PostAssignment(AssignmentDetailTeacherDTO assignmentDTO)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            Authorize auth = new Authorize();
+            User authorizedUser = auth.GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null || authorizedUser.GetTeacher() == null)
                 return Unauthorized();
             Course course = db.Courses.Find(assignmentDTO.NewCourseId);
             if (!ModelState.IsValid || course == null || !assignmentDTO.Validate(null))
                 return BadRequest();
-            if (!"Teacher".Equals(GetAccessRole(authorizedUser, course)))
+            if (!"Teacher".Equals(auth.GetAccessRole(authorizedUser, course)))
                 return Unauthorized();
             Assignment assignment = assignmentDTO.Create();
             string error = db.Update(assignment, Added);
@@ -76,7 +79,8 @@ namespace EasyGradeManager.Controllers.API
         //TODO Delete Tasks if there are no groups yet
         public IHttpActionResult DeleteAssignment(int id)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            Authorize auth = new Authorize();
+            User authorizedUser = auth.GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null)
                 return Unauthorized();
             Assignment assignment = db.Assignments.Find(id);
@@ -85,7 +89,7 @@ namespace EasyGradeManager.Controllers.API
             Course course = assignment.Course;
             if (course == null)
                 return BadRequest();
-            if (!"Teacher".Equals(GetAccessRole(authorizedUser, course)))
+            if (!"Teacher".Equals(auth.GetAccessRole(authorizedUser, course)))
                 return Unauthorized();
             string error = db.Update(assignment, Deleted);
             if (error != null)

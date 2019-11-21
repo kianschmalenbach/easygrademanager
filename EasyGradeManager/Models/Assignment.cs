@@ -24,6 +24,7 @@ namespace EasyGradeManager.Models
         public int MinGroupSize { get; set; }
         public int MaxGroupSize { get; set; }
         public bool IsFinal { get; set; }
+        public bool MembershipsFinal { get; set; }
         [Required]
         public int CourseId { get; set; }
         public virtual Course Course { get; set; }
@@ -83,11 +84,20 @@ namespace EasyGradeManager.Models
         {
             if (assignment != null)
             {
+                Lessons = new HashSet<LessonListDTO>();
                 if (assignment.Course != null)
                     Course = new CourseListDTO(assignment.Course);
+                if (assignment.Lessons != null)
+                {
+                    foreach (Lesson lesson in assignment.Lessons)
+                        Lessons.Add(new LessonListDTO(lesson));
+                }
+                MembershipsFinal = assignment.MembershipsFinal;
             }
         }
+        public ICollection<LessonListDTO> Lessons { get; }
         public CourseListDTO Course { get; set; }
+        public bool MembershipsFinal { get; set; }
         public override bool Equals(object other)
         {
             return other != null && other is AssignmentDetailDTO && Id == ((AssignmentDetailDTO)other).Id;
@@ -104,15 +114,11 @@ namespace EasyGradeManager.Models
         {
             if (assignment != null)
             {
-                Lessons = new HashSet<LessonListDTO>();
                 Tasks = new HashSet<TaskListDTO>();
-                foreach (Lesson lesson in assignment.Lessons)
-                    Lessons.Add(new LessonListDTO(lesson));
                 foreach (Task task in assignment.Tasks)
                     Tasks.Add(new TaskListDTO(task));
             }
         }
-        public ICollection<LessonListDTO> Lessons { get; }
         public ICollection<TaskListDTO> Tasks { get; }
         public int NewCourseId { get; set; }
         public override bool Equals(object other)
@@ -126,12 +132,14 @@ namespace EasyGradeManager.Models
         public bool Validate(Assignment assignment)
         {
             bool finalOk = true;
+            bool membershipsFinalOk = true;
             double maxScore = 0;
             HashSet<string> names = new HashSet<string>();
             HashSet<int> numbers = new HashSet<int>();
             if (assignment != null)
             {
                 finalOk = IsFinal || !assignment.IsFinal;
+                membershipsFinalOk = MembershipsFinal || !assignment.MembershipsFinal;
                 if (assignment.Tasks != null)
                 {
                     foreach (Task task in assignment.Tasks)
@@ -151,7 +159,7 @@ namespace EasyGradeManager.Models
             return
                 Name != null && Number > 0 && !names.Contains(Name) && !numbers.Contains(Number) &&
                 MinGroupSize > 0 && MaxGroupSize > 0 && MinGroupSize <= MaxGroupSize &&
-                MinRequiredScore >= 0 && MinRequiredScore <= maxScore && Weight >= 0 && finalOk;
+                MinRequiredScore >= 0 && MinRequiredScore <= maxScore && Weight >= 0 && finalOk && membershipsFinalOk;
         }
         public void Update(Assignment assignment)
         {
@@ -186,7 +194,7 @@ namespace EasyGradeManager.Models
                     if (assignment.Equals(membership.Group.Lesson.Assignment))
                     {
                         Lesson = new LessonListDTO(membership.Group.Lesson);
-                        Group = new GroupDetailStudentDTO(membership.Group);
+                        GroupMembership = new GroupMembershipDTO(membership);
                         if (membership.Group.IsFinal)
                         {
                             foreach (Task task in assignment.Tasks)
@@ -203,7 +211,7 @@ namespace EasyGradeManager.Models
             }
         }
         public LessonListDTO Lesson { get; set; }
-        public GroupDetailStudentDTO Group { get; set; }
+        public GroupMembershipDTO GroupMembership { get; set; }
         public ICollection<TaskListDTO> Tasks { get; }
         public override bool Equals(object other)
         {

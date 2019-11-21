@@ -1,7 +1,7 @@
 ﻿using EasyGradeManager.Models;
+using EasyGradeManager.Static;
 using System;
 using System.Web.Mvc;
-using static EasyGradeManager.Static.Authorize;
 using static EasyGradeManager.Static.Initialize;
 using static EasyGradeManager.Static.Webpage;
 
@@ -11,7 +11,7 @@ namespace EasyGradeManager.Controllers
     {
         public ActionResult Details(int? id)
         {
-            User user = GetAuthorizedUser(Request.Cookies["user"]);
+            User user = new Authorize().GetAuthorizedUser(Request.Cookies["user"]);
             string text = GetWebpage("Home", user, id);
             ContentResult result = Content(text, "text/html");
             return result;

@@ -52,6 +52,7 @@
                         </div>
                         <div class="col-md-12 col-lg-6 px-3">
                             <p class="mb-0"><span class="font-weight-bold">Weight: </span><span data="Weight"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Fixed Groups: </span><span data="MembershipsFinal" type="checkbox"></span></p>
                             <p class="mb-0"><span class="font-weight-bold">Final Results: </span><span data="IsFinal" type="checkbox"></span></p>
                             <p class="mb-0"><span class="font-weight-bold">Group Size: </span><span data="MinGroupSize"></span>-<span data="MaxGroupSize"></span></p>
                         </div>
@@ -110,22 +111,25 @@
                             <tbody class="text-center">
                                 <tr>
                                     <th>Group Number:</th>
-                                    <td data="Group.Number"></td>
+                                    <td data="GroupMembership.Group.Number"></td>
                                 </tr>
                                 <tr>
                                     <th>Group Password:</th>
-                                    <td data="Group.Password"></td>
+                                    <td data="GroupMembership.Group.Password"></td>
                                 </tr>
                                 <tr>
                                     <th>Group Members:</th>
                                     <td>
-                                        <span datalist="Group.Student" order="Group.Student.Name ASC" removeonempty="GroupTable">
-                                            <span data="Group.Student.Name"></span><br>
+                                        <span datalist="GroupMembership.Group.Student" order="GroupMembership.Group.Student.Name ASC" removeonempty="GroupTable">
+                                            <span data="GroupMembership.Group.Student.Name"></span><br>
                                         </span>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div> <!-- TODO: Give this div and the elements inside a proper style -->
+                        <button task="GroupMembership.Delete">Leave Group</button>
                     </div>
                 </div>
             </div>

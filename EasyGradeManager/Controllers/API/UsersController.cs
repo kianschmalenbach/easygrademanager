@@ -1,9 +1,9 @@
 ﻿using EasyGradeManager.Models;
+using EasyGradeManager.Static;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
-using static EasyGradeManager.Static.Authorize;
 using static System.Data.Entity.EntityState;
 
 namespace EasyGradeManager.Controllers.API
@@ -14,7 +14,7 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult GetUsers()
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            User authorizedUser = new Authorize().GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null)
                 return Unauthorized();
             var result = new List<UserListDTO>();
@@ -25,7 +25,7 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult GetUser(int id)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            User authorizedUser = new Authorize().GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null)
                 return Unauthorized();
             User user = db.Users.Find(id);
@@ -36,7 +36,7 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult PutUser(int id, UserDetailDTO userDTO)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            User authorizedUser = new Authorize().GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null || authorizedUser.Id != id)
                 return Unauthorized();
             User user = db.Users.Find(id);
@@ -60,7 +60,7 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult PostUser(UserDetailDTO userDTO)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            User authorizedUser = new Authorize().GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (!ModelState.IsValid || !userDTO.Validate(true))
                 return BadRequest();
             if (authorizedUser == null && !userDTO.NewRole.Equals("Student"))
@@ -76,7 +76,7 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult DeleteUser(int id)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            User authorizedUser = new Authorize().GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null || authorizedUser.Id != id)
                 return Unauthorized();
             User user = db.Users.Find(id);

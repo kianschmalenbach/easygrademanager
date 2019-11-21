@@ -86,13 +86,13 @@ namespace EasyGradeManager.Models
                 numbers.Add(otherTask.Number);
                 names.Add(otherTask.Name);
             }
-            if(task != null)
+            if (task != null)
             {
                 numbers.Remove(task.Number);
                 names.Remove(task.Name);
             }
-            return 
-                (task == null || NewAssignmentId == 0) && !numbers.Contains(Number) && !names.Contains(Name) && 
+            return
+                (task == null || NewAssignmentId == 0) && !numbers.Contains(Number) && !names.Contains(Name) &&
                 MaxScore > 0;
         }
         public void Update(Task task)

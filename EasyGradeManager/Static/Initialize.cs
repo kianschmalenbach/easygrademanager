@@ -461,97 +461,113 @@ namespace EasyGradeManager.Static
             db.Groups.Add(new Group()
             {
                 Number = 1,
-                LessonId = 1
+                LessonId = 1,
+                Password = new Random().Next(10000000, 99999999).ToString()
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 2,
-                LessonId = 1
+                LessonId = 1,
+                Password = new Random().Next(10000000, 99999999).ToString()
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 3,
-                LessonId = 3
+                LessonId = 3,
+                Password = new Random().Next(10000000, 99999999).ToString()
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 1,
-                LessonId = 4
+                LessonId = 4,
+                Password = new Random().Next(10000000, 99999999).ToString()
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 2,
-                LessonId = 4
+                LessonId = 4,
+                Password = new Random().Next(10000000, 99999999).ToString()
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 3,
-                LessonId = 6
+                LessonId = 6,
+                Password = new Random().Next(10000000, 99999999).ToString()
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 1,
-                LessonId = 7
+                LessonId = 7,
+                Password = new Random().Next(10000000, 99999999).ToString()
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 2,
-                LessonId = 8
+                LessonId = 8,
+                Password = new Random().Next(10000000, 99999999).ToString()
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 3,
-                LessonId = 9
+                LessonId = 9,
+                Password = new Random().Next(10000000, 99999999).ToString()
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 1,
-                LessonId = 10
+                LessonId = 10,
+                Password = new Random().Next(10000000, 99999999).ToString()
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 2,
-                LessonId = 10
+                LessonId = 10,
+                Password = new Random().Next(10000000, 99999999).ToString()
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 3,
-                LessonId = 10
+                LessonId = 10,
+                Password = new Random().Next(10000000, 99999999).ToString()
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 4,
-                LessonId = 10
+                LessonId = 10,
+                Password = new Random().Next(10000000, 99999999).ToString()
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 5,
-                LessonId = 10
+                LessonId = 10,
+                Password = new Random().Next(10000000, 99999999).ToString()
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 6,
-                LessonId = 10
+                LessonId = 10,
+                Password = new Random().Next(10000000, 99999999).ToString()
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 7,
-                LessonId = 10
+                LessonId = 10,
+                Password = new Random().Next(10000000, 99999999).ToString()
             });
             db.SaveChanges();
         }

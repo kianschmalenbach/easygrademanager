@@ -4,10 +4,10 @@ using System.Text.RegularExpressions;
 
 namespace EasyGradeManager.Static
 {
-    public static class Authorize
+    public class Authorize
     {
-        private static readonly EasyGradeManagerContext db = new EasyGradeManagerContext();
-        public static User GetAuthorizedUser(System.Web.HttpCookie cookie)
+        private EasyGradeManagerContext db;
+        public User GetAuthorizedUser(System.Web.HttpCookie cookie)
         {
             if (cookie == null || cookie.Value == null)
                 return null;
@@ -17,7 +17,7 @@ namespace EasyGradeManager.Static
             return GetAuthorizedUser(credentials[1] + "&" + credentials[2]);
         }
 
-        public static User GetAuthorizedUser(System.Net.Http.Headers.CookieHeaderValue cookie)
+        public User GetAuthorizedUser(System.Net.Http.Headers.CookieHeaderValue cookie)
         {
             if (cookie == null || cookie["user"] == null || cookie["user"].Value == null)
                 return null;
@@ -27,8 +27,11 @@ namespace EasyGradeManager.Static
             return GetAuthorizedUser(credentials[1] + "&" + credentials[2]);
         }
 
-        public static User GetAuthorizedUser(string value)
+        public User GetAuthorizedUser(string value)
         {
+            if (db != null)
+                db.Dispose();
+            db = new EasyGradeManagerContext();
             string[] credentials = value.Split('&');
             if (credentials.Length != 2)
                 return null;
@@ -42,7 +45,7 @@ namespace EasyGradeManager.Static
             return null;
         }
 
-        public static string GetPassword(string value)
+        public string GetPassword(string value)
         {
             string[] credentials = value.Split('&');
             if (credentials.Length != 2)
@@ -50,7 +53,7 @@ namespace EasyGradeManager.Static
             return credentials[1];
         }
 
-        public static string GetAccessRole(User user, Course course)
+        public string GetAccessRole(User user, Course course)
         {
             if (user.Equals(course.Teacher.User))
                 return "Teacher";

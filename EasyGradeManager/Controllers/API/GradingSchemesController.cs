@@ -1,10 +1,10 @@
 ﻿using EasyGradeManager.Models;
+using EasyGradeManager.Static;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using static EasyGradeManager.Static.Authorize;
 using static System.Data.Entity.EntityState;
 
 namespace EasyGradeManager.Controllers.API
@@ -15,7 +15,7 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult GetGradingSchemes()
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            User authorizedUser = new Authorize().GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null || authorizedUser.GetTeacher() == null)
                 return Unauthorized();
             var result = new List<GradingSchemeDTO>();
@@ -26,7 +26,7 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult GetGradingScheme(int id)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            User authorizedUser = new Authorize().GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null || authorizedUser.GetTeacher() == null)
                 return Unauthorized();
             GradingScheme scheme = db.GradingSchemes.Find(id);
@@ -42,7 +42,7 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult PostGradingScheme(GradingSchemeDTO schemeDTO)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            User authorizedUser = new Authorize().GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null || authorizedUser.GetTeacher() == null)
                 return Unauthorized();
             Teacher teacher = authorizedUser.GetTeacher();
@@ -59,7 +59,8 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult DeleteGradingScheme(int id)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            Authorize auth = new Authorize();
+            User authorizedUser = auth.GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null || authorizedUser.GetTeacher() == null)
                 return Unauthorized();
             GradingScheme scheme = db.GradingSchemes.Find(id);
@@ -70,7 +71,7 @@ namespace EasyGradeManager.Controllers.API
             {
                 foreach (Course course in scheme.Courses)
                 {
-                    if ("Teacher".Equals(GetAccessRole(authorizedUser, course)))
+                    if ("Teacher".Equals(auth.GetAccessRole(authorizedUser, course)))
                     {
                         authorized = true;
                         break;
