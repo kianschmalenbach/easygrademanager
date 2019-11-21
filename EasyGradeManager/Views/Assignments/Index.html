@@ -131,16 +131,23 @@
                     <div class="col-md-12 col-lg-12" showif="GroupMembership!=null">
                         <button class="btn btn-default float-right" task="GroupMembership.Delete">Leave Group</button>
                     </div>
-                    <div showif="GroupMembership=null"> <!-- TODO: Give this div and the elements inside a proper style -->
-                        <p>You do not have a group for this assignment yet. You can either create a group or join an existing one.</p>
-                        <h5>Create Group</h5>
-                        <input id="NewLesson" type="number" min="1" data="NewGroupMembership.NewLessonId" placeholder="LessonId">
-                        <button id="CreateGroup" task="NewGroupMembership.Add">Create Group</button>
-                        <h5>Join Group</h5>
-                        <input id="NewAssignmentId" type="hidden" data="NewGroupMembership.NewAssignmentId" autovalue="Id">
-                        <input id="NewGroupNumber" type="number" min="1" data="NewGroupMembership.NewGroupNumber" placeholder="Group Number">
-                        <input id="NewGroupPassword" type="text" data="NewGroupMembership.NewGroupPassword" placeholder="Group Password">
-                        <button id="JoinGroup" task="NewGroupMembership.Add">Join Group</button>
+                    <div class="col-md-12 col-lg-12" showif="GroupMembership=null">
+                        <p class="text-center font-italic">You do not have a group for this assignment yet. You can either create a group or join an existing one.</p>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-6 text-center">
+                                <h5>Create Group</h5>
+                                <input class="mx-2" id="NewLesson" type="number" min="1" data="NewGroupMembership.NewLessonId" placeholder="LessonId">
+                                <button class="btn btn-default mx-auto" id="CreateGroup" task="NewGroupMembership.Add">Create Group</button>
+                            </div>
+                            <div class="col-md-12 col-lg-6 text-center">
+                                <!-- TODO: Give this div and the elements inside a proper style -->
+                                <h5>Join Group</h5>
+                                <input class="mx-2" id="NewAssignmentId" type="hidden" data="NewGroupMembership.NewAssignmentId" autovalue="Id">
+                                <input class="mx-2" id="NewGroupNumber" type="number" min="1" data="NewGroupMembership.NewGroupNumber" placeholder="Group Number">
+                                <input class="mx-2" id="NewGroupPassword" type="text" data="NewGroupMembership.NewGroupPassword" placeholder="Group Password">
+                                <button class="btn btn-default mx-auto" id="JoinGroup" task="NewGroupMembership.Add">Join Group</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
