@@ -18,28 +18,36 @@ function init() {
             .then(data => {
                 pageData = data;
                 fillPageWithData(data);
-                //initPage();
                 insertCustomElements();
+                initPage();
                 hideLoaders();
             });
     }
 }
 
 function fillPageWithData(data, type = "") {
-    generateLinks(data, type);
+    if (data !== null)
+        generateLinks(data, type);
     if (type !== "")
         type += ".";
     initializeButtons(type, data);
+    if (data === null) {
+        const showIfs = document.querySelectorAll("*[showif]");
+        for (let index = 0; index < showIfs.length; ++index)
+            handleShowIfs(showIfs[index], type.substring(0, type.length-1), null);
+        return;
+    }
     const datalists = [];
     for (let key in data) {
         const element = data[key];
+        const showIfs = document.querySelectorAll("*[showif]");
+        for (let index = 0; index < showIfs.length; ++index)
+            handleShowIfs(showIfs[index], type + key, element);
         switch (typeof element) {
             case "undefined":
                 continue;
             case "object":
-                if (element === null)
-                    continue;
-                if (element.constructor === Array)
+                if (element !== null && element.constructor === Array)
                     datalists.push([key, element]);
                 else
                     fillPageWithData(element, type + key);
@@ -191,13 +199,35 @@ function handleArray(key, type, array, rootElement) {
     function modifyChildDataAttrs(root, oldValue, newValue) {
         const childElements = root.getElementsByTagName("*");
         for (let i = 0; i < childElements.length; ++i) {
-            ["id", "data", "datalist", "link", "task"].forEach(attr => {
+            ["id", "data", "datalist", "link", "task", "showif"].forEach(attr => {
                 if (childElements[i].hasAttribute(attr)) {
                     const data = childElements[i].getAttribute(attr).replace(oldValue, newValue);
                     childElements[i].setAttribute(attr, data);
                 }
             });
         }
+    }
+}
+
+function handleShowIfs(htmlElement, type, element) {
+    const array = htmlElement.getAttribute("showif").split("=");
+    if (array.length !== 2)
+        return;
+    let key = array[0].replace(" ", "");
+    let equal = true;
+    if (key.endsWith("!")) {
+        equal = false;
+        key = key.substring(0, key.length - 1);
+    }
+    if (key === type) {
+        if (array[1] !== null)
+            array[1] = array[1].replace(" ", "");
+        if(element !== null)
+            element = element.toString().replace(" ", "");
+        else
+            element = "null";
+        if ((equal && array[1] !== element) || (!equal && array[1] === element))
+            htmlElement.remove();
     }
 }
 
@@ -217,7 +247,14 @@ function initializeButtons(type, data) {
     for(let i=0; i<array.length-1; ++i)
         addType += array[i] + ".";
     addType += "New" + array[array.length-1] + ".";
-    let buttons = document.querySelectorAll("*[task=\"" + type + "Edit\"]");
+    let buttons = document.querySelectorAll("*[task=\"" + addType + "Add\"]");
+    for(let i=0; i<buttons.length; ++i) {
+        buttons[i].setAttribute("onclick", "addElement('" + array[array.length-1] + "')");
+        addButtons.push(buttons[i]);
+    }
+    if (data === null)
+        return;
+    buttons = document.querySelectorAll("*[task=\"" + type + "Edit\"]");
     for(let i=0; i<buttons.length; ++i) {
         buttons[i].setAttribute("onclick",
             "editElement('" + entityType + "', " + data.Id + ", " + arrayType + ", this)");
@@ -228,11 +265,6 @@ function initializeButtons(type, data) {
         buttons[i].setAttribute("onclick",
             "deleteElement('" + entityType + "', " + data.Id + ", this)");
         deleteButtons.push(buttons[i]);
-    }
-    buttons = document.querySelectorAll("*[task=\"" + addType + "Add\"]");
-    for(let i=0; i<buttons.length; ++i) {
-        buttons[i].setAttribute("onclick", "addElement('" + array[array.length-1] + "')");
-        addButtons.push(buttons[i]);
     }
 }
 
@@ -392,11 +424,9 @@ function getInputData() {
         let inputField = fields[i];
         if(inputField.tagName.toLowerCase() !== "input")
             inputField = fields[i].getElementsByTagName("input")[0];
-        if(inputField.hasAttribute("type") && inputField.getAttribute("type") === "number" &&
-            inputField.value === "")
-            data[inputField.getAttribute("data")] = 0;
-        else
-            data[inputField.getAttribute("data")] = inputField.value;
+        if(inputField.value === "")
+            continue;
+        data[inputField.getAttribute("data")] = inputField.value;
     }
     return data;
 }

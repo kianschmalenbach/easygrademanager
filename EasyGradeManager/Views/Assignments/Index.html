@@ -106,7 +106,7 @@
             <div class="col-md-12 col-lg-12" roles="Student">
                 <div class="card pb-1 mb-4">
                     <h4>Assignment Group</h4>
-                    <div class="px-3 table-responsive">
+                    <div showif="GroupMembership!=null" class="px-3 table-responsive">
                         <table class="table table-striped table-bordered table-hover table-sm" id="GroupTable">
                             <tbody class="text-center">
                                 <tr>
@@ -128,14 +128,28 @@
                             </tbody>
                         </table>
                     </div>
-                    <div> <!-- TODO: Give this div and the elements inside a proper style -->
+                    <div showif="GroupMembership!=null"> <!-- TODO: Give this div and the elements inside a proper style -->
                         <button task="GroupMembership.Delete">Leave Group</button>
+                    </div>
+                    <div showif="GroupMembership=null"> <!-- TODO: Give this div and the elements inside a proper style -->
+                        <p>You do not have a group for this assignment yet. You can either create a group or join an existing one.</p>
+                        <h5>Create Group</h5>
+                        <input id="NewLesson" type="number" min="1" data="NewGroupMembership.NewLessonId" placeholder="LessonId">
+                        <button id="CreateGroup" task="NewGroupMembership.Add">Create Group</button>
+                        <h5>Join Group</h5>
+                        <input id="NewGroupNumber" type="number" min="1" data="NewGroupMembership.NewGroupNumber" placeholder="Group Number">
+                        <input id="NewGroupPassword" type="text" data="NewGroupMembership.NewGroupPassword" placeholder="Group Password">
+                        <button id="JoinGroup" task="NewGroupMembership.Add">Join Group</button>
                     </div>
                 </div>
             </div>
             <div class="col-md-12 col-lg-12">
                 <div class="card pb-1 mb-4">
-                    <h4>Assignment <span roles="Teacher Tutor">Tasks</span><span roles="Student">Results</span></h4>
+                    <h4>Assignment
+                        <span roles="Teacher Tutor">Tasks</span>
+                        <span roles="Student" showif="GroupMembership=null">Tasks</span>
+                        <span roles="Student" showif="GroupMembership!=null">Results</span>
+                    </h4>
                     <p class="font-italic text-center" roles="Student">Final Results: <span data="Group.IsFinal"></span></p>
                     <div class="px-3 table-responsive">
                         <table class="table table-striped table-bordered table-hover table-sm" id="TaskTable">
@@ -143,7 +157,7 @@
                                 <tr>
                                     <th mode="edit" scope="Task">Number</th>
                                     <th>Name</th>
-                                    <th roles="Student">Score</th>
+                                    <th roles="Student" showif="GroupMembership!=null">Score</th>
                                     <th>Max. Score</th>
                                     <th roles="Teacher">Actions</th>
                                 </tr>
@@ -152,7 +166,7 @@
                                 <tr datalist="Task" order="Task.Number ASC" removeonempty="TaskTable">
                                     <td mode="edit" scope="Task"><span data="Task.Number" type="number" min="1"></span></td>
                                     <td><span data="Task.Name"></span></td>
-                                    <td roles="Student"><span data="Task.Score">t.b.a.</span></td>
+                                    <td roles="Student" showif="GroupMembership!=null"><span data="Task.Score">t.b.a.</span></td>
                                     <td><span data="Task.MaxScore"></span></td>
                                     <td roles="Teacher">
                                         <button class="btn btn-default" task="Task.Edit">Edit</button>
