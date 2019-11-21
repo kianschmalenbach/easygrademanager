@@ -62,7 +62,10 @@ namespace EasyGradeManager.Models
         {
             if (task != null)
             {
-                Score = evaluation.Score;
+                if (evaluation != null)
+                    Score = evaluation.Score;
+                else
+                    Score = 0;
             }
         }
         public double Score { get; set; }

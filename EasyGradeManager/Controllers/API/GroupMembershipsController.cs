@@ -38,7 +38,7 @@ namespace EasyGradeManager.Controllers.API
             Student student = authorizedUser.GetStudent();
             Assignment assignment = db.Assignments.Find(membershipDTO.NewAssignmentId);
             Lesson lesson = db.Lessons.Find(membershipDTO.NewLessonId);
-            if (assignment == null && lesson == null)
+            if (assignment == null || (lesson != null && !assignment.Equals(lesson.Assignment)))
                 return BadRequest();
             Group group = null;
             if (membershipDTO.NewGroupNumber > 0)

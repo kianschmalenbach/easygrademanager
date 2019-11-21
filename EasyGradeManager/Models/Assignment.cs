@@ -191,7 +191,7 @@ namespace EasyGradeManager.Models
             if (assignment != null && student != null)
             {
                 Tasks = new HashSet<TaskListDTO>();
-                bool isMember = false;
+                HashSet<int> taskNumbers = new HashSet<int>();
                 foreach (GroupMembership membership in student.GroupMemberships)
                 {
                     if (assignment.Equals(membership.Group.Lesson.Assignment))
@@ -199,15 +199,20 @@ namespace EasyGradeManager.Models
                         Lesson = new LessonListDTO(membership.Group.Lesson);
                         GroupMembership = new GroupMembershipDTO(membership);
                         foreach (Evaluation evaluation in membership.Group.Evaluations)
-                                Tasks.Add(new TaskDetailDTO(evaluation.Task, evaluation));
-                        isMember = true;
+                        {
+                            taskNumbers.Add(evaluation.Task.Number);
+                            Tasks.Add(new TaskDetailDTO(evaluation.Task, evaluation));
+                        }
                         break;
                     }
                 }
-                if(!isMember && assignment.Tasks != null)
+                if(assignment.Tasks != null)
                 {
                     foreach(Task task in assignment.Tasks)
-                        Tasks.Add(new TaskListDTO(task));
+                    {
+                        if(!taskNumbers.Contains(task.Number))
+                            Tasks.Add(new TaskListDTO(task));
+                    }
                 }
             }
         }
