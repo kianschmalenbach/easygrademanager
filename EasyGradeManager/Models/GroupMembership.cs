@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace EasyGradeManager.Models
 {
@@ -23,7 +24,17 @@ namespace EasyGradeManager.Models
 
     public class GroupMembershipDTO
     {
+        public GroupMembershipDTO(GroupMembership membership)
+        {
+            if (membership != null)
+            {
+                Id = membership.Id;
+                if (membership.Group != null)
+                    Group = new GroupDetailStudentDTO(membership.Group);
+            }
+        }
         public int Id { get; set; }
+        public GroupDetailStudentDTO Group { get; }
         public int NewLessonId { get; set; }
         public int NewGroupId { get; set; }
         public string NewPassword { get; set; }
@@ -41,15 +52,15 @@ namespace EasyGradeManager.Models
                 return false;
             if (group != null && group.GroupMemberships != null && group.GroupMemberships.Count >= assignment.MaxGroupSize)
                 return false;
-            foreach(Lesson lesson in assignment.Lessons)
+            foreach (Lesson lesson in assignment.Lessons)
             {
-                if(lesson.Groups != null)
+                if (lesson.Groups != null)
                 {
-                    foreach(Group otherGroup in lesson.Groups)
+                    foreach (Group otherGroup in lesson.Groups)
                     {
-                        if(otherGroup.GroupMemberships != null)
+                        if (otherGroup.GroupMemberships != null)
                         {
-                            foreach(GroupMembership membership in otherGroup.GroupMemberships)
+                            foreach (GroupMembership membership in otherGroup.GroupMemberships)
                             {
                                 if (student.Equals(membership.Student))
                                     return false;
@@ -72,10 +83,13 @@ namespace EasyGradeManager.Models
                 group = new Group
                 {
                     LessonId = lesson.Id,
-                    Number = lesson.NextGroupNumber++
+                    Number = lesson.NextGroupNumber++,
+                    Password = new Random().Next(10000000, 99999999).ToString()
                 };
                 membership.Group = group;
             }
+            else
+                membership.GroupId = group.Id;
             membership.StudentId = student.Id;
             return membership;
         }

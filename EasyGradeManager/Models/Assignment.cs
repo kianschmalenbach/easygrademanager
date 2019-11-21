@@ -194,7 +194,7 @@ namespace EasyGradeManager.Models
                     if (assignment.Equals(membership.Group.Lesson.Assignment))
                     {
                         Lesson = new LessonListDTO(membership.Group.Lesson);
-                        Group = new GroupDetailStudentDTO(membership.Group, membership.Id);
+                        GroupMembership = new GroupMembershipDTO(membership);
                         if (membership.Group.IsFinal)
                         {
                             foreach (Task task in assignment.Tasks)
@@ -211,7 +211,7 @@ namespace EasyGradeManager.Models
             }
         }
         public LessonListDTO Lesson { get; set; }
-        public GroupDetailStudentDTO Group { get; set; }
+        public GroupMembershipDTO GroupMembership { get; set; }
         public ICollection<TaskListDTO> Tasks { get; }
         public override bool Equals(object other)
         {

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -8,7 +7,6 @@ namespace EasyGradeManager.Models
     {
         public Group()
         {
-            Password = new Random().Next(10000000, 99999999).ToString();
             Evaluations = new HashSet<Evaluation>();
             GroupMemberships = new HashSet<GroupMembership>();
             IsFinal = false;
@@ -16,7 +14,7 @@ namespace EasyGradeManager.Models
         public int Id { get; set; }
         [Required]
         public int Number { get; set; }
-        public string Password { get; }
+        public string Password { get; set; }
         public bool IsFinal { get; set; }
         [Required]
         public int LessonId { get; set; }
@@ -94,16 +92,14 @@ namespace EasyGradeManager.Models
 
     public class GroupDetailStudentDTO : GroupListDTO
     {
-        public GroupDetailStudentDTO(Group group, int membershipId) : base(group)
+        public GroupDetailStudentDTO(Group group) : base(group)
         {
             if (group != null)
             {
                 Password = group.Password;
             }
-            GroupMembershipId = membershipId;
         }
         public string Password { get; }
-        public int GroupMembershipId { get; set; }
         public override bool Equals(object other)
         {
             return other != null && other is GroupDetailStudentDTO && Id == ((GroupDetailStudentDTO)other).Id;

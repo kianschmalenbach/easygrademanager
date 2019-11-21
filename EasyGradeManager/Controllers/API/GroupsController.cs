@@ -1,11 +1,11 @@
 ﻿using EasyGradeManager.Models;
+using EasyGradeManager.Static;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using static EasyGradeManager.Static.Authorize;
 
 namespace EasyGradeManager.Controllers.API
 {
@@ -20,7 +20,8 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult GetGroup(int id)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            Authorize auth = new Authorize();
+            User authorizedUser = auth.GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null)
                 return Unauthorized();
             Group group = db.Groups.Find(id);
@@ -29,7 +30,7 @@ namespace EasyGradeManager.Controllers.API
             if (group.Lesson == null || group.Lesson.Assignment == null || group.Lesson.Assignment.Course == null)
                 return InternalServerError();
             Course course = group.Lesson.Assignment.Course;
-            string accessRole = GetAccessRole(authorizedUser, course);
+            string accessRole = auth.GetAccessRole(authorizedUser, course);
             if (accessRole == null || accessRole.Equals("Student"))
                 return Unauthorized();
             return Ok(new GroupDetailTeacherDTO(group));
@@ -56,7 +57,7 @@ namespace EasyGradeManager.Controllers.API
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!GroupExists(id))
+                if (!(db.Groups.Count(e => e.Id == id) > 0))
                 {
                     return NotFound();
                 }
@@ -69,35 +70,6 @@ namespace EasyGradeManager.Controllers.API
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        //TODO implement
-        public IHttpActionResult PostGroup(Group group)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Groups.Add(group);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = group.Id }, group);
-        }
-
-        //TODO implement
-        public IHttpActionResult DeleteGroup(int id)
-        {
-            Group group = db.Groups.Find(id);
-            if (group == null)
-            {
-                return NotFound();
-            }
-
-            db.Groups.Remove(group);
-            db.SaveChanges();
-
-            return Ok(group);
-        }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -105,11 +77,6 @@ namespace EasyGradeManager.Controllers.API
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private bool GroupExists(int id)
-        {
-            return db.Groups.Count(e => e.Id == id) > 0;
         }
     }
 }

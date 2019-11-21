@@ -1,9 +1,9 @@
 ﻿using EasyGradeManager.Models;
+using EasyGradeManager.Static;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
-using static EasyGradeManager.Static.Authorize;
 using static System.Data.Entity.EntityState;
 
 namespace EasyGradeManager.Controllers.API
@@ -14,7 +14,7 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult GetCourses()
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            User authorizedUser = new Authorize().GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null)
                 return Unauthorized();
             var result = new List<CourseListDTO>();
@@ -25,24 +25,26 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult GetCourse(int id)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            Authorize auth = new Authorize();
+            User authorizedUser = auth.GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null)
                 return Unauthorized();
             Course course = db.Courses.Find(id);
             if (course == null)
                 return NotFound();
-            return Ok(GetAccessRole(authorizedUser, course) != null ? new CourseDetailDTO(course) : new CourseListDTO(course));
+            return Ok(auth.GetAccessRole(authorizedUser, course) != null ? new CourseDetailDTO(course) : new CourseListDTO(course));
         }
 
         public IHttpActionResult PutCourse(int id, CourseDetailDTO courseDTO)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            Authorize auth = new Authorize();
+            User authorizedUser = auth.GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null)
                 return Unauthorized();
             Course course = db.Courses.Find(id);
             if (courseDTO == null || course == null || !ModelState.IsValid)
                 return BadRequest(ModelState);
-            if (!"Teacher".Equals(GetAccessRole(authorizedUser, course)))
+            if (!"Teacher".Equals(auth.GetAccessRole(authorizedUser, course)))
                 return Unauthorized();
             if (!courseDTO.Validate(course))
                 return BadRequest();
@@ -55,7 +57,8 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult PostCourse(CourseDetailDTO courseDTO)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            Authorize auth = new Authorize();
+            User authorizedUser = auth.GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null || authorizedUser.GetTeacher() == null)
                 return Unauthorized();
             if (!ModelState.IsValid || !courseDTO.Validate(null))
@@ -70,13 +73,14 @@ namespace EasyGradeManager.Controllers.API
         //TODO Delete Assignments, Lessons, and Tasks if there are no groups yet
         public IHttpActionResult DeleteCourse(int id)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            Authorize auth = new Authorize();
+            User authorizedUser = auth.GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null)
                 return Unauthorized();
             Course course = db.Courses.Find(id);
             if (course == null)
                 return NotFound();
-            if (!"Teacher".Equals(GetAccessRole(authorizedUser, course)))
+            if (!"Teacher".Equals(auth.GetAccessRole(authorizedUser, course)))
                 return Unauthorized();
             string error = db.Update(course, Deleted);
             if (error != null)

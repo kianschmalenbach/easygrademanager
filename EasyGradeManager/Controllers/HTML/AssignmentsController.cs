@@ -1,6 +1,6 @@
 ﻿using EasyGradeManager.Models;
+using EasyGradeManager.Static;
 using System.Web.Mvc;
-using static EasyGradeManager.Static.Authorize;
 using static EasyGradeManager.Static.Webpage;
 
 namespace EasyGradeManager.Controllers.HTML
@@ -9,7 +9,7 @@ namespace EasyGradeManager.Controllers.HTML
     {
         public ActionResult Details(int? id)
         {
-            User user = GetAuthorizedUser(Request.Cookies["user"]);
+            User user = new Authorize().GetAuthorizedUser(Request.Cookies["user"]);
             if (user == null || id == null)
                 return new RedirectResult("/");
             string text = GetWebpage("Assignments", user, (int)id);

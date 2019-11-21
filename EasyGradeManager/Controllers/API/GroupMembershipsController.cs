@@ -1,8 +1,9 @@
 ﻿using EasyGradeManager.Models;
+using EasyGradeManager.Static;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
-using static EasyGradeManager.Static.Authorize;
 using static System.Data.Entity.EntityState;
 
 namespace EasyGradeManager.Controllers.API
@@ -11,9 +12,12 @@ namespace EasyGradeManager.Controllers.API
     {
         private readonly EasyGradeManagerContext db = new EasyGradeManagerContext();
 
-        public IHttpActionResult GetGroupMemberships()
+        public IHttpActionResult GetGroupMemberships() //TODO remove method body
         {
-            return BadRequest();
+            List<GroupMembershipDTO> results = new List<GroupMembershipDTO>();
+            foreach (GroupMembership membership in db.GroupMemberships)
+                results.Add(new GroupMembershipDTO(membership));
+            return Ok(results);
         }
 
         public IHttpActionResult GetGroupMembership(int id)
@@ -28,15 +32,15 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult PostGroupMembership(GroupMembershipDTO membershipDTO)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            User authorizedUser = new Authorize().GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null || authorizedUser.GetStudent() == null)
                 return Unauthorized();
             Student student = authorizedUser.GetStudent();
-            Lesson lesson = db.Lessons.Find(membershipDTO.NewLessonId);
+            Group group = db.Groups.Find(membershipDTO.NewGroupId);
+            Lesson lesson = group == null ? db.Lessons.Find(membershipDTO.NewLessonId) : group.Lesson;
             if (!ModelState.IsValid || lesson == null || lesson.Assignment == null ||
                 lesson.Assignment.Course == null)
                 return BadRequest();
-            Group group = db.Groups.Find(membershipDTO.NewGroupId);
             if (!membershipDTO.Validate(student, group, lesson.Assignment))
                 return BadRequest();
             GroupMembership membership = membershipDTO.Create(student, group, lesson);
@@ -48,7 +52,7 @@ namespace EasyGradeManager.Controllers.API
 
         public IHttpActionResult DeleteGroupMembership(int id)
         {
-            User authorizedUser = GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            User authorizedUser = new Authorize().GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null || authorizedUser.GetStudent() == null)
                 return Unauthorized();
             Student student = authorizedUser.GetStudent();
@@ -58,7 +62,7 @@ namespace EasyGradeManager.Controllers.API
             if (membership.StudentId != student.Id)
                 return Unauthorized();
             if (membership.Group == null || membership.Group.Lesson == null || membership.Group.Lesson.Assignment == null ||
-                membership.Group.Lesson.Assignment.MembershipsFinal)
+                membership.Group.Lesson.Assignment.MembershipsFinal || membership.Student == null)
                 return BadRequest();
             int assignmentId = membership.Group.Lesson.Assignment.Id;
             string error = db.Update(membership, Deleted);
