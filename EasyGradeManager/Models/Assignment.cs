@@ -23,6 +23,7 @@ namespace EasyGradeManager.Models
         public double Weight { get; set; }
         public int MinGroupSize { get; set; }
         public int MaxGroupSize { get; set; }
+        public int NextGroupNumber { get; set; }
         public bool IsFinal { get; set; }
         public bool MembershipsFinal { get; set; }
         [Required]
@@ -172,6 +173,7 @@ namespace EasyGradeManager.Models
             assignment.MaxGroupSize = MaxGroupSize;
             assignment.MinRequiredScore = MinRequiredScore;
             assignment.Weight = Weight;
+            assignment.NextGroupNumber = 1;
         }
         public Assignment Create()
         {
@@ -189,24 +191,23 @@ namespace EasyGradeManager.Models
             if (assignment != null && student != null)
             {
                 Tasks = new HashSet<TaskListDTO>();
+                bool isMember = false;
                 foreach (GroupMembership membership in student.GroupMemberships)
                 {
                     if (assignment.Equals(membership.Group.Lesson.Assignment))
                     {
                         Lesson = new LessonListDTO(membership.Group.Lesson);
                         GroupMembership = new GroupMembershipDTO(membership);
-                        if (membership.Group.IsFinal)
-                        {
-                            foreach (Task task in assignment.Tasks)
-                                Tasks.Add(new TaskListDTO(task));
-                        }
-                        else
-                        {
-                            foreach (Evaluation evaluation in membership.Group.Evaluations)
+                        foreach (Evaluation evaluation in membership.Group.Evaluations)
                                 Tasks.Add(new TaskDetailDTO(evaluation.Task, evaluation));
-                        }
+                        isMember = true;
                         break;
                     }
+                }
+                if(!isMember && assignment.Tasks != null)
+                {
+                    foreach(Task task in assignment.Tasks)
+                        Tasks.Add(new TaskListDTO(task));
                 }
             }
         }

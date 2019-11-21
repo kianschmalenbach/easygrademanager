@@ -36,8 +36,32 @@ namespace EasyGradeManager.Controllers.API
             if (authorizedUser == null || authorizedUser.GetStudent() == null)
                 return Unauthorized();
             Student student = authorizedUser.GetStudent();
-            Group group = db.Groups.Find(membershipDTO.NewGroupId);
-            Lesson lesson = group == null ? db.Lessons.Find(membershipDTO.NewLessonId) : group.Lesson;
+            Assignment assignment = db.Assignments.Find(membershipDTO.NewAssignmentId);
+            Lesson lesson = db.Lessons.Find(membershipDTO.NewLessonId);
+            if (assignment == null && lesson == null)
+                return BadRequest();
+            Group group = null;
+            if (membershipDTO.NewGroupNumber > 0)
+            {
+                lesson = null;
+                foreach (Lesson otherLesson in assignment.Lessons)
+                {
+                    if (otherLesson.Groups != null)
+                    {
+                        foreach (Group otherGroup in otherLesson.Groups)
+                        {
+                            if (membershipDTO.NewGroupNumber == otherGroup.Number)
+                            {
+                                group = otherGroup;
+                                lesson = otherLesson;
+                                break;
+                            }
+                        }
+                    }
+                    if (group != null)
+                        break;
+                }
+            }
             if (!ModelState.IsValid || lesson == null || lesson.Assignment == null ||
                 lesson.Assignment.Course == null)
                 return BadRequest();
@@ -65,6 +89,8 @@ namespace EasyGradeManager.Controllers.API
                 membership.Group.Lesson.Assignment.MembershipsFinal || membership.Student == null)
                 return BadRequest();
             int assignmentId = membership.Group.Lesson.Assignment.Id;
+            if (membership.Group.GroupMemberships.Count == 0)
+                db.Entry(membership.Group).State = Deleted;
             string error = db.Update(membership, Deleted);
             if (error != null)
                 return BadRequest(error);

@@ -11,7 +11,6 @@ namespace EasyGradeManager.Models
         {
             Groups = new HashSet<Group>();
             DerivedLessons = new HashSet<Lesson>();
-            NextGroupNumber = 1;
         }
         public int Id { get; set; }
         [Required]
@@ -27,7 +26,6 @@ namespace EasyGradeManager.Models
         public virtual Lesson DerivedFrom { get; set; }
         public virtual ICollection<Lesson> DerivedLessons { get; }
         public virtual ICollection<Group> Groups { get; }
-        public int NextGroupNumber { get; set; }
         public override bool Equals(object other)
         {
             return other != null && other is Lesson && Id == ((Lesson)other).Id;

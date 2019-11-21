@@ -36,8 +36,9 @@ namespace EasyGradeManager.Models
         public int Id { get; set; }
         public GroupDetailStudentDTO Group { get; }
         public int NewLessonId { get; set; }
-        public int NewGroupId { get; set; }
-        public string NewPassword { get; set; }
+        public int NewAssignmentId { get; set; }
+        public int NewGroupNumber { get; set; }
+        public string NewGroupPassword { get; set; }
         public override bool Equals(object other)
         {
             return other != null && other is GroupMembershipDTO && Id == ((GroupMembershipDTO)other).Id;
@@ -69,7 +70,7 @@ namespace EasyGradeManager.Models
                     }
                 }
             }
-            return group == null || (NewPassword != null && NewPassword.Equals(group.Password));
+            return group == null || (NewGroupPassword != null && NewGroupPassword.Equals(group.Password));
         }
         public GroupMembership Create(Student student, Group group, Lesson lesson)
         {
@@ -78,12 +79,12 @@ namespace EasyGradeManager.Models
             GroupMembership membership = new GroupMembership();
             if (group == null)
             {
-                if (lesson == null)
+                if (lesson == null || lesson.Assignment == null)
                     return null;
                 group = new Group
                 {
                     LessonId = lesson.Id,
-                    Number = lesson.NextGroupNumber++,
+                    Number = lesson.Assignment.NextGroupNumber++,
                     Password = new Random().Next(10000000, 99999999).ToString()
                 };
                 membership.Group = group;

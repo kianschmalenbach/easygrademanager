@@ -195,7 +195,8 @@ namespace EasyGradeManager.Static
                 MaxGroupSize = 3,
                 Name = "Sheet 1",
                 Number = 1,
-                Weight = 0.2
+                Weight = 0.2,
+                NextGroupNumber = 4
             });
             db.SaveChanges();
             db.Assignments.Add(new Assignment()
@@ -209,7 +210,8 @@ namespace EasyGradeManager.Static
                 MaxGroupSize = 3,
                 Name = "Sheet 2",
                 Number = 2,
-                Weight = 0.2
+                Weight = 0.2,
+                NextGroupNumber = 4
             });
             db.SaveChanges();
             db.Assignments.Add(new Assignment()
@@ -223,7 +225,8 @@ namespace EasyGradeManager.Static
                 MaxGroupSize = 3,
                 Name = "Sheet 3",
                 Number = 3,
-                Weight = 0.2
+                Weight = 0.2,
+                NextGroupNumber = 4
             });
             db.SaveChanges();
             db.Assignments.Add(new Assignment()
@@ -237,7 +240,8 @@ namespace EasyGradeManager.Static
                 MaxGroupSize = 1,
                 Name = "Exam",
                 Number = 4,
-                Weight = 0.4
+                Weight = 0.4,
+                NextGroupNumber = 8
             });
             db.SaveChanges();
         }
