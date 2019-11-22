@@ -25,6 +25,7 @@ namespace EasyGradeManager.Models
         public int MaxGroupSize { get; set; }
         public int NextGroupNumber { get; set; }
         public bool IsFinal { get; set; }
+        public bool IsGraded { get; set; }
         public bool MembershipsFinal { get; set; }
         [Required]
         public int CourseId { get; set; }
@@ -39,6 +40,63 @@ namespace EasyGradeManager.Models
         {
             return Id;
         }
+        public double GetMaxScore()
+        {
+            if (Tasks == null || Tasks.Count == 0)
+                return 0;
+            double result = 0;
+            foreach (Task task in Tasks)
+                result += task.MaxScore;
+            return result;
+        }
+        public double GetScore(Student student)
+        {
+            if (student == null || student.GroupMemberships == null)
+                return 0;
+            double score = 0;
+            foreach(GroupMembership membership in student.GroupMemberships)
+            {
+                if (membership?.Group?.Lesson?.Assignment == null || membership.Group.Evaluations == null)
+                    continue;
+                if (Equals(membership.Group.Lesson.Assignment))
+                {
+                    foreach (Evaluation evaluation in membership.Group.Evaluations)
+                        score += evaluation.Score;
+                }
+            }
+            return score;
+        }
+        public bool HasPassed(Student student)
+        {
+            return GetScore(student) >= MinRequiredScore;
+        }
+        public string GetGrade(Student student)
+        {
+            if (student == null)
+                return null;
+            double score = GetScore(student);
+            double maxScore = GetMaxScore();
+            GradingScheme scheme = Course.GradingScheme;
+            if (maxScore <= 0 || scheme == null || scheme.Grades == null || scheme.Grades.Count == 0)
+                return null;
+            double percentage = score / maxScore;
+            if (percentage < 0 || percentage > 1)
+                return null;
+            return scheme.GetGrade(percentage);
+        }
+        public ICollection<Student> GetStudents()
+        {
+            ICollection<Student> students = new HashSet<Student>();
+            if(Lessons != null)
+            {
+                foreach (Lesson lesson in Lessons)
+                {
+                    foreach (Student student in lesson.GetStudents())
+                        students.Add(student);
+                }
+            }
+            return students;
+        }
     }
 
     public class AssignmentListDTO
@@ -50,6 +108,7 @@ namespace EasyGradeManager.Models
                 Id = assignment.Id;
                 Deadline = assignment.Deadline;
                 IsFinal = assignment.IsFinal;
+                IsGraded = assignment.IsGraded;
                 Mandatory = assignment.Mandatory;
                 MaxGroupSize = assignment.MaxGroupSize;
                 MinGroupSize = assignment.MinGroupSize;
@@ -69,6 +128,7 @@ namespace EasyGradeManager.Models
         public int MinGroupSize { get; set; }
         public int MaxGroupSize { get; set; }
         public bool IsFinal { get; set; }
+        public bool IsGraded { get; set; }
         public override bool Equals(object other)
         {
             return other != null && other is AssignmentListDTO && Id == ((AssignmentListDTO)other).Id;
@@ -140,10 +200,12 @@ namespace EasyGradeManager.Models
                             Tasks.Add(new TaskListDTO(task));
                     }
                 }
+                Result = new StudentResult(student, assignment, false);
             }
         }
         public LessonListDTO Lesson { get; set; }
         public ICollection<TaskListDTO> Tasks { get; }
+        public StudentResult Result { get; }
         public override bool Equals(object other)
         {
             return other != null && other is AssignmentDetailStudentDTO && Id == ((AssignmentDetailStudentDTO)other).Id;
@@ -156,16 +218,35 @@ namespace EasyGradeManager.Models
 
     public class AssignmentDetailTeacherDTO : AssignmentDetailStudentDTO
     {
-        public AssignmentDetailTeacherDTO(Assignment assignment, Student student, Tutor tutor) : base(assignment, student, tutor)
+        public AssignmentDetailTeacherDTO(Assignment assignment, Student student, Tutor tutor, Teacher teacher) : base(assignment, student, tutor)
         {
+            Results = new HashSet<StudentResult>();
             if (assignment != null)
             {
                 if (Tasks.Count == 0)
                     foreach (Task task in assignment.Tasks)
                         Tasks.Add(new TaskListDTO(task));
+                if (teacher != null)
+                {
+                    ICollection<Student> students = assignment.GetStudents();
+                    foreach (Student otherStudent in students)
+                        Results.Add(new StudentResult(otherStudent, assignment, true));
+                }
+                else if (tutor != null && assignment.Lessons != null)
+                {
+                    foreach (Lesson lesson in assignment.Lessons)
+                    {
+                        if (!tutor.Equals(lesson.Tutor))
+                            continue;
+                        ICollection<Student> students = lesson.GetStudents();
+                        foreach (Student otherStudent in students)
+                            Results.Add(new StudentResult(otherStudent, assignment, true));
+                    }
+                }
             }
         }
         public int NewCourseId { get; set; }
+        public ICollection<StudentResult> Results { get; }
         public override bool Equals(object other)
         {
             return other != null && other is AssignmentDetailTeacherDTO && Id == ((AssignmentDetailTeacherDTO)other).Id;
@@ -226,5 +307,27 @@ namespace EasyGradeManager.Models
             assignment.CourseId = NewCourseId;
             return assignment;
         }
+        
+    }
+    
+    public class StudentResult
+    {
+        internal StudentResult(Student student, Assignment assignment, bool setStudent)
+        {
+            if (student != null && assignment != null)
+            {
+                if (setStudent)
+                    Student = new UserListDTO(student.User);
+                Id = student.Id;
+                Score = assignment.GetScore(student);
+                HasPassed = assignment.HasPassed(student);
+                Grade = assignment.GetGrade(student);
+            }
+        }
+        public int Id { get; }
+        public UserListDTO Student { get; }
+        public double Score { get; }
+        public bool HasPassed { get; }
+        public string Grade { get; }
     }
 }

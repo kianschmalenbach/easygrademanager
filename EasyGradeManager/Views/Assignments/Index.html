@@ -52,6 +52,7 @@
                         </div>
                         <div class="col-md-12 col-lg-6 px-3">
                             <p class="mb-0"><span class="font-weight-bold">Weight: </span><span data="Weight"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Is Graded: </span><span data="IsGraded"></span></p>
                             <p class="mb-0"><span class="font-weight-bold">Fixed Groups: </span><span data="MembershipsFinal" type="checkbox"></span></p>
                             <p class="mb-0"><span class="font-weight-bold">Final Results: </span><span data="IsFinal" type="checkbox"></span></p>
                             <p class="mb-0"><span class="font-weight-bold">Group Size: </span><span data="MinGroupSize"></span>-<span data="MaxGroupSize"></span></p>
@@ -61,6 +62,33 @@
                             <button class="btn btn-default float-right ml-2" task="Edit">Edit</button>
                             <button class="btn btn-default float-right " task="Delete">Delete</button>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-12" roles="Teacher Tutor" showif="IsFinal=true">
+                <div class="card pb-1 mb-4">
+                    <h4>
+                        Assignment Results
+                    </h4>
+                    <div class="px-3 table-responsive">
+                        <table class="table table-striped table-bordered table-hover table-sm" id="ResultTable">
+                            <thead class="thead-dark text-center">
+                            <tr>
+                                <th>Student</th>
+                                <th>Score</th>
+                                <th>Passed</th>
+                                <th showif="IsGraded=true">Grade</th>
+                            </tr>
+                            </thead>
+                            <tbody class="text-center">
+                            <tr roles="Teacher Tutor" datalist="Result" order="Result.Student.Name ASC" removeonempty="ResultTable">
+                                <td><span data="Result.Student.Name"></span></td>
+                                <td><span data="Result.Score"></span></td>
+                                <td><span data="Result.HasPassed"></span></td>
+                                <td showif="IsGraded=true"><span data="Result.Grade"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -177,7 +205,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-12">
+            <div class="col-md-12 col-lg-12" roles="Teacher Tutor Student">
                 <div class="card pb-1 mb-4">
                     <h4>
                         <span showif="GroupMembership!=null">My</span>
@@ -185,9 +213,30 @@
                         <span showif="GroupMembership=null">Tasks</span>
                         <span showif="GroupMembership!=null">Results</span>
                     </h4>
+                    <div class="px-3 table-responsive">
+                        <table roles="Student" showif="IsFinal=true" class="table table-striped table-bordered table-hover table-sm">
+                            <thead class="thead-dark text-center">
+                            <tr>
+                                <th>Total Score</th>
+                                <th>Passed</th>
+                                <th showif="IsGraded=true">Grade</th>
+                            </tr>
+                            </thead>
+                            <tbody class="text-center">
+                            <tr showif="IsFinal=true">
+                                <td><span data="Result.Score"></span></td>
+                                <td><span data="Result.HasPassed"></span></td>
+                                <td showif="IsGraded=true"><span data="Result.Grade"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <p class="font-italic text-center" roles="Student" showif="GroupMembership!=null">
                         <span showif="IsFinal=false">The results displayed below are not final yet and hence still subject to change.</span>
-                        <span showif="IsFinal=true">The results displayed below are the final results for this assignment.</span>
+                        <span showif="IsFinal=true">
+                            The results displayed above are the final results for this assignment.<br>
+                            Please find a detailed listing for all tasks below:
+                        </span>
                     </p>
                     <div class="px-3 table-responsive">
                         <table class="table table-striped table-bordered table-hover table-sm" id="TaskTable">

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace EasyGradeManager.Models
 {
@@ -23,6 +24,22 @@ namespace EasyGradeManager.Models
         public override int GetHashCode()
         {
             return Id;
+        }
+        public string GetGrade(double percentage)
+        {
+            if (Grades == null || Grades.Count == 0)
+                return null;
+            List<Grade> grades = Grades.OrderBy(grade => grade.MinPercentage).ToList();
+            if (grades[0].MinPercentage != 0.0)
+                return null;
+            int index = 0;
+            Grade cursor;
+            do
+            {
+                cursor = grades[index];
+                index++;
+            } while (cursor.MinPercentage < percentage && index < grades.Count);
+            return grades[index-1].Name;
         }
     }
 
@@ -55,16 +72,20 @@ namespace EasyGradeManager.Models
         {
             HashSet<double> percentages = new HashSet<double>();
             HashSet<string> names = new HashSet<string>();
+            bool encounteredZero = false;
             foreach (GradeDTO gradeDTO in Grades)
             {
                 if (!gradeDTO.Validate())
                     return false;
+                if (gradeDTO.MinPercentage == 0.0)
+                    encounteredZero = true;
                 percentages.Add(gradeDTO.MinPercentage);
                 names.Add(gradeDTO.Name);
             }
             return
                 Name != null && Name.Length <= 25 && GetCourse(teacher) != null &&
-                percentages.Count == Grades.Count && names.Count == Grades.Count;
+                percentages.Count == Grades.Count && names.Count == Grades.Count &&
+                encounteredZero;
         }
         private void Update(GradingScheme scheme)
         {

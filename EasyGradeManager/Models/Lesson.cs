@@ -34,6 +34,25 @@ namespace EasyGradeManager.Models
         {
             return Id;
         }
+        public ICollection<Student> GetStudents()
+        {
+            ICollection<Student> students = new HashSet<Student>();
+            if (Groups != null)
+            {
+                foreach (Group group in Groups)
+                {
+                    if (group.GroupMemberships != null)
+                    {
+                        foreach (GroupMembership membership in group.GroupMemberships)
+                        {
+                            if (membership.Student != null)
+                                students.Add(membership.Student);
+                        }
+                    }
+                }
+            }
+            return students;
+        }
     }
 
     public class LessonListDTO

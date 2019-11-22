@@ -33,7 +33,10 @@ namespace EasyGradeManager.Controllers.API
             if (accessRole.Equals("Student"))
                 return Ok(new AssignmentDetailStudentDTO(assignment, authorizedUser.GetStudent(), null));
             else
-                return Ok(new AssignmentDetailTeacherDTO(assignment, authorizedUser.GetStudent(), accessRole.Equals("Teacher") ? null : authorizedUser.GetTutor()));
+            {
+                Tutor tutor = accessRole.Equals("Teacher") ? null : authorizedUser.GetTutor();
+                return Ok(new AssignmentDetailTeacherDTO(assignment, authorizedUser.GetStudent(), tutor, authorizedUser.GetTeacher()));
+            }
         }
 
         public IHttpActionResult PutAssignment(int id, AssignmentDetailTeacherDTO assignmentDTO)
