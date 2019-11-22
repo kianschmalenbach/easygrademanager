@@ -22,7 +22,7 @@ namespace EasyGradeManager.Static
                 text += "\n\t\t\tRoles: [ ";
                 foreach (Role role in user.Roles)
                 {
-                    if(entity == null || role.Equals("Student") || GetAllAccessRoles(user, entity).Contains(role.Name))
+                    if (entity == null || role.Equals("Student") || GetAllAccessRoles(user, entity).Contains(role.Name))
                         text += " \"" + role.Name + "\",";
                 }
                 text = text.Remove(text.Length - 1);

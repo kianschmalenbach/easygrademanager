@@ -132,7 +132,7 @@ namespace EasyGradeManager.Static
                     {
                         Tutor authorizedTutor = user.GetTutor();
                         if (authorizedTutor.Equals(lesson.Tutor))
-                             accessRoles.Add("Tutor");
+                            accessRoles.Add("Tutor");
                     }
                     if (user.GetStudent() != null)
                     {

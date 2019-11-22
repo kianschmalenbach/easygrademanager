@@ -45,7 +45,7 @@ namespace EasyGradeManager.Controllers.API
                 return BadRequest(ModelState);
             Course course = group.Lesson.Assignment.Course;
             bool isTeacher;
-            if(!group.IsFinal)
+            if (!group.IsFinal)
             {
                 if (authorizedUser.GetTutor() == null || !authorizedUser.GetTutor().Equals(group.Lesson.Tutor))
                     return Unauthorized();

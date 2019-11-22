@@ -51,7 +51,7 @@ namespace EasyGradeManager.Controllers.API
             string error = db.Update(lesson, Modified);
             if (error != null)
                 return BadRequest(error);
-            return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Lessons/" + lesson.Id);
+            return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Assignments/" + lesson.Assignment.Id);
         }
 
         public IHttpActionResult PostLesson(LessonDetailDTO lessonDTO)
@@ -70,7 +70,7 @@ namespace EasyGradeManager.Controllers.API
             string error = db.Update(lesson, Added);
             if (error != null)
                 return BadRequest(error);
-            return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Lessons/" + lesson.Id);
+            return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Assignments/" + lesson.Assignment.Id);
         }
 
         public IHttpActionResult DeleteLesson(int id)

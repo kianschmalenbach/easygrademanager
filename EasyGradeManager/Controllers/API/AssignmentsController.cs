@@ -29,7 +29,7 @@ namespace EasyGradeManager.Controllers.API
                 return InternalServerError();
             string accessRole = auth.GetAccessRole(authorizedUser, assignment);
             if (accessRole == null)
-                return Unauthorized();
+                accessRole = "Student";
             if (accessRole.Equals("Student"))
                 return Ok(new AssignmentDetailStudentDTO(assignment, authorizedUser.GetStudent(), null));
             else

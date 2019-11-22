@@ -78,7 +78,7 @@ namespace EasyGradeManager.Models
                     taskNumbers.Add(evaluation.Task.Number);
                     Tasks.Add(new TaskDetailDTO(evaluation.Task, evaluation));
                 }
-                foreach(Task task in group.Lesson.Assignment.Tasks)
+                foreach (Task task in group.Lesson.Assignment.Tasks)
                 {
                     if (!taskNumbers.Contains(task.Number))
                         Tasks.Add(new TaskDetailDTO(task, null));
@@ -104,7 +104,7 @@ namespace EasyGradeManager.Models
                 return false;
             if ((group.IsFinal && (!isTeacher || group.Lesson.Assignment.IsFinal || !IsFinal)) || (!group.IsFinal && isTeacher))
                 return false;
-            foreach(TaskDetailDTO taskDTO in Tasks)
+            foreach (TaskDetailDTO taskDTO in Tasks)
             {
                 Task task = null;
                 foreach (Task otherTask in group.Lesson.Assignment.Tasks)

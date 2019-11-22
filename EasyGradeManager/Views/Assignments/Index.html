@@ -81,7 +81,6 @@
                                 <!-- ALSO POSSIBLE: order="Lesson.Tutor.Name DESC" -->
                                 <tr datalist="Lesson" order="Lesson.Number ASC" removeonempty="LessonTable" filter="Lesson.IsOwnLesson=true">
                                     <td roles="Teacher" link="Lesson">Lesson <span data="Lesson.Number" type="number" min="1"></span></td>
-                                    <td roles="Tutor" link="Lesson">Lesson <span data="Lesson.Number" type="number" min="1"></span></td>
                                     <td><span data="Lesson.Date" type="date"></span></td>
                                     <td roles="Teacher">
                                         <span mode="show" data="Lesson.Tutor.Name"></span>
@@ -133,25 +132,29 @@
                         <button class="btn btn-default float-right" task="GroupMembership.Delete">Leave Group</button>
                     </div>
                     <div class="col-md-12 col-lg-12" showif="GroupMembership=null">
-                        <p class="text-center font-italic">
-                            You do not have a group for this assignment yet.<br>
-                            You can either create a group or join an existing one.
-                        </p>
-                        <div class="row">
-                            <div class="col-md-12 col-lg-6 text-center">
-                                <h5>Create Group</h5>
-                                <input class="mx-2" id="NewLesson" type="number" min="1" data="NewGroupMembership.NewLessonId" placeholder="LessonId">
-                                <button class="btn btn-default mx-auto" id="CreateGroup" task="NewGroupMembership.Add">Create Group</button>
-                            </div>
-                            <div class="col-md-12 col-lg-6 text-center">
-                                <!-- TODO: Give this div and the elements inside a proper style -->
-                                <h5>Join Group</h5>
-                                <input class="mx-2" id="NewAssignmentId" type="hidden" data="NewGroupMembership.NewAssignmentId" autovalue="Id">
-                                <input class="mx-2" id="NewGroupNumber" type="number" min="1" data="NewGroupMembership.NewGroupNumber" placeholder="Group Number">
-                                <input class="mx-2" id="NewGroupPassword" type="text" data="NewGroupMembership.NewGroupPassword" placeholder="Group Password">
-                                <button class="btn btn-default mx-auto" id="JoinGroup" task="NewGroupMembership.Add">Join Group</button>
+                        <div showif="MembershipsFinal=false">
+                            <p class="text-center font-italic">
+                                You do not have a group for this assignment yet.<br>
+                                You can either create a group or join an existing one.
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12 col-lg-6 text-center">
+                                    <h5>Create Group</h5>
+                                    <input class="mx-2" id="NewLesson" type="number" min="1" data="NewGroupMembership.NewLessonId" placeholder="LessonId">
+                                    <button class="btn btn-default mx-auto" id="CreateGroup" task="NewGroupMembership.Add">Create Group</button>
+                                </div>
+                                <div class="col-md-12 col-lg-6 text-center">
+                                    <h5>Join Group</h5>
+                                    <input class="mx-2" id="NewAssignmentId" type="hidden" data="NewGroupMembership.NewAssignmentId" autovalue="Id">
+                                    <input class="mx-2" id="NewGroupNumber" type="number" min="1" data="NewGroupMembership.NewGroupNumber" placeholder="Group Number">
+                                    <input class="mx-2" id="NewGroupPassword" type="text" data="NewGroupMembership.NewGroupPassword" placeholder="Group Password">
+                                    <button class="btn btn-default mx-auto" id="JoinGroup" task="NewGroupMembership.Add">Join Group</button>
+                                </div>
                             </div>
                         </div>
+                        <p class="text-center font-italic" showif="MembershipsFinal=true">
+                            You cannot join a group any more because the teacher has already fixed the groups.
+                        </p>
                     </div>
                 </div>
             </div>

@@ -160,7 +160,7 @@ namespace EasyGradeManager.Models
         {
             if (assignment != null)
             {
-                if(Tasks.Count == 0)
+                if (Tasks.Count == 0)
                     foreach (Task task in assignment.Tasks)
                         Tasks.Add(new TaskListDTO(task));
             }
