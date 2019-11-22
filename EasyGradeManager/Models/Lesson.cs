@@ -38,21 +38,27 @@ namespace EasyGradeManager.Models
 
     public class LessonListDTO
     {
-        public LessonListDTO(Lesson lesson)
+        public LessonListDTO(Lesson lesson, Tutor tutor)
         {
             if (lesson != null)
             {
                 Id = lesson.Id;
                 Number = lesson.Number;
                 Date = lesson.Date;
+                IsOwnLesson = true;
                 if (lesson.Tutor != null)
+                {
                     Tutor = new UserListDTO(lesson.Tutor.User);
+                    if (tutor != null)
+                        IsOwnLesson = lesson.Tutor.Equals(tutor);
+                }
             }
         }
         public int Id { get; set; }
         public int Number { get; set; }
         public DateTime Date { get; set; }
         public UserListDTO Tutor { get; set; }
+        public bool IsOwnLesson { get; }
         public override bool Equals(object other)
         {
             return other != null && other is LessonListDTO && Id == ((LessonListDTO)other).Id;
@@ -65,7 +71,7 @@ namespace EasyGradeManager.Models
 
     public class LessonDetailDTO : LessonListDTO
     {
-        public LessonDetailDTO(Lesson lesson) : base(lesson)
+        public LessonDetailDTO(Lesson lesson) : base(lesson, null)
         {
             if (lesson != null)
             {
@@ -77,7 +83,7 @@ namespace EasyGradeManager.Models
                 foreach (Group group in lesson.Groups)
                     Groups.Add(new GroupListDTO(group));
                 if (lesson.DerivedFrom != null)
-                    DerivedFrom = new LessonListDTO(lesson.DerivedFrom);
+                    DerivedFrom = new LessonListDTO(lesson.DerivedFrom, null);
             }
         }
         public CourseListDTO Course { get; set; }

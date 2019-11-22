@@ -25,16 +25,15 @@ namespace EasyGradeManager.Controllers.API
             Assignment assignment = db.Assignments.Find(id);
             if (assignment == null)
                 return NotFound();
-            Course course = assignment.Course;
-            if (course == null)
+            if (assignment.Course == null)
                 return InternalServerError();
-            string accessRole = auth.GetAccessRole(authorizedUser, course);
+            string accessRole = auth.GetAccessRole(authorizedUser, assignment);
             if (accessRole == null)
                 return Unauthorized();
             if (accessRole.Equals("Student"))
-                return Ok(new AssignmentDetailStudentDTO(assignment, authorizedUser.GetStudent()));
+                return Ok(new AssignmentDetailStudentDTO(assignment, authorizedUser.GetStudent(), null));
             else
-                return Ok(new AssignmentDetailTeacherDTO(assignment));
+                return Ok(new AssignmentDetailTeacherDTO(assignment, authorizedUser.GetStudent(), accessRole.Equals("Teacher") ? null : authorizedUser.GetTutor()));
         }
 
         public IHttpActionResult PutAssignment(int id, AssignmentDetailTeacherDTO assignmentDTO)

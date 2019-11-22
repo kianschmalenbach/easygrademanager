@@ -111,7 +111,17 @@ namespace EasyGradeManager.Static
                         }
                     }
                     if (user.GetStudent() != null)
-                        accessRoles.Add("Student");
+                    {
+                        Student authorizedStudent = user.GetStudent();
+                        foreach (GroupMembership membership in authorizedStudent.GroupMemberships)
+                        {
+                            if (membership.Group.Lesson.Assignment.Equals(assignment))
+                            {
+                                accessRoles.Add("Student");
+                                break;
+                            }
+                        }
+                    }
                     return accessRoles;
 
                 case "Lesson":

@@ -66,23 +66,24 @@
             </div>
             <div class="col-md-12 col-lg-12" roles="Teacher Tutor">
                 <div class="card pb-1 mb-4">
-                    <h4>Assignment Lessons</h4>
+                    <h4><span roles="Tutor">My<span roles="Student"> Tutored</span></span> Assignment Lessons</h4>
                     <div class="px-3 table-responsive">
                         <table class="table table-striped table-bordered table-hover table-sm" id="LessonTable">
                             <thead class="thead-dark text-center">
                                 <tr>
                                     <th>Lesson</th>
                                     <th>Date</th>
-                                    <th>Tutor</th>
+                                    <th roles="Teacher">Tutor</th>
                                     <th roles="Teacher">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="text-center">
                                 <!-- ALSO POSSIBLE: order="Lesson.Tutor.Name DESC" -->
-                                <tr datalist="Lesson" order="Lesson.Number ASC" removeonempty="LessonTable">
-                                    <td link="Lesson">Lesson <span data="Lesson.Number" type="number" min="1"></span></td>
+                                <tr datalist="Lesson" order="Lesson.Number ASC" removeonempty="LessonTable" filter="Lesson.IsOwnLesson=true">
+                                    <td roles="Teacher" link="Lesson">Lesson <span data="Lesson.Number" type="number" min="1"></span></td>
+                                    <td roles="Tutor" link="Lesson">Lesson <span data="Lesson.Number" type="number" min="1"></span></td>
                                     <td><span data="Lesson.Date" type="date"></span></td>
-                                    <td>
+                                    <td roles="Teacher">
                                         <span mode="show" data="Lesson.Tutor.Name"></span>
                                         <span mode="edit" data="Lesson.NewTutorId" type="number" min="1"></span>
                                     </td>
@@ -103,10 +104,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-12" roles="Student">
+            <div class="col-md-12 col-lg-12">
                 <div class="card pb-1 mb-4">
-                    <h4>Assignment Group</h4>
-                    <div showif="GroupMembership!=null" class="px-3 table-responsive">
+                    <h4>My Assignment Group</h4>
+                    <div roles="Student" showif="GroupMembership!=null" class="px-3 table-responsive">
                         <table class="table table-striped table-bordered table-hover table-sm" id="GroupTable">
                             <tbody class="text-center">
                                 <tr>
@@ -128,7 +129,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-md-12 col-lg-12" showif="GroupMembership!=null">
+                    <div roles="Student" class="col-md-12 col-lg-12" showif="GroupMembership!=null">
                         <button class="btn btn-default float-right" task="GroupMembership.Delete">Leave Group</button>
                     </div>
                     <div class="col-md-12 col-lg-12" showif="GroupMembership=null">
@@ -156,10 +157,11 @@
             </div>
             <div class="col-md-12 col-lg-12">
                 <div class="card pb-1 mb-4">
-                    <h4>Assignment
-                        <span roles="Teacher Tutor">Tasks</span>
-                        <span roles="Student" showif="GroupMembership=null">Tasks</span>
-                        <span roles="Student" showif="GroupMembership!=null">Results</span>
+                    <h4>
+                        <span showif="GroupMembership!=null">My</span>
+                        Assignment
+                        <span showif="GroupMembership=null">Tasks</span>
+                        <span showif="GroupMembership!=null">Results</span>
                     </h4>
                     <p class="font-italic text-center" roles="Student" showif="GroupMembership!=null">
                         <span showif="IsFinal=false">The results displayed below are not final yet and hence still subject to change.</span>

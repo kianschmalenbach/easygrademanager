@@ -129,7 +129,7 @@ namespace EasyGradeManager.Models
                 Lessons = new HashSet<LessonListDTO>();
                 foreach (Lesson lesson in tutor.Lessons)
                 {
-                    Lessons.Add(new LessonListDTO(lesson));
+                    Lessons.Add(new LessonListDTO(lesson, tutor));
                     Courses.Add(new CourseListDTO(lesson.Assignment.Course));
                 }
             }

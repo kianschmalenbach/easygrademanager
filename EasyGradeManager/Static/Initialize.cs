@@ -144,6 +144,19 @@ namespace EasyGradeManager.Static
             {
                 UserId = 10
             });
+            db.Students.Add(new Student()
+            {
+                UserId = 1
+            });
+            db.Students.Add(new Student()
+            {
+                UserId = 2
+            });
+            db.Students.Add(new Student()
+            {
+                UserId = 3
+            });
+
             db.SaveChanges();
         }
 

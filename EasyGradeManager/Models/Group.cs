@@ -68,7 +68,7 @@ namespace EasyGradeManager.Models
             if (group != null)
             {
                 if (group.Lesson != null)
-                    Lesson = new LessonListDTO(group.Lesson);
+                    Lesson = new LessonListDTO(group.Lesson, null);
                 if (group.Lesson.Assignment != null)
                     Assignment = new AssignmentListDTO(group.Lesson.Assignment);
                 if (group.Lesson.Assignment.Course != null)
