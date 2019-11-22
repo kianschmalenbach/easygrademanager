@@ -256,8 +256,9 @@ function initializeButtons(type, data) {
         return;
     buttons = document.querySelectorAll("*[task=\"" + type + "Edit\"]");
     for(let i=0; i<buttons.length; ++i) {
+        const custom = buttons[i].hasAttribute("custom") && buttons[i].getAttribute("custom") === "true";
         buttons[i].setAttribute("onclick",
-            "editElement('" + entityType + "', " + data.Id + ", " + arrayType + ", this)");
+            "editElement('" + entityType + "', " + data.Id + ", " + arrayType + ", this" + (custom ? ", true" : " ") + ")");
         editButtons.push(buttons[i]);
     }
     buttons = document.querySelectorAll("*[task=\"" + type + "Delete\"]");
@@ -331,11 +332,10 @@ function addElement(type) {
     return false;
 }
 
-function editElement(type, id, isArray, button) {
+function editElement(type, id, isArray, button, customFields=false) {
     disableButtons();
     showModeSpecificElements("edit", type);
-    const dataFields = findDataFields(type, isArray, id);
-    console.log(dataFields);
+    const dataFields = customFields ? findCustomDataFields(type, isArray, id) : findDataFields(type, isArray, id);
     createInputFields(dataFields);
     button.innerText = button.innerText.replace("Edit", "Save");
     button.setAttribute("onclick", button.getAttribute("onclick")
@@ -426,7 +426,35 @@ function getInputData() {
             inputField = fields[i].getElementsByTagName("input")[0];
         if(inputField.value === "")
             continue;
-        data[inputField.getAttribute("data")] = inputField.value;
+        let value = inputField.value;
+        if(inputField.hasAttribute("type") && inputField.getAttribute("type").toLowerCase() === "checkbox")
+            value = inputField.checked;
+        const fieldName = inputField.getAttribute("data");
+        const array = fieldName.split(".");
+        if(array.length === 1)
+            data[fieldName] = value;
+        else {
+            let cursor = data;
+            for(let i=0; i<array.length-1; ++i) {
+                if(/[[0-9]+]$/.test(array[i])) {
+                    const innerArray = array[i].split("[");
+                    const datalist = innerArray[0] + "s";
+                    if(cursor[datalist] === undefined)
+                        cursor[datalist] = [];
+                    const id = parseInt(innerArray[1].split("]")[0]);
+                    cursor[datalist].push({
+                        "Id": id
+                    });
+                    cursor = cursor[datalist][cursor[datalist].length-1];
+                }
+                else {
+                    cursor[array[i]] = {};
+                    cursor = cursor[array[i]];
+                }
+            }
+
+            cursor[array[array.length-1]] = value;
+        }
     }
     return data;
 }

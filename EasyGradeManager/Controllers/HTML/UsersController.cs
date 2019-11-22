@@ -12,7 +12,7 @@ namespace EasyGradeManager.Controllers.HTML
             User user = new Authorize().GetAuthorizedUser(Request.Cookies["user"]);
             if (user == null || id == null || user.Id != id)
                 return new RedirectResult("/");
-            string text = GetWebpage("Users", user, (int)id);
+            string text = GetWebpage("Users", user, (int)id, null);
             ContentResult result = Content(text, "text/html");
             return result;
         }

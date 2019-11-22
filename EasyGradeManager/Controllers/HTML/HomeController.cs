@@ -12,7 +12,7 @@ namespace EasyGradeManager.Controllers
         public ActionResult Details(int? id)
         {
             User user = new Authorize().GetAuthorizedUser(Request.Cookies["user"]);
-            string text = GetWebpage("Home", user, id);
+            string text = GetWebpage("Home", user, id, null);
             ContentResult result = Content(text, "text/html");
             return result;
         }

@@ -18,7 +18,8 @@ namespace EasyGradeManager.Models
         public double Score { get; set; }
         public override bool Equals(object other)
         {
-            return other != null && other is Evaluation && Id == ((Evaluation)other).Id;
+            return other != null && other is Evaluation && Id == ((Evaluation)other).Id &&
+                (Id != 0 || (GroupId == ((Evaluation)other).GroupId && TaskId == ((Evaluation)other).TaskId));
         }
         public override int GetHashCode()
         {

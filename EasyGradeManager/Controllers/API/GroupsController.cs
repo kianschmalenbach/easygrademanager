@@ -1,11 +1,9 @@
 ﻿using EasyGradeManager.Models;
 using EasyGradeManager.Static;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using static System.Data.Entity.EntityState;
 
 namespace EasyGradeManager.Controllers.API
 {
@@ -29,45 +27,43 @@ namespace EasyGradeManager.Controllers.API
                 return NotFound();
             if (group.Lesson == null || group.Lesson.Assignment == null || group.Lesson.Assignment.Course == null)
                 return InternalServerError();
-            Course course = group.Lesson.Assignment.Course;
-            string accessRole = auth.GetAccessRole(authorizedUser, course);
+            string accessRole = auth.GetAccessRole(authorizedUser, group);
             if (accessRole == null || accessRole.Equals("Student"))
                 return Unauthorized();
             return Ok(new GroupDetailTeacherDTO(group));
         }
 
-        //TODO implement
-        public IHttpActionResult PutGroup(int id, Group group)
+        public IHttpActionResult PutGroup(int id, GroupDetailTeacherDTO groupDTO)
         {
-            if (!ModelState.IsValid)
-            {
+            Authorize auth = new Authorize();
+            User authorizedUser = auth.GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
+            if (authorizedUser == null || (authorizedUser.GetTeacher() == null && authorizedUser.GetTutor() == null))
+                return Unauthorized();
+            Group group = db.Groups.Find(id);
+            if (groupDTO == null || group == null || group.Lesson == null || group.Lesson.Assignment == null ||
+                group.Lesson.Assignment.Course == null || !ModelState.IsValid)
                 return BadRequest(ModelState);
-            }
-
-            if (id != group.Id)
+            Course course = group.Lesson.Assignment.Course;
+            bool isTeacher;
+            if(!group.IsFinal)
             {
+                if (authorizedUser.GetTutor() == null || !authorizedUser.GetTutor().Equals(group.Lesson.Tutor))
+                    return Unauthorized();
+                isTeacher = false;
+            }
+            else
+            {
+                if (authorizedUser.GetTeacher() == null || !"Teacher".Equals(auth.GetAccessRole(authorizedUser, course)))
+                    return Unauthorized();
+                isTeacher = true;
+            }
+            if (!groupDTO.Validate(group, isTeacher))
                 return BadRequest();
-            }
-
-            db.Entry(group).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!(db.Groups.Count(e => e.Id == id) > 0))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
+            groupDTO.Update(group);
+            string error = db.Update(group, Modified);
+            if (error != null)
+                return BadRequest(error);
+            return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Groups/" + id);
         }
 
         protected override void Dispose(bool disposing)

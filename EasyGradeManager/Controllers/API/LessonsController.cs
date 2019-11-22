@@ -27,8 +27,7 @@ namespace EasyGradeManager.Controllers.API
                 return NotFound();
             if (lesson.Assignment == null || lesson.Assignment.Course == null)
                 return InternalServerError();
-            Course course = lesson.Assignment.Course;
-            string accessRole = auth.GetAccessRole(authorizedUser, course);
+            string accessRole = auth.GetAccessRole(authorizedUser, lesson);
             if (accessRole == null || accessRole.Equals("Student"))
                 return Unauthorized();
             return Ok(new LessonDetailDTO(lesson));
@@ -44,8 +43,7 @@ namespace EasyGradeManager.Controllers.API
             if (lessonDTO == null || lesson == null || lesson.Assignment == null || lesson.Assignment.Course == null ||
                 !ModelState.IsValid)
                 return BadRequest(ModelState);
-            Course course = lesson.Assignment.Course;
-            if (!"Teacher".Equals(auth.GetAccessRole(authorizedUser, course)))
+            if (!"Teacher".Equals(auth.GetAccessRole(authorizedUser, lesson)))
                 return Unauthorized();
             if (!lessonDTO.Validate(lesson, null, null, db.Tutors))
                 return BadRequest();
@@ -66,7 +64,7 @@ namespace EasyGradeManager.Controllers.API
             if (!ModelState.IsValid || assignment == null || assignment.Course == null ||
                 !lessonDTO.Validate(null, db.Lessons, assignment, db.Tutors))
                 return BadRequest();
-            if (!"Teacher".Equals(auth.GetAccessRole(authorizedUser, assignment.Course)))
+            if (!"Teacher".Equals(auth.GetAccessRole(authorizedUser, assignment)))
                 return Unauthorized();
             Lesson lesson = lessonDTO.Create(db.Lessons);
             string error = db.Update(lesson, Added);
@@ -86,7 +84,7 @@ namespace EasyGradeManager.Controllers.API
                 return NotFound();
             if (lesson.Assignment == null || lesson.Assignment.Course == null)
                 return BadRequest();
-            if (!"Teacher".Equals(auth.GetAccessRole(authorizedUser, lesson.Assignment.Course)))
+            if (!"Teacher".Equals(auth.GetAccessRole(authorizedUser, lesson)))
                 return Unauthorized();
             int assignmentId = lesson.Assignment.Id;
             string error = db.Update(lesson, Deleted);

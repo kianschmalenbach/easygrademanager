@@ -1,12 +1,13 @@
 ﻿using EasyGradeManager.Models;
 using System;
 using System.Text.RegularExpressions;
+using static EasyGradeManager.Static.Authorize;
 
 namespace EasyGradeManager.Static
 {
-    public class Webpage
+    public static class Webpage
     {
-        public static string GetWebpage(string path, User user, int? id)
+        public static string GetWebpage(string path, User user, int? id, object entity)
         {
             path = AppDomain.CurrentDomain.BaseDirectory + "\\Views\\" + path + "\\Index.html";
             string text = System.IO.File.ReadAllText(path);
@@ -20,7 +21,10 @@ namespace EasyGradeManager.Static
                 text += "\n\t\t\tName: \"" + user.Name + "\",";
                 text += "\n\t\t\tRoles: [ ";
                 foreach (Role role in user.Roles)
-                    text += " \"" + role.Name + "\",";
+                {
+                    if(entity == null || role.Equals("Student") || GetAllAccessRoles(user, entity).Contains(role.Name))
+                        text += " \"" + role.Name + "\",";
+                }
                 text = text.Remove(text.Length - 1);
                 text += " ]";
                 text += "\n\t\t};";

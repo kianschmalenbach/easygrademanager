@@ -63,9 +63,10 @@ namespace EasyGradeManager.Models
     {
         public GroupDetailTeacherDTO(Group group) : base(group)
         {
+            Tasks = new HashSet<TaskDetailDTO>();
+            HashSet<int> taskNumbers = new HashSet<int>();
             if (group != null)
             {
-                Tasks = new HashSet<TaskDetailDTO>();
                 if (group.Lesson != null)
                     Lesson = new LessonListDTO(group.Lesson);
                 if (group.Lesson.Assignment != null)
@@ -73,7 +74,15 @@ namespace EasyGradeManager.Models
                 if (group.Lesson.Assignment.Course != null)
                     Course = new CourseListDTO(group.Lesson.Assignment.Course);
                 foreach (Evaluation evaluation in group.Evaluations)
+                {
+                    taskNumbers.Add(evaluation.Task.Number);
                     Tasks.Add(new TaskDetailDTO(evaluation.Task, evaluation));
+                }
+                foreach(Task task in group.Lesson.Assignment.Tasks)
+                {
+                    if (!taskNumbers.Contains(task.Number))
+                        Tasks.Add(new TaskDetailDTO(task, null));
+                }
             }
         }
         public CourseListDTO Course { get; set; }
@@ -87,6 +96,56 @@ namespace EasyGradeManager.Models
         public override int GetHashCode()
         {
             return Id;
+        }
+        public bool Validate(Group group, bool isTeacher)
+        {
+            if (group == null || group.Lesson == null || group.Lesson.Assignment == null ||
+                group.Lesson.Assignment.Tasks == null || group.Evaluations == null)
+                return false;
+            if ((group.IsFinal && (!isTeacher || group.Lesson.Assignment.IsFinal || !IsFinal)) || (!group.IsFinal && isTeacher))
+                return false;
+            foreach(TaskDetailDTO taskDTO in Tasks)
+            {
+                Task task = null;
+                foreach (Task otherTask in group.Lesson.Assignment.Tasks)
+                {
+                    if (taskDTO.Id == otherTask.Id)
+                    {
+                        task = otherTask;
+                        break;
+                    }
+                }
+                if (task == null || taskDTO.Score < 0 || taskDTO.Score > task.MaxScore)
+                    return false;
+            }
+            return true;
+
+        }
+        public void Update(Group group)
+        {
+            group.IsFinal = IsFinal;
+            foreach (TaskDetailDTO taskDTO in Tasks)
+            {
+                bool set = false;
+                foreach (Evaluation evaluation in group.Evaluations)
+                {
+                    if (taskDTO.Id == evaluation.TaskId)
+                    {
+                        evaluation.Score = taskDTO.Score;
+                        set = true;
+                        break;
+                    }
+                }
+                if (!set)
+                {
+                    group.Evaluations.Add(new Evaluation()
+                    {
+                        GroupId = group.Id,
+                        TaskId = taskDTO.Id,
+                        Score = taskDTO.Score
+                    });
+                }
+            }
         }
     }
 

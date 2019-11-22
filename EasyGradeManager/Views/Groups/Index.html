@@ -53,24 +53,50 @@
             </div>
             <div class="col-md-12 col-lg-6">
                 <div class="card pb-1 mb-4">
-                    <h4>Temporary Scores for <span data="Assignment.Name"></span></h4>
+                    <h4>
+                        <span showif="IsFinal=false">Temporary</span>
+                        <span showif="IsFinal=true">Final</span>
+                        Scores for <span data="Assignment.Name"></span>
+                        <span roles="Teacher" showif="Assignment.IsFinal=false">(set by Tutor)</span>
+                    </h4>
                     <div class="px-3 table-responsive">
                         <table class="table table-striped table-bordered table-hover table-sm" id="EvaluationTable">
                             <thead class="thead-dark text-center">
-                                <tr>
-                                    <th>Task</th>
-                                    <th>Score</th>
-                                    <th>Max. Score</th>
-                                </tr>
+                            <tr>
+                                <th>Task</th>
+                                <th>Score</th>
+                                <th>Max. Score</th>
+                            </tr>
                             </thead>
                             <tbody class="text-center">
-                                <tr datalist="Task" order="Task.Number ASC">
-                                    <td data="Task.Name"></td>
-                                    <td data="Task.Score">5</td>
-                                    <td data="Task.MaxScore">8</td>
-                                </tr>
+                            <tr datalist="Task" order="Task.Number ASC" removeonempty="EvaluationTable">
+                                <td data="Task.Name"></td>
+                                <td data="Task.Score" type="number" min="0" step="any">t.b.a.</td>
+                                <td data="Task.MaxScore"></td>
+                            </tr>
                             </tbody>
-                    </table>
+                        </table>
+                    </div>
+                    <!-- TODO Give Elements below proper style -->
+                    <div roles="Tutor" showif="IsFinal=false">
+                        <input type="checkbox" data="IsFinal" mode="edit" scope="Group">
+                        <span mode="edit" scope="Group">Final Results</span>
+                        <button Task="Edit" custom="true">Edit</button>
+                    </div>
+                    <div showif="IsFinal=true">
+                        <span roles="Tutor">
+                            You cannot change the results any more <span roles="Teacher">(as Tutor)</span> because they are marked as final.<br roles="Teacher">
+                        </span>
+                        <span roles="Teacher">
+                            <span showif="Assignment.IsFinal=true">
+                                You cannot change the results any more <span roles="Tutor">(as Teacher)</span> because the assignment is marked as final.
+                            </span>
+                            <span showif="Assignment.IsFinal=false">
+                                <input type="hidden" data="IsFinal" autovalue="IsFinal">
+                                <button Task="Edit" custom="true">Edit</button>
+                            </span>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
