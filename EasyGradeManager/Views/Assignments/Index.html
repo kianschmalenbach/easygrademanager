@@ -45,17 +45,17 @@
                     <h4>Assignment Details</h4>
                     <div class="row mx-0">
                         <div class="col-md-12 col-lg-6 px-3">
-                            <p class="mb-0"><span class="font-weight-bold">Number: </span><span data="Number"></span></p>
-                            <p class="mb-0"><span class="font-weight-bold">Deadline: </span><span data="Deadline"></span></p>
-                            <p class="mb-0"><span class="font-weight-bold">Min. req. Score: </span><span data="MinRequiredScore"></span></p>
-                            <p class="mb-0"><span class="font-weight-bold">Mandatory: </span><span data="Mandatory"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Number: </span><span data="Number" type="number" min="1"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Deadline: </span><span data="Deadline" type="date"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Min. req. Score: </span><span data="MinRequiredScore" min="0" step="any"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Mandatory: </span><span data="Mandatory" type="checkbox"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Weight: </span><span data="Weight" type="number" min="0" max="1" step="any"></span></p>
                         </div>
                         <div class="col-md-12 col-lg-6 px-3">
-                            <p class="mb-0"><span class="font-weight-bold">Weight: </span><span data="Weight"></span></p>
-                            <p class="mb-0"><span class="font-weight-bold">Is Graded: </span><span data="IsGraded"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Is Graded: </span><span data="IsGraded" type="checkbox"></span></p>
                             <p class="mb-0"><span class="font-weight-bold">Fixed Groups: </span><span data="MembershipsFinal" type="checkbox"></span></p>
                             <p class="mb-0"><span class="font-weight-bold">Final Results: </span><span data="IsFinal" type="checkbox"></span></p>
-                            <p class="mb-0"><span class="font-weight-bold">Group Size: </span><span data="MinGroupSize"></span>-<span data="MaxGroupSize"></span></p>
+                            <p class="mb-0"><span class="font-weight-bold">Group Size: </span><span data="MinGroupSize" type="number" min="1"></span>-<span data="MaxGroupSize" type="number" min="1"></span></p>
                         </div>
                         <div class="col-md-12 col-lg-12" roles="Teacher">
                             <button class="btn btn-default float-right ml-2">Set Results as Final</button>

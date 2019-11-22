@@ -259,6 +259,7 @@ namespace EasyGradeManager.Models
         {
             bool finalOk = true;
             bool membershipsFinalOk = true;
+            bool gradedOk = true;
             double maxScore = 0;
             HashSet<string> names = new HashSet<string>();
             HashSet<int> numbers = new HashSet<int>();
@@ -266,6 +267,7 @@ namespace EasyGradeManager.Models
             {
                 finalOk = IsFinal || !assignment.IsFinal;
                 membershipsFinalOk = MembershipsFinal || !assignment.MembershipsFinal;
+                gradedOk = !IsFinal || (IsGraded == assignment.IsGraded);
                 if (assignment.Tasks != null)
                 {
                     foreach (Task task in assignment.Tasks)
@@ -285,15 +287,18 @@ namespace EasyGradeManager.Models
             return
                 Name != null && Number > 0 && !names.Contains(Name) && !numbers.Contains(Number) &&
                 MinGroupSize > 0 && MaxGroupSize > 0 && MinGroupSize <= MaxGroupSize &&
-                MinRequiredScore >= 0 && MinRequiredScore <= maxScore && Weight >= 0 && finalOk && membershipsFinalOk;
+                MinRequiredScore >= 0 && MinRequiredScore <= maxScore && Weight >= 0 && finalOk && 
+                membershipsFinalOk && gradedOk;
         }
         public void Update(Assignment assignment)
         {
             assignment.Name = Name;
             assignment.Number = Number;
             assignment.Deadline = Deadline;
+            assignment.IsGraded = IsGraded;
             assignment.IsFinal = IsFinal;
             assignment.Mandatory = Mandatory;
+            assignment.MembershipsFinal = MembershipsFinal;
             assignment.MinGroupSize = MinGroupSize;
             assignment.MaxGroupSize = MaxGroupSize;
             assignment.MinRequiredScore = MinRequiredScore;
