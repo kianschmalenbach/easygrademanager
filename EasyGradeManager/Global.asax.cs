@@ -16,8 +16,8 @@ namespace EasyGradeManager
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            //IDatabaseInitializer<EasyGradeManagerContext> init = new DropCreateDatabaseAlways<EasyGradeManagerContext>();
-            IDatabaseInitializer<EasyGradeManagerContext> init = new DropCreateDatabaseIfModelChanges<EasyGradeManagerContext>();
+            IDatabaseInitializer<EasyGradeManagerContext> init = new DropCreateDatabaseAlways<EasyGradeManagerContext>();
+            //IDatabaseInitializer<EasyGradeManagerContext> init = new DropCreateDatabaseIfModelChanges<EasyGradeManagerContext>();
             Database.SetInitializer(init);
             init.InitializeDatabase(new EasyGradeManagerContext());
             HttpConfiguration config = GlobalConfiguration.Configuration;

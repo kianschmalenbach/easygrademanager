@@ -116,8 +116,8 @@
                                         <span mode="edit" data="Lesson.NewTutorId" type="number" min="1"></span>
                                     </td>
                                     <td roles="Teacher">
-                                        <button class="btn btn-default" task="Lesson.Edit">Edit</button>
-                                        <button class="btn btn-default" task="Lesson.Delete">Delete</button>
+                                        <button class="btn btn-default my-0" task="Lesson.Edit">Edit</button>
+                                        <button class="btn btn-default my-0" task="Lesson.Delete">Delete</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -183,9 +183,9 @@
                             </p>
                             <div class="row">
                                 <div class="col-md-12 col-lg-6 text-center">
-                                    <h5>Create Group</h5> <!-- TODO style -->
+                                    <h5>Create Group</h5>
                                     Lesson Number:
-                                    <select id="NewLessonNumber" data="NewGroupMembership.NewLessonNumber">
+                                    <select class="custom-select" id="NewLessonNumber" data="NewGroupMembership.NewLessonNumber">
                                         <option datalist="Lesson" data="Lesson.Number"></option>
                                     </select>
                                     <button class="btn btn-default mx-auto" id="CreateGroup" task="NewGroupMembership.Add">Create Group</button>
@@ -256,8 +256,8 @@
                                     <td roles="Student" showif="GroupMembership!=null"><span data="Task.Score">t.b.a.</span></td>
                                     <td><span data="Task.MaxScore"></span></td>
                                     <td roles="Teacher">
-                                        <button class="btn btn-default" task="Task.Edit">Edit</button>
-                                        <button class="btn btn-default" task="Task.Delete">Delete</button>
+                                        <button class="btn btn-default my-0" task="Task.Edit">Edit</button>
+                                        <button class="btn btn-default my-0" task="Task.Delete">Delete</button>
                                     </td>
                                 </tr>
                             </tbody>
