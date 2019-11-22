@@ -12,9 +12,9 @@ function login() {
         redirect: "follow",
         body: "\"" + identifier + "&" + password + "\""
     }).then(response => {
-        if(response.redirected)
+        if (response.redirected)
             window.location.href = response.url;
-        else if(!response.ok && response.status === 401) {
+        else if (!response.ok && response.status === 401) {
             document.getElementById("Login.status").innerText = "Invalid Identifier or Password";
             document.getElementById("password").value = "";
         }
@@ -26,11 +26,11 @@ function fetchData(path) {
     const url = baseUrl + path;
     return new Promise((resolve, reject) => {
         fetch(url, {
-                method: 'GET',
-                credentials: 'include'
-            })
+            method: 'GET',
+            credentials: 'include'
+        })
             .then(data => {
-                if(data.status !== 200)
+                if (data.status !== 200)
                     reject(handleError(data));
                 return data.json();
             })
@@ -39,8 +39,8 @@ function fetchData(path) {
     });
 }
 
-function sendData(method, type, data, id=0) {
-    const url = baseUrl + "/api/" + type + "s" + (id>0 ? "/" + id : "");
+function sendData(method, type, data, id = 0) {
+    const url = baseUrl + "/api/" + type + "s" + (id > 0 ? "/" + id : "");
     console.log(method + " " + url);
     console.log(data);
     fetch(url, {
@@ -52,7 +52,7 @@ function sendData(method, type, data, id=0) {
         }
     })
         .then(data => {
-            switch(data.status) {
+            switch (data.status) {
                 case 200:
                     window.location.href = data.url;
                     break;
@@ -67,7 +67,7 @@ function sendData(method, type, data, id=0) {
 }
 
 function handleError(error) {
-    switch(error.status) {
+    switch (error.status) {
         case 401:
             alert("The last request was not performed because you do not have the rights to perform this action.");
             break;

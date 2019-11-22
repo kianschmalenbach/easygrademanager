@@ -1,13 +1,13 @@
-const lessonField = document.getElementById("NewLesson");
+const lessonField = document.getElementById("NewLessonNumber");
 const groupNumberField = document.getElementById("NewGroupNumber");
 const groupPasswordField = document.getElementById("NewGroupPassword");
 
 function initPage() {
-    if(lessonField !== null)
+    if (lessonField !== null)
         lessonField.setAttribute("onchange", "toggle('Create')");
-    if(groupNumberField !== null)
+    if (groupNumberField !== null)
         groupNumberField.setAttribute("onchange", "toggle('Join')");
-    if(groupPasswordField !== null)
+    if (groupPasswordField !== null)
         groupPasswordField.setAttribute("onchange", "toggle('Join')");
 }
 
@@ -15,7 +15,7 @@ function toggle(mode) {
     mode = mode === "Join";
     disableButton(mode, document.getElementById("CreateGroup"));
     disableButton(!mode, document.getElementById("JoinGroup"));
-    if(mode)
+    if (mode)
         lessonField.value = null;
     else {
         groupNumberField.value = null;
@@ -24,7 +24,7 @@ function toggle(mode) {
 }
 
 function disableButton(disable, button) {
-    if(disable)
+    if (disable)
         button.setAttribute("disabled", "disabled");
     else
         button.removeAttribute("disabled");

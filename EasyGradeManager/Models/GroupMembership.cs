@@ -35,7 +35,7 @@ namespace EasyGradeManager.Models
         }
         public int Id { get; set; }
         public GroupDetailStudentDTO Group { get; }
-        public int NewLessonId { get; set; }
+        public int NewLessonNumber { get; set; }
         public int NewAssignmentId { get; set; }
         public int NewGroupNumber { get; set; }
         public string NewGroupPassword { get; set; }

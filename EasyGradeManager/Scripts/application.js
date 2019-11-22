@@ -1,5 +1,5 @@
 ﻿const pageType = window.location.href.split("/")[3]
-    .substring(0, window.location.href.split("/")[3].length-1);
+    .substring(0, window.location.href.split("/")[3].length - 1);
 let pageData = null;
 const addButtons = [];
 const editButtons = [];
@@ -34,7 +34,7 @@ function fillPageWithData(data, type = "") {
     if (data === null) {
         const showIfs = document.querySelectorAll("*[showif]");
         for (let index = 0; index < showIfs.length; ++index)
-            handleShowIfs(showIfs[index], type.substring(0, type.length-1), null);
+            handleShowIfs(showIfs[index], type.substring(0, type.length - 1), null);
         return;
     }
     const datalists = [];
@@ -99,7 +99,7 @@ function generateLinks(data, type) {
             const link = document.createElement("a");
             const array = type.split(".");
             let href = array[array.length - 1].replace(/\[[0-9]+]/, "");
-            if(href === "AuthorizedUser")
+            if (href === "AuthorizedUser")
                 href = "User";
             link.setAttribute("href", "/" + href + "s/" + id);
             if (element.hasAttribute("data")) {
@@ -116,7 +116,7 @@ function generateLinks(data, type) {
 
 function handleElement(key, type, element, htmlElement) {
     if (htmlElement !== null) {
-        if(htmlElement.tagName.toLowerCase() === "input")
+        if (htmlElement.tagName.toLowerCase() === "input")
             htmlElement.setAttribute("value", element.toString());
         else
             htmlElement.innerText = element.toString();
@@ -198,11 +198,14 @@ function handleArray(key, type, array, rootElement) {
 
     function modifyChildDataAttrs(root, oldValue, newValue) {
         const childElements = root.getElementsByTagName("*");
-        for (let i = 0; i < childElements.length; ++i) {
+        const elementList = [root];
+        for (let i = 0; i < childElements.length; ++i)
+            elementList.push(childElements[i]);
+        for (let i = 0; i < elementList.length; ++i) {
             ["id", "data", "datalist", "link", "task", "showif"].forEach(attr => {
-                if (childElements[i].hasAttribute(attr)) {
-                    const data = childElements[i].getAttribute(attr).replace(oldValue, newValue);
-                    childElements[i].setAttribute(attr, data);
+                if (elementList[i].hasAttribute(attr)) {
+                    const data = elementList[i].getAttribute(attr).replace(oldValue, newValue);
+                    elementList[i].setAttribute(attr, data);
                 }
             });
         }
@@ -222,7 +225,7 @@ function handleShowIfs(htmlElement, type, element) {
     if (key === type) {
         if (array[1] !== null)
             array[1] = array[1].replace(" ", "");
-        if(element !== null)
+        if (element !== null)
             element = element.toString().replace(" ", "");
         else
             element = "null";
@@ -234,35 +237,36 @@ function handleShowIfs(htmlElement, type, element) {
 function initializeButtons(type, data) {
     let entityType = type;
     let arrayType = false;
-    if(/[[0-9]+].$/.test(type)) {
+    if (/[[0-9]+].$/.test(type)) {
         entityType = entityType.split("[")[0] + ".";
         arrayType = true;
     }
-    if(entityType !== "")
-        entityType = entityType.substring(0, entityType.length-1);
+    if (entityType !== "")
+        entityType = entityType.substring(0, entityType.length - 1);
     else
         entityType = pageType;
     let addType = "";
     const array = entityType.split(".");
-    for(let i=0; i<array.length-1; ++i)
+    for (let i = 0; i < array.length - 1; ++i)
         addType += array[i] + ".";
-    addType += "New" + array[array.length-1] + ".";
+    addType += "New" + array[array.length - 1] + ".";
     let buttons = document.querySelectorAll("*[task=\"" + addType + "Add\"]");
-    for(let i=0; i<buttons.length; ++i) {
-        buttons[i].setAttribute("onclick", "addElement('" + array[array.length-1] + "')");
+    for (let i = 0; i < buttons.length; ++i) {
+        const custom = buttons[i].hasAttribute("custom") && buttons[i].getAttribute("custom") === "true";
+        buttons[i].setAttribute("onclick", "addElement('" + array[array.length - 1] + "'" + (custom ? ", true" : "") + ")");
         addButtons.push(buttons[i]);
     }
     if (data === null)
         return;
     buttons = document.querySelectorAll("*[task=\"" + type + "Edit\"]");
-    for(let i=0; i<buttons.length; ++i) {
+    for (let i = 0; i < buttons.length; ++i) {
         const custom = buttons[i].hasAttribute("custom") && buttons[i].getAttribute("custom") === "true";
         buttons[i].setAttribute("onclick",
             "editElement('" + entityType + "', " + data.Id + ", " + arrayType + ", this" + (custom ? ", true" : " ") + ")");
         editButtons.push(buttons[i]);
     }
     buttons = document.querySelectorAll("*[task=\"" + type + "Delete\"]");
-    for(let i=0; i<buttons.length; ++i) {
+    for (let i = 0; i < buttons.length; ++i) {
         buttons[i].setAttribute("onclick",
             "deleteElement('" + entityType + "', " + data.Id + ", this)");
         deleteButtons.push(buttons[i]);
@@ -300,7 +304,7 @@ function insertCustomElements() {
 
 function showLoaders() {
     const boxes = document.querySelectorAll("div[class=\"box\"]");
-    for(let i=0; i<boxes.length; ++i) {
+    for (let i = 0; i < boxes.length; ++i) {
         const element = boxes[i];
         const loaderWrapper = document.createElement("div");
         loaderWrapper.setAttribute("class", "loaderWrapper");
@@ -316,23 +320,24 @@ function showLoaders() {
 
 function hideLoaders() {
     const loaders = document.querySelectorAll("div[class=\"loaderWrapper\"]");
-    for(let i=0; i<loaders.length; ++i)
+    for (let i = 0; i < loaders.length; ++i)
         loaders[i].remove();
 }
 
 function addElement(type) {
     disableButtons();
     const dataFields = findDataFields("New" + type);
+    console.log(dataFields);
     createInputFields(dataFields);
     const data = getInputData();
-    if(data !== null)
+    if (data !== null)
         sendData("POST", type, data);
     removeInputFields();
     enableButtons();
     return false;
 }
 
-function editElement(type, id, isArray, button, customFields=false) {
+function editElement(type, id, isArray, button, customFields = false) {
     disableButtons();
     showModeSpecificElements("edit", type);
     const dataFields = customFields ? findCustomDataFields(type, isArray, id) : findDataFields(type, isArray, id);
@@ -346,7 +351,7 @@ function editElement(type, id, isArray, button, customFields=false) {
 function saveElement(type, id, isArray, button) {
     disableButtons();
     const data = getInputData(type + isArray ? ("[" + id + "]") : "");
-    if(data !== null)
+    if (data !== null)
         sendData("PUT", type, data, id);
     removeInputFields();
     button.innerText = button.innerText.replace("Save", "Edit");
@@ -356,7 +361,7 @@ function saveElement(type, id, isArray, button) {
     return false;
 }
 
-function findDataFields(type, isArray=false, id=0) {
+function findDataFields(type, isArray = false, id = 0) {
     const allFields = document.querySelectorAll("*[data]");
     const dataFields = {};
     for (let i = 0; i < allFields.length; ++i) {
@@ -369,8 +374,7 @@ function findDataFields(type, isArray=false, id=0) {
         if (type === pageType && fieldData.split(".").length === 1) {
             dataFields[fieldData] = allFields[i];
             match = true;
-        }
-        else {
+        } else {
             const array = fieldData.split(".");
             let matchString = "";
             let matchType = type;
@@ -383,7 +387,7 @@ function findDataFields(type, isArray=false, id=0) {
                 match = true;
             }
         }
-        if(match) {
+        if (match) {
             allFields[i].setAttribute("flag", "editField");
             allFields[i].setAttribute("previousValue", allFields[i].innerText);
         }
@@ -394,24 +398,26 @@ function findDataFields(type, isArray=false, id=0) {
 function createInputFields(dataFields) {
     for (const field in dataFields) {
         let inputElement = dataFields[field];
-        let inputType = "text";
-        if (dataFields[field].hasAttribute("type"))
-            inputType = dataFields[field].getAttribute("type");
-        if (inputElement.tagName.toLowerCase() !== "input") {
-            inputElement = document.createElement("input");
-            if (inputType === "checkbox" && dataFields[field].innerText === "true")
-                inputElement.setAttribute("checked", "checked");
-            else if (inputType === "date")
-                inputElement.setAttribute("value", "");
-            inputElement.setAttribute("value", dataFields[field].innerText);
-            dataFields[field].innerText = "";
-            dataFields[field].appendChild(inputElement);
-            inputElement.setAttribute("type", inputType);
-            ["min", "max", "step", "size", "maxlength", "required"].forEach(attr => {
-                if (dataFields[field].hasAttribute(attr))
-                    inputElement.setAttribute(attr, dataFields[field].getAttribute(attr));
-            });
-            inputElement.setAttribute("placeholder", field);
+        if (inputElement.tagName.toLowerCase() !== "select") {
+            let inputType = "text";
+            if (dataFields[field].hasAttribute("type"))
+                inputType = dataFields[field].getAttribute("type");
+            if (inputElement.tagName.toLowerCase() !== "input") {
+                inputElement = document.createElement("input");
+                if (inputType === "checkbox" && dataFields[field].innerText === "true")
+                    inputElement.setAttribute("checked", "checked");
+                else if (inputType === "date")
+                    inputElement.setAttribute("value", "");
+                inputElement.setAttribute("value", dataFields[field].innerText);
+                dataFields[field].innerText = "";
+                dataFields[field].appendChild(inputElement);
+                inputElement.setAttribute("type", inputType);
+                ["min", "max", "step", "size", "maxlength", "required"].forEach(attr => {
+                    if (dataFields[field].hasAttribute(attr))
+                        inputElement.setAttribute(attr, dataFields[field].getAttribute(attr));
+                });
+                inputElement.setAttribute("placeholder", field);
+            }
         }
         inputElement.setAttribute("data", field);
     }
@@ -420,40 +426,43 @@ function createInputFields(dataFields) {
 function getInputData() {
     const data = {};
     const fields = document.querySelectorAll("*[flag=\"editField\"]");
-    for(let i=0; i<fields.length; ++i) {
+    for (let i = 0; i < fields.length; ++i) {
         let inputField = fields[i];
-        if(inputField.tagName.toLowerCase() !== "input")
+        const selectField = inputField;
+        let select = false;
+        if (inputField.tagName.toLowerCase() === "select") {
+            inputField = inputField.options[inputField.selectedIndex];
+            select = true;
+        } else if (inputField.tagName.toLowerCase() !== "input")
             inputField = fields[i].getElementsByTagName("input")[0];
-        if(inputField.value === "")
+        if (inputField === undefined || inputField === null || inputField.value === "")
             continue;
-        let value = inputField.value;
-        if(inputField.hasAttribute("type") && inputField.getAttribute("type").toLowerCase() === "checkbox")
+        let value = select ? inputField.text : inputField.value;
+        if (inputField.hasAttribute("type") && inputField.getAttribute("type").toLowerCase() === "checkbox")
             value = inputField.checked;
-        const fieldName = inputField.getAttribute("data");
+        const fieldName = (select ? selectField : inputField).getAttribute("data");
         const array = fieldName.split(".");
-        if(array.length === 1)
+        if (array.length === 1)
             data[fieldName] = value;
         else {
             let cursor = data;
-            for(let i=0; i<array.length-1; ++i) {
-                if(/[[0-9]+]$/.test(array[i])) {
+            for (let i = 0; i < array.length - 1; ++i) {
+                if (/[[0-9]+]$/.test(array[i])) {
                     const innerArray = array[i].split("[");
                     const datalist = innerArray[0] + "s";
-                    if(cursor[datalist] === undefined)
+                    if (cursor[datalist] === undefined)
                         cursor[datalist] = [];
                     const id = parseInt(innerArray[1].split("]")[0]);
                     cursor[datalist].push({
                         "Id": id
                     });
-                    cursor = cursor[datalist][cursor[datalist].length-1];
-                }
-                else {
+                    cursor = cursor[datalist][cursor[datalist].length - 1];
+                } else {
                     cursor[array[i]] = {};
                     cursor = cursor[array[i]];
                 }
             }
-
-            cursor[array[array.length-1]] = value;
+            cursor[array[array.length - 1]] = value;
         }
     }
     return data;
@@ -461,11 +470,11 @@ function getInputData() {
 
 function removeInputFields() {
     const fields = document.querySelectorAll("*[flag=\"editField\"]");
-    for(let i=0; i<fields.length; ++i) {
+    for (let i = 0; i < fields.length; ++i) {
         const value = fields[i].getAttribute("previousValue");
-        if(fields[i].getElementsByTagName("input").length > 0)
+        if (fields[i].getElementsByTagName("input").length > 0)
             fields[i].getElementsByTagName("input")[0].remove();
-        else if(fields[i].tagName.toLowerCase() === "input")
+        else if (fields[i].tagName.toLowerCase() === "input")
             fields[i].value = fields[i].getAttribute("previousValue");
         fields[i].innerText = value;
         fields[i].removeAttribute("flag");
@@ -478,37 +487,37 @@ function deleteElement(type, id) {
 }
 
 function enableButtons() {
-    for(let i=0; i<editButtons.length; ++i)
+    for (let i = 0; i < editButtons.length; ++i)
         editButtons[i].removeAttribute("disabled");
-    for(let i=0; i<deleteButtons.length; ++i)
+    for (let i = 0; i < deleteButtons.length; ++i)
         deleteButtons[i].removeAttribute("disabled");
-    for(let i=0; i<addButtons.length; ++i)
+    for (let i = 0; i < addButtons.length; ++i)
         addButtons[i].removeAttribute("disabled");
 }
 
 function disableButtons() {
-    for(let i=0; i<editButtons.length; ++i)
+    for (let i = 0; i < editButtons.length; ++i)
         editButtons[i].setAttribute("disabled", "true");
-    for(let i=0; i<deleteButtons.length; ++i)
+    for (let i = 0; i < deleteButtons.length; ++i)
         deleteButtons[i].setAttribute("disabled", "true");
-    for(let i=0; i<addButtons.length; ++i)
+    for (let i = 0; i < addButtons.length; ++i)
         addButtons[i].setAttribute("disabled", "true");
 }
 
-function showModeSpecificElements(mode, scope=null) {
+function showModeSpecificElements(mode, scope = null) {
     let elements = document.querySelectorAll("*[mode]");
-    if(scope !== null) {
+    if (scope !== null) {
         const filteredElements = [];
-        for(let i=0; i<elements.length; ++i) {
-            if(!elements[i].hasAttribute("scope") ||
+        for (let i = 0; i < elements.length; ++i) {
+            if (!elements[i].hasAttribute("scope") ||
                 elements[i].getAttribute("scope") === scope)
                 filteredElements.push(elements[i]);
         }
         elements = filteredElements;
     }
-    for(let i=0; i<elements.length; ++i) {
+    for (let i = 0; i < elements.length; ++i) {
         const modes = elements[i].getAttribute("mode").split(" ");
-        if(modes.includes(mode))
+        if (modes.includes(mode))
             elements[i].removeAttribute("hidden");
         else
             elements[i].setAttribute("hidden", "hidden");

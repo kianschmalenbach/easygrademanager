@@ -20,12 +20,19 @@ namespace EasyGradeManager.Static
                 text += "\n\t\t\tIdentifier: \"" + user.Identifier + "\",";
                 text += "\n\t\t\tName: \"" + user.Name + "\",";
                 text += "\n\t\t\tRoles: [ ";
+                bool match = false;
                 foreach (Role role in user.Roles)
                 {
                     if (entity == null || role.Equals("Student") || GetAllAccessRoles(user, entity).Contains(role.Name))
+                    {
                         text += " \"" + role.Name + "\",";
+                        match = true;
+                    }
                 }
-                text = text.Remove(text.Length - 1);
+                if (match)
+                    text = text.Remove(text.Length - 1);
+                else
+                    text += "\"none\"";
                 text += " ]";
                 text += "\n\t\t};";
             }

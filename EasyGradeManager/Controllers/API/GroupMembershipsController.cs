@@ -37,11 +37,24 @@ namespace EasyGradeManager.Controllers.API
                 return Unauthorized();
             Student student = authorizedUser.GetStudent();
             Assignment assignment = db.Assignments.Find(membershipDTO.NewAssignmentId);
-            Lesson lesson = db.Lessons.Find(membershipDTO.NewLessonId);
-            if (assignment == null || (lesson != null && !assignment.Equals(lesson.Assignment)))
+            if (assignment == null || assignment.Lessons == null)
                 return BadRequest();
+            Lesson lesson = null;
             Group group = null;
-            if (membershipDTO.NewGroupNumber > 0)
+            if (membershipDTO.NewLessonNumber > 0)
+            {
+                foreach (Lesson otherLesson in assignment.Lessons)
+                {
+                    if (membershipDTO.NewLessonNumber == otherLesson.Number)
+                    {
+                        lesson = otherLesson;
+                        break;
+                    }
+                }
+                if (lesson == null)
+                    return BadRequest();
+            }
+            else if (membershipDTO.NewGroupNumber > 0)
             {
                 lesson = null;
                 foreach (Lesson otherLesson in assignment.Lessons)
@@ -61,6 +74,8 @@ namespace EasyGradeManager.Controllers.API
                     if (group != null)
                         break;
                 }
+                if (group == null || lesson == null)
+                    return BadRequest();
             }
             if (!ModelState.IsValid || lesson == null || lesson.Assignment == null ||
                 lesson.Assignment.Course == null)
