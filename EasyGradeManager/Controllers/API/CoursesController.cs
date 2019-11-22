@@ -32,7 +32,11 @@ namespace EasyGradeManager.Controllers.API
             Course course = db.Courses.Find(id);
             if (course == null)
                 return NotFound();
-            return Ok(auth.GetAccessRole(authorizedUser, course) != null ? new CourseDetailDTO(course) : new CourseListDTO(course));
+            string accessRole = auth.GetAccessRole(authorizedUser, course);
+            if (accessRole == null)
+                return Ok(new CourseListDTO(course));
+            return Ok(new CourseDetailDTO(course, authorizedUser.GetStudent(), authorizedUser.GetTutor(), authorizedUser.GetTeacher()));
+            
         }
 
         public IHttpActionResult PutCourse(int id, CourseDetailDTO courseDTO)

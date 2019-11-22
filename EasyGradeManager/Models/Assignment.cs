@@ -84,13 +84,15 @@ namespace EasyGradeManager.Models
                 return null;
             return scheme.GetGrade(percentage);
         }
-        public ICollection<Student> GetStudents()
+        public ICollection<Student> GetStudents(Tutor tutor)
         {
             ICollection<Student> students = new HashSet<Student>();
             if(Lessons != null)
             {
                 foreach (Lesson lesson in Lessons)
                 {
+                    if (tutor != null && !tutor.Equals(lesson.Tutor))
+                        continue;
                     foreach (Student student in lesson.GetStudents())
                         students.Add(student);
                 }
@@ -200,12 +202,12 @@ namespace EasyGradeManager.Models
                             Tasks.Add(new TaskListDTO(task));
                     }
                 }
-                Result = new StudentResult(student, assignment, false);
+                Result = new AssignmentResult(student, assignment, false);
             }
         }
         public LessonListDTO Lesson { get; set; }
         public ICollection<TaskListDTO> Tasks { get; }
-        public StudentResult Result { get; }
+        public AssignmentResult Result { get; }
         public override bool Equals(object other)
         {
             return other != null && other is AssignmentDetailStudentDTO && Id == ((AssignmentDetailStudentDTO)other).Id;
@@ -220,33 +222,22 @@ namespace EasyGradeManager.Models
     {
         public AssignmentDetailTeacherDTO(Assignment assignment, Student student, Tutor tutor, Teacher teacher) : base(assignment, student, tutor)
         {
-            Results = new HashSet<StudentResult>();
+            Results = new HashSet<AssignmentResult>();
             if (assignment != null)
             {
                 if (Tasks.Count == 0)
                     foreach (Task task in assignment.Tasks)
                         Tasks.Add(new TaskListDTO(task));
-                if (teacher != null)
+                if (teacher != null || tutor != null)
                 {
-                    ICollection<Student> students = assignment.GetStudents();
+                    ICollection<Student> students = assignment.GetStudents(teacher != null ? null : tutor);
                     foreach (Student otherStudent in students)
-                        Results.Add(new StudentResult(otherStudent, assignment, true));
-                }
-                else if (tutor != null && assignment.Lessons != null)
-                {
-                    foreach (Lesson lesson in assignment.Lessons)
-                    {
-                        if (!tutor.Equals(lesson.Tutor))
-                            continue;
-                        ICollection<Student> students = lesson.GetStudents();
-                        foreach (Student otherStudent in students)
-                            Results.Add(new StudentResult(otherStudent, assignment, true));
-                    }
+                        Results.Add(new AssignmentResult(otherStudent, assignment, true));
                 }
             }
         }
         public int NewCourseId { get; set; }
-        public ICollection<StudentResult> Results { get; }
+        public ICollection<AssignmentResult> Results { get; }
         public override bool Equals(object other)
         {
             return other != null && other is AssignmentDetailTeacherDTO && Id == ((AssignmentDetailTeacherDTO)other).Id;
@@ -315,9 +306,9 @@ namespace EasyGradeManager.Models
         
     }
     
-    public class StudentResult
+    public class AssignmentResult
     {
-        internal StudentResult(Student student, Assignment assignment, bool setStudent)
+        internal AssignmentResult(Student student, Assignment assignment, bool setStudent)
         {
             if (student != null && assignment != null)
             {
