@@ -99,6 +99,7 @@ li{
     border-bottom: 1px solid #41698E !important;
     border-radius: 0 !important;
     padding-bottom: 1px !important;
+    width: fit-content !important;
 }
 
 .custom-select:focus, input[type=number]:focus, input[type=date]: focus {

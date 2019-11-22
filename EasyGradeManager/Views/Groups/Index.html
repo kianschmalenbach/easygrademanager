@@ -78,12 +78,12 @@
                         </table>
                     </div>
                     <!-- TODO Give Elements below proper style -->
-                    <div roles="Tutor" showif="IsFinal=false">
+                    <div class="col-md-12 col-lg-12" roles="Tutor" showif="IsFinal=false">
                         <input type="checkbox" data="IsFinal" mode="edit" scope="Group">
                         <span mode="edit" scope="Group">Final Results</span>
-                        <button Task="Edit" custom="true">Edit</button>
+                        <button class="btn btn-default float-right" Task="Edit" custom="true">Edit</button>
                     </div>
-                    <div showif="IsFinal=true">
+                    <div class="col-md-12 col-lg-12" showif="IsFinal=true">
                         <span roles="Tutor">
                             You cannot change the results any more <span roles="Teacher">(as Tutor)</span> because they are marked as final.<br roles="Teacher">
                         </span>
@@ -93,7 +93,7 @@
                             </span>
                             <span showif="Assignment.IsFinal=false">
                                 <input type="hidden" data="IsFinal" autovalue="IsFinal">
-                                <button Task="Edit" custom="true">Edit</button>
+                                <button class="btn btn-default float-right" Task="Edit" custom="true">Edit</button>
                             </span>
                         </span>
                     </div>
