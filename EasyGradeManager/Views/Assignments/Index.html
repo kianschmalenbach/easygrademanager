@@ -133,7 +133,7 @@
                             <td><span data="Lesson.Date" type="date"></span></td>
                             <td roles="Teacher none">
                                 <span mode="show" data="Lesson.Tutor.Name"></span>
-                                <span mode="edit" data="Lesson.NewTutorId" type="number" min="1"></span>
+                                <span mode="edit" roles="Teacher" data="Lesson.NewTutorIdentifier" type="text"></span>
                             </td>
                             <td roles="Teacher">
                                 <button class="btn btn-default my-0" task="Lesson.Edit">Edit</button>
@@ -145,7 +145,7 @@
                 </div>
                 <div class="form-inline mx-0 px-3" roles="Teacher">
                     <input type="number" size="12" placeholder="Lesson Number" data="NewLesson.Number">
-                    <input class="mx-2" type="number" min="1" placeholder="TutorId" data="NewLesson.NewTutorId">
+                    <input class="mx-2" type="text" placeholder="Tutor Identifier" data="NewLesson.NewTutorIdentifier">
                     <input type="date" placeholder="Date" data="NewLesson.Date">
                     <input type="hidden" data="NewLesson.NewAssignmentId" autoValue="Id">
                     <button class="btn btn-default mx-2" task="NewLesson.Add">Add Lesson</button>

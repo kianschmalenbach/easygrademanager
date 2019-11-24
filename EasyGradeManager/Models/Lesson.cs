@@ -108,7 +108,7 @@ namespace EasyGradeManager.Models
         public CourseListDTO Course { get; set; }
         public AssignmentListDTO Assignment { get; set; }
         public int NewAssignmentId { get; set; }
-        public int NewTutorId { get; set; }
+        public string NewTutorIdentifier { get; set; }
         public ICollection<GroupListDTO> Groups { get; }
         public LessonListDTO DerivedFrom { get; set; }
         public int NewDerivedFromId { get; set; }
@@ -121,9 +121,9 @@ namespace EasyGradeManager.Models
         {
             return Id;
         }
-        public bool Validate(Lesson lesson, DbSet<Lesson> allLessons, Assignment assignment, DbSet<Tutor> allTutors)
+        public bool Validate(Lesson lesson, DbSet<Lesson> allLessons, Assignment assignment, Tutor tutor)
         {
-            if (NewTutorId != 0 && (NewDerivedFromId != 0 || allTutors == null || allTutors.Find(NewTutorId) == null))
+            if (tutor != null && NewDerivedFromId != 0)
                 return false;
             HashSet<int> numbers = new HashSet<int>();
             if (lesson != null && lesson.Assignment != null && lesson.Assignment.Lessons != null)
@@ -146,13 +146,13 @@ namespace EasyGradeManager.Models
                     if (derivedFrom == null || derivedFrom.Tutor == null || derivedFrom.Assignment == null ||
                         derivedFrom.Assignment.Course == null || !assignment.Course.Equals(derivedFrom.Assignment.Course))
                         return false;
-                    return !numbers.Contains(derivedFrom.Number) && NewTutorId == 0;
+                    return !numbers.Contains(derivedFrom.Number) && tutor == null;
                 }
                 return !numbers.Contains(Number);
             }
             return false;
         }
-        public void Update(Lesson lesson, Lesson derivedFrom)
+        public void Update(Lesson lesson, Lesson derivedFrom, Tutor tutor)
         {
             if (derivedFrom != null)
             {
@@ -165,11 +165,11 @@ namespace EasyGradeManager.Models
             {
                 lesson.Number = Number;
                 lesson.Date = Date;
-                if (NewTutorId != 0)
-                    lesson.TutorId = NewTutorId;
+                if (tutor != null)
+                    lesson.TutorId = tutor.Id;
             }
         }
-        public Lesson Create(DbSet<Lesson> allLessons)
+        public Lesson Create(DbSet<Lesson> allLessons, Tutor tutor)
         {
             Lesson lesson = new Lesson();
             if (allLessons == null)
@@ -179,11 +179,11 @@ namespace EasyGradeManager.Models
                 Lesson derivedFrom = allLessons.Find(NewDerivedFromId);
                 if (derivedFrom == null)
                     return null;
-                Update(lesson, derivedFrom);
+                Update(lesson, derivedFrom, tutor);
             }
             else
             {
-                Update(lesson, null);
+                Update(lesson, null, tutor);
             }
             lesson.AssignmentId = NewAssignmentId;
             return lesson;

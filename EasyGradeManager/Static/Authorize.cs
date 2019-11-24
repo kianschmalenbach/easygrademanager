@@ -30,6 +30,9 @@ namespace EasyGradeManager.Static
 
         public User GetAuthorizedUser(string value)
         {
+            if (db != null)
+                db.Dispose();
+            db = new EasyGradeManagerContext();
             string[] credentials = value.Split('&');
             if (credentials.Length != 2)
                 return null;
@@ -52,8 +55,7 @@ namespace EasyGradeManager.Static
         public User GetUserByIdentifier(string identifier)
         {
             if (db != null)
-                db.Dispose();
-            db = new EasyGradeManagerContext();
+                db = new EasyGradeManagerContext();
             return (from u in db.Users
                     where u.Identifier.Equals(identifier)
                     select u).FirstOrDefault();

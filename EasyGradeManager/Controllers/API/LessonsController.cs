@@ -45,9 +45,17 @@ namespace EasyGradeManager.Controllers.API
                 return BadRequest(ModelState);
             if (!"Teacher".Equals(auth.GetAccessRole(authorizedUser, lesson)))
                 return Unauthorized();
-            if (!lessonDTO.Validate(lesson, null, null, db.Tutors))
+            Tutor tutor = null;
+            if (lessonDTO.NewTutorIdentifier != null)
+            {
+                User user = auth.GetUserByIdentifier(lessonDTO.NewTutorIdentifier);
+                if (user == null && user.GetTutor() == null)
+                    return BadRequest();
+                tutor = user.GetTutor();
+            }
+            if (!lessonDTO.Validate(lesson, null, null, tutor))
                 return BadRequest();
-            lessonDTO.Update(lesson, null);
+            lessonDTO.Update(lesson, null, tutor);
             string error = db.Update(lesson, Modified);
             if (error != null)
                 return BadRequest(error);
@@ -61,12 +69,19 @@ namespace EasyGradeManager.Controllers.API
             if (authorizedUser == null || authorizedUser.GetTeacher() == null)
                 return Unauthorized();
             Assignment assignment = db.Assignments.Find(lessonDTO.NewAssignmentId);
+            Tutor tutor = null;
+            if (lessonDTO.NewTutorIdentifier == null)
+                return BadRequest();
+            User user = auth.GetUserByIdentifier(lessonDTO.NewTutorIdentifier);
+            if (user == null && user.GetTutor() == null)
+                return BadRequest();
+            tutor = user.GetTutor();
             if (!ModelState.IsValid || assignment == null || assignment.Course == null ||
-                !lessonDTO.Validate(null, db.Lessons, assignment, db.Tutors))
+                !lessonDTO.Validate(null, db.Lessons, assignment, tutor))
                 return BadRequest();
             if (!"Teacher".Equals(auth.GetAccessRole(authorizedUser, assignment)))
                 return Unauthorized();
-            Lesson lesson = lessonDTO.Create(db.Lessons);
+            Lesson lesson = lessonDTO.Create(db.Lessons, tutor);
             string error = db.Update(lesson, Added);
             if (error != null)
                 return BadRequest(error);
