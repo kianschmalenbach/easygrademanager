@@ -84,8 +84,9 @@ namespace EasyGradeManager.Models
 
     public class UserDetailDTO : UserListDTO
     {
-        public UserDetailDTO(User user) : base(user)
+        public UserDetailDTO(User user, ICollection<Course> courses) : base(user)
         {
+            Courses = new HashSet<CourseListDTO>();
             if (user != null)
             {
                 Email = user.Email;
@@ -96,6 +97,11 @@ namespace EasyGradeManager.Models
                 if (user.GetStudent() != null)
                     Student = new StudentDTO(user.GetStudent());
             }
+            if (courses != null)
+            {
+                foreach (Course course in courses)
+                    Courses.Add(new CourseListDTO(course));
+            }
         }
         public string Email { get; set; }
         public string NewPassword { get; set; }
@@ -105,6 +111,7 @@ namespace EasyGradeManager.Models
         public TeacherDTO Teacher { get; set; }
         public TutorDTO Tutor { get; set; }
         public StudentDTO Student { get; set; }
+        public ICollection<CourseListDTO> Courses { get; }
         public override bool Equals(object other)
         {
             return other != null && other is UserDetailDTO && Id == ((UserDetailDTO)other).Id;

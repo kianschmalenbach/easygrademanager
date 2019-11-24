@@ -91,15 +91,27 @@
             <div class="card pb-1 mb-4">
                 <h4>My Taught Courses</h4>
                 <div class="row mx-0">
-                    <div class="col-md-12 col-lg-6 px-3" id="CurrentTaughtCourses">
-                        <h5>Current Term</h5>
-                        <ul>
-                            <li datalist="Teacher.Course" filter="Teacher.Course.Archived=false"
-                                removeonempty="CurrentTaughtCourses">
-                                <span data="Teacher.Course.Name" link="Teacher.Course"></span>
-                                (<span data="Teacher.Course.Term"></span>)
-                            </li>
-                        </ul>
+                    <div class="col-md-12 col-lg-6 px-3">
+                        <div id="CurrentTaughtCourses">
+                            <h5>Current Term</h5>
+                            <ul>
+                                <li datalist="Teacher.Course" filter="Teacher.Course.Archived=false"
+                                    removeonempty="CurrentTaughtCourses">
+                                    <span data="Teacher.Course.Name" link="Teacher.Course"></span>
+                                    (<span data="Teacher.Course.Term"></span>)
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="PreviousTaughtCourses">
+                            <h5>Previous Terms</h5>
+                            <ul>
+                                <li datalist="Teacher.Course" order="Teacher.Course.Term DESC" filter="Teacher.Course.Archived=true"
+                                    removeonempty="PreviousTaughtCourses">
+                                    <span data="Teacher.Course.Name" link="Teacher.Course"></span>
+                                    (<span data="Teacher.Course.Term"></span>)
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="col-md-12 col-lg-6 px-3">
                         <label class="control-label" for="CourseName">Course Name</label>
@@ -110,18 +122,6 @@
                             <i class="far fa-plus-square"></i> Add Course
                         </button>
                     </div>
-                </div>
-
-                <div class="px-3" id="PreviousTaughtCourses">
-                    <h5>Previous Terms</h5>
-                    <ul>
-                        <li datalist="Teacher.Course" order="Teacher.Course.Term DESC"
-                            filter="Teacher.Course.Archived=true"
-                            removeonempty="PreviousTaughtCourses">
-                            <span data="Teacher.Course.Name" link="Teacher.Course"></span>
-                            (<span data="Teacher.Course.Term"></span>)
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>
@@ -171,6 +171,19 @@
                             removeonempty="PreviousStudentCourses">
                             <span data="Student.Course.Name" link="Student.Course"></span>
                             (<span data="Student.Course.Term"></span>)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="AllCourses" class="col-md-12 col-lg-12">
+            <div class="card pb-1 mb-4">
+                <h4>All Available Courses</h4>
+                <div class="px-3">
+                    <ul>
+                        <li datalist="Course" order="Course.Name ASC" removeonempty="AllCourses">
+                            <span data="Course.Name" link="Course"></span>
+                            (<span data="Course.Term"></span>)
                         </li>
                     </ul>
                 </div>

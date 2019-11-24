@@ -31,7 +31,31 @@ namespace EasyGradeManager.Controllers.API
             User user = db.Users.Find(id);
             if (user == null)
                 return NotFound();
-            return Ok(user.Equals(authorizedUser) ? new UserDetailDTO(user) : new UserListDTO(user));
+            if (!user.Equals(authorizedUser))
+                return Ok(new UserListDTO(user));
+            ICollection<Course> ownCourses = new HashSet<Course>();
+            if (user.GetTeacher() != null)
+            {
+                foreach (Course course in user.GetTeacher().Courses)
+                    ownCourses.Add(course);
+            }
+            if (user.GetTutor() != null)
+            {
+                foreach (Lesson lesson in user.GetTutor().Lessons)
+                    ownCourses.Add(lesson.Assignment.Course);
+            }
+            if (user.GetStudent() != null)
+            {
+                foreach (GroupMembership membership in user.GetStudent().GroupMemberships)
+                    ownCourses.Add(membership.Group.Lesson.Assignment.Course);
+            }
+            ICollection<Course> courses = new HashSet<Course>();
+            foreach (Course course in db.Courses)
+            {
+                if (!ownCourses.Contains(course) && !course.IsFinal() && !course.Archived)
+                    courses.Add(course);
+            }
+            return Ok(new UserDetailDTO(user, courses));
         }
 
         public IHttpActionResult PutUser(int id, UserDetailDTO userDTO)
