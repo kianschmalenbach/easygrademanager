@@ -37,16 +37,27 @@ namespace EasyGradeManager.Controllers.API
         public IHttpActionResult PutUser(int id, UserDetailDTO userDTO)
         {
             User authorizedUser = new Authorize().GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
-            if (authorizedUser == null || authorizedUser.Id != id)
+            if (userDTO == null)
+                return BadRequest();
+            if (authorizedUser == null)
                 return Unauthorized();
+            if (userDTO.NewUserIdentifier != null)
+            {
+                User otherUser = new Authorize().GetUserByIdentifier(userDTO.NewUserIdentifier);
+                if (otherUser == null)
+                    return NotFound();
+                id = otherUser.Id;
+            }
             User user = db.Users.Find(id);
-            if (userDTO == null || user == null || !ModelState.IsValid || !userDTO.Validate(false))
+            if (user == null || !ModelState.IsValid || !userDTO.Validate(false, authorizedUser.Id != id ? authorizedUser : null))
                 return BadRequest(ModelState);
-            bool logoutNecessary = userDTO.Update(user);
+            bool logoutNecessary = false;
+            if (authorizedUser.Id == id)
+                userDTO.Update(user);
             if (userDTO.NewRole != null)
             {
                 if (authorizedUser.GetTeacher() == null)
-                    return BadRequest();
+                    return Unauthorized();
                 userDTO.UpdateRole(user);
             }
             string error = db.Update(user, Modified);
@@ -54,14 +65,13 @@ namespace EasyGradeManager.Controllers.API
                 return BadRequest(error);
             if (logoutNecessary)
                 return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Logout");
-            else
-                return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Users/" + authorizedUser.Id);
+            return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Users/" + authorizedUser.Id);
         }
 
         public IHttpActionResult PostUser(UserDetailDTO userDTO)
         {
             User authorizedUser = new Authorize().GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
-            if (!ModelState.IsValid || !userDTO.Validate(true))
+            if (!ModelState.IsValid || !userDTO.Validate(true, null))
                 return BadRequest();
             if (authorizedUser == null && !userDTO.NewRole.Equals("Student"))
                 return Unauthorized();

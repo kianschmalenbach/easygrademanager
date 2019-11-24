@@ -2,7 +2,7 @@ function initPage() {
 
 }
 
-function findCustomDataFields(type, isArray = false, id = 0) {
+function findCustomDataFields(type, isArray = false, id = 0, button) {
     if (type !== "Group")
         return findDataFields(type, isArray, id);
     const allFields = document.querySelectorAll("*[data]");

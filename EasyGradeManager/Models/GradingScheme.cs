@@ -39,7 +39,7 @@ namespace EasyGradeManager.Models
                 cursor = grades[index];
                 index++;
             } while (cursor.MinPercentage < percentage && index < grades.Count);
-            return grades[index-1].Name;
+            return grades[index - 1].Name;
         }
     }
 

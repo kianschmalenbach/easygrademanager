@@ -36,7 +36,7 @@ namespace EasyGradeManager.Models
         {
             if (Assignments == null)
                 return false;
-            foreach(Assignment assignment in Assignments)
+            foreach (Assignment assignment in Assignments)
             {
                 if (!assignment.IsFinal)
                     return false;
@@ -72,7 +72,7 @@ namespace EasyGradeManager.Models
             if (GetAbsoluteScore(student) >= MinRequiredScore)
                 return false;
             int passedAssignments = 0;
-            if(Assignments != null)
+            if (Assignments != null)
             {
                 foreach (Assignment assignment in Assignments)
                 {
@@ -86,7 +86,7 @@ namespace EasyGradeManager.Models
         }
         public string GetGrade(Student student)
         {
-            if (student == null || Assignments == null || GradingScheme == null || 
+            if (student == null || Assignments == null || GradingScheme == null ||
                 GradingScheme.Grades == null || GradingScheme.Grades.Count == 0)
                 return null;
             double percentage = GetPercentage(student);
@@ -135,7 +135,7 @@ namespace EasyGradeManager.Models
         }
     }
 
-    public class CourseDetailDTO: CourseListDTO
+    public class CourseDetailDTO : CourseListDTO
     {
         public CourseDetailDTO(Course course, Student student, Tutor tutor, Teacher teacher) : base(course)
         {

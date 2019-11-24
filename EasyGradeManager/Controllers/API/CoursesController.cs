@@ -36,7 +36,7 @@ namespace EasyGradeManager.Controllers.API
             if (accessRole == null)
                 return Ok(new CourseListDTO(course));
             return Ok(new CourseDetailDTO(course, authorizedUser.GetStudent(), authorizedUser.GetTutor(), authorizedUser.GetTeacher()));
-            
+
         }
 
         public IHttpActionResult PutCourse(int id, CourseDetailDTO courseDTO)

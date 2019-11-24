@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>Assignments</title>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <script type="text/javascript" src="/Scripts/application.js" defer></script>
     <script type="text/javascript" src="/Scripts/network.js" defer></script>
     <script type="text/javascript" src="/Scripts/Pages/assignment.js" defer></script>
@@ -14,265 +14,297 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
 </head>
 <body onload="init()">
-    <header id="header">
-        <nav class="navbar navbar-expand">
-            <div class="container">
-                <a link="AuthorizedUser" class="navbar-brand">Homepage</a>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span data="AuthorizedUser.Name"></span>
-                                (<span data="AuthorizedUser.Identifier"></span>)
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-ledby="navbarDropdown">
-                                <a class="dropdown-item" href="/Logout">Logout</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 col-lg-12 mt-2 mb-4">
-                <h1 class="font-weight-bold">Assignment "<span data="Name"></span>"</h1>
-                <p class="text-center">Course: <span data="Course.Name" link="Course"></span> (<span data="Course.Term"></span>)</p>
-            </div>
-            <div class="col-md-12 col-lg-12">
-                <div class="card pb-1 mb-4">
-                    <h4>Assignment Details</h4>
-                    <div class="row mx-0">
-                        <div class="col-md-12 col-lg-6 px-3">
-                            <p class="mb-0"><span class="font-weight-bold">Number: </span><span data="Number" type="number" min="1"></span></p>
-                            <p class="mb-0"><span class="font-weight-bold">Deadline: </span><span data="Deadline" type="date"></span></p>
-                            <p class="mb-0"><span class="font-weight-bold">Min. req. Score: </span><span data="MinRequiredScore" min="0" step="any"></span></p>
-                            <p class="mb-0"><span class="font-weight-bold">Mandatory: </span><span data="Mandatory" type="checkbox"></span></p>
-                            <p class="mb-0"><span class="font-weight-bold">Weight: </span><span data="Weight" type="number" min="0" max="1" step="any"></span></p>
+<header id="header">
+    <nav class="navbar navbar-expand">
+        <div class="container">
+            <a link="AuthorizedUser" class="navbar-brand">Homepage</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span data="AuthorizedUser.Name"></span>
+                            (<span data="AuthorizedUser.Identifier"></span>)
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-ledby="navbarDropdown">
+                            <a class="dropdown-item" href="/Logout">Logout</a>
                         </div>
-                        <div class="col-md-12 col-lg-6 px-3">
-                            <p class="mb-0"><span class="font-weight-bold">Is Graded: </span><span data="IsGraded" type="checkbox"></span></p>
-                            <p class="mb-0"><span class="font-weight-bold">Fixed Groups: </span><span data="MembershipsFinal" type="checkbox"></span></p>
-                            <p class="mb-0"><span class="font-weight-bold">Final Results: </span><span data="IsFinal" type="checkbox"></span></p>
-                            <p class="mb-0"><span class="font-weight-bold">Group Size: </span><span data="MinGroupSize" type="number" min="1"></span>-<span data="MaxGroupSize" type="number" min="1"></span></p>
-                        </div>
-                        <div class="col-md-12 col-lg-12" roles="Teacher">
-                            <button class="btn btn-default float-right ml-2">Set Results as Final</button>
-                            <button class="btn btn-default float-right ml-2" task="Edit">Edit</button>
-                            <button class="btn btn-default float-right " task="Delete">Delete</button>
-                        </div>
-                    </div>
-                </div>
+                    </li>
+                </ul>
             </div>
-            <div class="col-md-12 col-lg-12" roles="Teacher Tutor" showif="IsFinal=true">
-                <div class="card pb-1 mb-4">
-                    <h4>
-                        Assignment Results
-                    </h4>
-                    <div class="px-3 table-responsive">
-                        <table class="table table-striped table-bordered table-hover table-sm" id="ResultTable">
-                            <thead class="thead-dark text-center">
-                            <tr>
-                                <th>Student</th>
-                                <th>Score</th>
-                                <th>Passed</th>
-                                <th showif="IsGraded=true">Grade</th>
-                            </tr>
-                            </thead>
-                            <tbody class="text-center">
-                            <tr roles="Teacher Tutor" datalist="Result" order="Result.Student.Name ASC" removeonempty="ResultTable">
-                                <td><span data="Result.Student.Name"></span></td>
-                                <td><span data="Result.Score"></span></td>
-                                <td><span data="Result.HasPassed"></span></td>
-                                <td showif="IsGraded=true"><span data="Result.Grade"></span></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 col-lg-12" roles="Teacher Tutor none">
-                <div class="card pb-1 mb-4">
-                    <h4><span roles="Tutor">My<span roles="Student"> Tutored</span></span> Assignment Lessons</h4>
-                    <div class="px-3 table-responsive">
-                        <table class="table table-striped table-bordered table-hover table-sm" id="LessonTable">
-                            <thead class="thead-dark text-center">
-                                <tr>
-                                    <th>Lesson</th>
-                                    <th>Date</th>
-                                    <th roles="Teacher none">Tutor</th>
-                                    <th roles="Teacher">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-center">
-                                <!-- ALSO POSSIBLE: order="Lesson.Tutor.Name DESC" -->
-                                <tr datalist="Lesson" order="Lesson.Number ASC" removeonempty="LessonTable" filter="Lesson.IsOwnLesson=true">
-                                    <td roles="Teacher Tutor" link="Lesson">Lesson <span data="Lesson.Number" type="number" min="1"></span></td>
-                                    <td roles="none">Lesson <span data="Lesson.Number"></span></td>
-                                    <td><span data="Lesson.Date" type="date"></span></td>
-                                    <td roles="Teacher none">
-                                        <span mode="show" data="Lesson.Tutor.Name"></span>
-                                        <span mode="edit" data="Lesson.NewTutorId" type="number" min="1"></span>
-                                    </td>
-                                    <td roles="Teacher">
-                                        <button class="btn btn-default my-0" task="Lesson.Edit">Edit</button>
-                                        <button class="btn btn-default my-0" task="Lesson.Delete">Delete</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="form-inline mx-0 px-3" roles="Teacher">
-                        <input type="number" size="12" placeholder="Lesson Number" data="NewLesson.Number">
-                        <input class="mx-2" type="number" min="1" placeholder="TutorId" data="NewLesson.NewTutorId">
-                        <input type="date" placeholder="Date" data="NewLesson.Date">
-                        <input type="hidden" data="NewLesson.NewAssignmentId" autoValue="Id">
-                        <button class="btn btn-default mx-2" task="NewLesson.Add">Add Lesson</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 col-lg-12" roles="Student">
-                <div class="card pb-1 mb-4">
-                    <h4>My <span roles="Tutor">Student </span>Lesson: Lesson <span data="Lesson.Number"></span></h4>
-                    <div class="px-3 table-responsive">
-                        <table class="table table-striped table-bordered table-hover table-sm">
-                            <tbody class="text-center">
-                            <tr>
-                                <th>Lesson Date:</th>
-                                <td data="Lesson.Date"></td>
-                            </tr>
-                            <tr>
-                                <th>Lesson Tutor:</th>
-                                <td data="Lesson.Tutor.Name"></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 col-lg-12">
-                <div class="card pb-1 mb-4">
-                    <h4>My Assignment Group<span roles="Student">: Group <span data="GroupMembership.Group.Number"></span></span></h4>
-                    <div roles="Student" class="px-3 table-responsive">
-                        <table class="table table-striped table-bordered table-hover table-sm" id="GroupTable">
-                            <tbody class="text-center">
-                                <tr>
-                                    <th>Group Password:</th>
-                                    <td data="GroupMembership.Group.Password"></td>
-                                </tr>
-                                <tr>
-                                    <th>Group Members:</th>
-                                    <td>
-                                        <span datalist="GroupMembership.Group.Student" order="GroupMembership.Group.Student.Name ASC" removeonempty="GroupTable">
-                                            <span data="GroupMembership.Group.Student.Name"></span><br>
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div roles="Student" class="col-md-12 col-lg-12" showif="GroupMembership!=null">
-                        <button class="btn btn-default float-right" task="GroupMembership.Delete">Leave Group</button>
-                    </div>
-                    <div class="col-md-12 col-lg-12" showif="GroupMembership=null">
-                        <div showif="MembershipsFinal=false">
-                            <p class="text-center font-italic">
-                                You do not have a group for this assignment yet.<br>
-                                You can either create a group or join an existing one.
-                            </p>
-                            <div class="row">
-                                <div class="col-md-12 col-lg-6 text-center">
-                                    <h5>Create Group</h5>
-                                    Lesson Number:
-                                    <select class="custom-select" id="NewLessonNumber" data="NewGroupMembership.NewLessonNumber">
-                                        <option datalist="Lesson" data="Lesson.Number"></option>
-                                    </select>
-                                    <button class="btn btn-default mx-auto" id="CreateGroup" task="NewGroupMembership.Add">Create Group</button>
-                                </div>
-                                <div class="col-md-12 col-lg-6 text-center">
-                                    <h5>Join Group</h5>
-                                    <input class="mx-2" type="hidden" data="NewGroupMembership.NewAssignmentId" autovalue="Id">
-                                    <input class="mx-2" id="NewGroupNumber" type="number" min="1" data="NewGroupMembership.NewGroupNumber" placeholder="Group Number">
-                                    <input class="mx-2" id="NewGroupPassword" type="text" data="NewGroupMembership.NewGroupPassword" placeholder="Group Password">
-                                    <button class="btn btn-default mx-auto" id="JoinGroup" task="NewGroupMembership.Add">Join Group</button>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="text-center font-italic" showif="MembershipsFinal=true">
-                            You cannot join a group any more because the teacher has already fixed the groups.
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-lg-12 mt-2 mb-4">
+            <h1 class="font-weight-bold">Assignment "<span data="Name"></span>"</h1>
+            <p class="text-center">Course: <span data="Course.Name" link="Course"></span> (<span
+                    data="Course.Term"></span>)</p>
+        </div>
+        <div class="col-md-12 col-lg-12">
+            <div class="card pb-1 mb-4">
+                <h4>Assignment Details</h4>
+                <div class="row mx-0">
+                    <div class="col-md-12 col-lg-6 px-3">
+                        <p class="mb-0"><span class="font-weight-bold">Number: </span><span data="Number" type="number"
+                                                                                            min="1"></span></p>
+                        <p class="mb-0"><span class="font-weight-bold">Deadline: </span><span data="Deadline"
+                                                                                              type="date"></span></p>
+                        <p class="mb-0"><span class="font-weight-bold">Min. req. Score: </span><span
+                                data="MinRequiredScore" min="0" step="any"></span></p>
+                        <p class="mb-0"><span class="font-weight-bold">Mandatory: </span><span data="Mandatory"
+                                                                                               type="checkbox"></span>
                         </p>
+                        <p class="mb-0"><span class="font-weight-bold">Weight: </span><span data="Weight" type="number"
+                                                                                            min="0" max="1"
+                                                                                            step="any"></span></p>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-12 col-lg-12" roles="Teacher Tutor Student">
-                <div class="card pb-1 mb-4">
-                    <h4>
-                        <span showif="GroupMembership!=null">My</span>
-                        Assignment
-                        <span showif="GroupMembership=null">Tasks</span>
-                        <span showif="GroupMembership!=null">Results</span>
-                    </h4>
-                    <div class="px-3 table-responsive">
-                        <table roles="Student" showif="IsFinal=true" class="table table-striped table-bordered table-hover table-sm">
-                            <thead class="thead-dark text-center">
-                            <tr>
-                                <th>Total Score</th>
-                                <th>Passed</th>
-                                <th showif="IsGraded=true">Grade</th>
-                            </tr>
-                            </thead>
-                            <tbody class="text-center">
-                            <tr showif="IsFinal=true">
-                                <td><span data="Result.Score"></span></td>
-                                <td><span data="Result.HasPassed"></span></td>
-                                <td showif="IsGraded=true"><span data="Result.Grade"></span></td>
-                            </tr>
-                            </tbody>
-                        </table>
+                    <div class="col-md-12 col-lg-6 px-3">
+                        <p class="mb-0"><span class="font-weight-bold">Is Graded: </span><span data="IsGraded"
+                                                                                               type="checkbox"></span>
+                        </p>
+                        <p class="mb-0"><span class="font-weight-bold">Fixed Groups: </span><span
+                                data="MembershipsFinal" type="checkbox"></span></p>
+                        <p class="mb-0"><span class="font-weight-bold">Final Results: </span><span data="IsFinal"
+                                                                                                   type="checkbox"></span>
+                        </p>
+                        <p class="mb-0"><span class="font-weight-bold">Group Size: </span><span data="MinGroupSize"
+                                                                                                type="number"
+                                                                                                min="1"></span>-<span
+                                data="MaxGroupSize" type="number" min="1"></span></p>
                     </div>
-                    <p class="font-italic text-center" roles="Student" showif="GroupMembership!=null">
-                        <span showif="IsFinal=false">The results displayed below are not final yet and hence still subject to change.</span>
-                        <span showif="IsFinal=true">
-                            The results displayed above are the final results for this assignment.<br>
-                            Please find a detailed listing for all tasks below:
-                        </span>
-                    </p>
-                    <div class="px-3 table-responsive">
-                        <table class="table table-striped table-bordered table-hover table-sm" id="TaskTable">
-                            <thead class="thead-dark text-center">
-                                <tr>
-                                    <th mode="edit" scope="Task">Number</th>
-                                    <th>Name</th>
-                                    <th roles="Student" showif="GroupMembership!=null">Score</th>
-                                    <th>Max. Score</th>
-                                    <th roles="Teacher">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-center">
-                                <tr datalist="Task" order="Task.Number ASC" removeonempty="TaskTable">
-                                    <td mode="edit" scope="Task"><span data="Task.Number" type="number" min="1"></span></td>
-                                    <td><span data="Task.Name"></span></td>
-                                    <td roles="Student" showif="GroupMembership!=null"><span data="Task.Score">t.b.a.</span></td>
-                                    <td><span data="Task.MaxScore"></span></td>
-                                    <td roles="Teacher">
-                                        <button class="btn btn-default my-0" task="Task.Edit">Edit</button>
-                                        <button class="btn btn-default my-0" task="Task.Delete">Delete</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="form-inline mx-0 px-3" roles="Teacher">
-                        <input type="number" size="10" placeholder="Task Number" data="NewTask.Number">
-                        <input class="mx-2" type="text" size="20" placeholder="Task Name" data="NewTask.Name">
-                        <input type="text" size="10" placeholder="Max. Score" data="NewTask.MaxScore">
-                        <input type="hidden" autovalue="Id" data="NewTask.NewAssignmentId">
-                        <button class="btn btn-default mx-2" task="NewTask.Add">Add Task</button>
+                    <div class="col-md-12 col-lg-12" roles="Teacher">
+                        <button class="btn btn-default float-right ml-2">Set Results as Final</button>
+                        <button class="btn btn-default float-right ml-2" task="Edit">Edit</button>
+                        <button class="btn btn-default float-right " task="Delete">Delete</button>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="col-md-12 col-lg-12" roles="Teacher Tutor" showif="IsFinal=true">
+            <div class="card pb-1 mb-4">
+                <h4>
+                    Assignment Results
+                </h4>
+                <div class="px-3 table-responsive">
+                    <table class="table table-striped table-bordered table-hover table-sm" id="ResultTable">
+                        <thead class="thead-dark text-center">
+                        <tr>
+                            <th>Student</th>
+                            <th>Score</th>
+                            <th>Passed</th>
+                            <th showif="IsGraded=true">Grade</th>
+                        </tr>
+                        </thead>
+                        <tbody class="text-center">
+                        <tr roles="Teacher Tutor" datalist="Result" order="Result.Student.Name ASC"
+                            removeonempty="ResultTable">
+                            <td><span data="Result.Student.Name"></span></td>
+                            <td><span data="Result.Score"></span></td>
+                            <td><span data="Result.HasPassed"></span></td>
+                            <td showif="IsGraded=true"><span data="Result.Grade"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-lg-12" roles="Teacher Tutor none">
+            <div class="card pb-1 mb-4">
+                <h4><span roles="Tutor">My<span roles="Student"> Tutored</span></span> Assignment Lessons</h4>
+                <div class="px-3 table-responsive">
+                    <table class="table table-striped table-bordered table-hover table-sm" id="LessonTable">
+                        <thead class="thead-dark text-center">
+                        <tr>
+                            <th>Lesson</th>
+                            <th>Date</th>
+                            <th roles="Teacher none">Tutor</th>
+                            <th roles="Teacher">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody class="text-center">
+                        <!-- ALSO POSSIBLE: order="Lesson.Tutor.Name DESC" -->
+                        <tr datalist="Lesson" order="Lesson.Number ASC" removeonempty="LessonTable"
+                            filter="Lesson.IsOwnLesson=true">
+                            <td roles="Teacher Tutor" link="Lesson">Lesson <span data="Lesson.Number" type="number"
+                                                                                 min="1"></span></td>
+                            <td roles="none">Lesson <span data="Lesson.Number"></span></td>
+                            <td><span data="Lesson.Date" type="date"></span></td>
+                            <td roles="Teacher none">
+                                <span mode="show" data="Lesson.Tutor.Name"></span>
+                                <span mode="edit" data="Lesson.NewTutorId" type="number" min="1"></span>
+                            </td>
+                            <td roles="Teacher">
+                                <button class="btn btn-default my-0" task="Lesson.Edit">Edit</button>
+                                <button class="btn btn-default my-0" task="Lesson.Delete">Delete</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="form-inline mx-0 px-3" roles="Teacher">
+                    <input type="number" size="12" placeholder="Lesson Number" data="NewLesson.Number">
+                    <input class="mx-2" type="number" min="1" placeholder="TutorId" data="NewLesson.NewTutorId">
+                    <input type="date" placeholder="Date" data="NewLesson.Date">
+                    <input type="hidden" data="NewLesson.NewAssignmentId" autoValue="Id">
+                    <button class="btn btn-default mx-2" task="NewLesson.Add">Add Lesson</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-lg-12" roles="Student">
+            <div class="card pb-1 mb-4">
+                <h4>My <span roles="Tutor">Student </span>Lesson: Lesson <span data="Lesson.Number"></span></h4>
+                <div class="px-3 table-responsive">
+                    <table class="table table-striped table-bordered table-hover table-sm">
+                        <tbody class="text-center">
+                        <tr>
+                            <th>Lesson Date:</th>
+                            <td data="Lesson.Date"></td>
+                        </tr>
+                        <tr>
+                            <th>Lesson Tutor:</th>
+                            <td data="Lesson.Tutor.Name"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-lg-12">
+            <div class="card pb-1 mb-4">
+                <h4>My Assignment Group<span roles="Student">: Group <span
+                        data="GroupMembership.Group.Number"></span></span></h4>
+                <div roles="Student" class="px-3 table-responsive">
+                    <table class="table table-striped table-bordered table-hover table-sm" id="GroupTable">
+                        <tbody class="text-center">
+                        <tr>
+                            <th>Group Password:</th>
+                            <td data="GroupMembership.Group.Password"></td>
+                        </tr>
+                        <tr>
+                            <th>Group Members:</th>
+                            <td>
+                                        <span datalist="GroupMembership.Group.Student"
+                                              order="GroupMembership.Group.Student.Name ASC" removeonempty="GroupTable">
+                                            <span data="GroupMembership.Group.Student.Name"></span><br>
+                                        </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div roles="Student" class="col-md-12 col-lg-12" showif="GroupMembership!=null">
+                    <button class="btn btn-default float-right" task="GroupMembership.Delete">Leave Group</button>
+                </div>
+                <div class="col-md-12 col-lg-12" showif="GroupMembership=null">
+                    <div showif="MembershipsFinal=false">
+                        <p class="text-center font-italic">
+                            You do not have a group for this assignment yet.<br>
+                            You can either create a group or join an existing one.
+                        </p>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-6 text-center">
+                                <h5>Create Group</h5>
+                                Lesson Number:
+                                <select class="custom-select" id="NewLessonNumber"
+                                        data="NewGroupMembership.NewLessonNumber">
+                                    <option datalist="Lesson" data="Lesson.Number"></option>
+                                </select>
+                                <button class="btn btn-default mx-auto" id="CreateGroup" task="NewGroupMembership.Add">
+                                    Create Group
+                                </button>
+                            </div>
+                            <div class="col-md-12 col-lg-6 text-center">
+                                <h5>Join Group</h5>
+                                <input class="mx-2" type="hidden" data="NewGroupMembership.NewAssignmentId"
+                                       autovalue="Id">
+                                <input class="mx-2" id="NewGroupNumber" type="number" min="1"
+                                       data="NewGroupMembership.NewGroupNumber" placeholder="Group Number">
+                                <input class="mx-2" id="NewGroupPassword" type="text"
+                                       data="NewGroupMembership.NewGroupPassword" placeholder="Group Password">
+                                <button class="btn btn-default mx-auto" id="JoinGroup" task="NewGroupMembership.Add">
+                                    Join Group
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center font-italic" showif="MembershipsFinal=true">
+                        You cannot join a group any more because the teacher has already fixed the groups.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-lg-12" roles="Teacher Tutor Student">
+            <div class="card pb-1 mb-4">
+                <h4>
+                    <span showif="GroupMembership!=null">My</span>
+                    Assignment
+                    <span showif="GroupMembership=null">Tasks</span>
+                    <span showif="GroupMembership!=null">Results</span>
+                </h4>
+                <div class="px-3 table-responsive">
+                    <table roles="Student" showif="IsFinal=true"
+                           class="table table-striped table-bordered table-hover table-sm">
+                        <thead class="thead-dark text-center">
+                        <tr>
+                            <th>Total Score</th>
+                            <th>Passed</th>
+                            <th showif="IsGraded=true">Grade</th>
+                        </tr>
+                        </thead>
+                        <tbody class="text-center">
+                        <tr showif="IsFinal=true">
+                            <td><span data="Result.Score"></span></td>
+                            <td><span data="Result.HasPassed"></span></td>
+                            <td showif="IsGraded=true"><span data="Result.Grade"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="font-italic text-center" roles="Student" showif="GroupMembership!=null">
+                    <span showif="IsFinal=false">The results displayed below are not final yet and hence still subject to change.</span>
+                    <span showif="IsFinal=true">
+                            The results displayed above are the final results for this assignment.<br>
+                            Please find a detailed listing for all tasks below:
+                        </span>
+                </p>
+                <div class="px-3 table-responsive">
+                    <table class="table table-striped table-bordered table-hover table-sm" id="TaskTable">
+                        <thead class="thead-dark text-center">
+                        <tr>
+                            <th mode="edit" scope="Task">Number</th>
+                            <th>Name</th>
+                            <th roles="Student" showif="GroupMembership!=null">Score</th>
+                            <th>Max. Score</th>
+                            <th roles="Teacher">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody class="text-center">
+                        <tr datalist="Task" order="Task.Number ASC" removeonempty="TaskTable">
+                            <td mode="edit" scope="Task"><span data="Task.Number" type="number" min="1"></span></td>
+                            <td><span data="Task.Name"></span></td>
+                            <td roles="Student" showif="GroupMembership!=null"><span data="Task.Score">t.b.a.</span>
+                            </td>
+                            <td><span data="Task.MaxScore"></span></td>
+                            <td roles="Teacher">
+                                <button class="btn btn-default my-0" task="Task.Edit">Edit</button>
+                                <button class="btn btn-default my-0" task="Task.Delete">Delete</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="form-inline mx-0 px-3" roles="Teacher">
+                    <input type="number" size="10" placeholder="Task Number" data="NewTask.Number">
+                    <input class="mx-2" type="text" size="20" placeholder="Task Name" data="NewTask.Name">
+                    <input type="text" size="10" placeholder="Max. Score" data="NewTask.MaxScore">
+                    <input type="hidden" autovalue="Id" data="NewTask.NewAssignmentId">
+                    <button class="btn btn-default mx-2" task="NewTask.Add">Add Task</button>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 </body>
 </html>

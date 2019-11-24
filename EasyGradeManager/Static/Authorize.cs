@@ -30,17 +30,12 @@ namespace EasyGradeManager.Static
 
         public User GetAuthorizedUser(string value)
         {
-            if (db != null)
-                db.Dispose();
-            db = new EasyGradeManagerContext();
             string[] credentials = value.Split('&');
             if (credentials.Length != 2)
                 return null;
             string identifier = credentials[0];
             string password = credentials[1];
-            var user = (from u in db.Users
-                        where u.Identifier.Equals(identifier)
-                        select u).FirstOrDefault();
+            User user = GetUserByIdentifier(identifier);
             if (user != null && SecurePasswordHasher.Verify(password, user.Password))
                 return user;
             return null;
@@ -52,6 +47,16 @@ namespace EasyGradeManager.Static
             if (credentials.Length != 2)
                 return null;
             return credentials[1];
+        }
+
+        public User GetUserByIdentifier(string identifier)
+        {
+            if (db != null)
+                db.Dispose();
+            db = new EasyGradeManagerContext();
+            return (from u in db.Users
+                    where u.Identifier.Equals(identifier)
+                    select u).FirstOrDefault();
         }
 
         public string GetAccessRole(User user, object entity)

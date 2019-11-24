@@ -22,7 +22,8 @@ function init() {
                 initPage();
                 hideLoaders();
             });
-    }
+    } else
+        initPage();
 }
 
 function fillPageWithData(data, type = "") {
@@ -340,7 +341,7 @@ function addElement(type) {
 function editElement(type, id, isArray, button, customFields = false) {
     disableButtons();
     showModeSpecificElements("edit", type);
-    const dataFields = customFields ? findCustomDataFields(type, isArray, id) : findDataFields(type, isArray, id);
+    const dataFields = customFields ? findCustomDataFields(type, isArray, id, button) : findDataFields(type, isArray, id);
     createInputFields(dataFields);
     button.innerText = button.innerText.replace("Edit", "Save");
     button.setAttribute("onclick", button.getAttribute("onclick")

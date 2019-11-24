@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>Users</title>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <script type="text/javascript" src="/Scripts/application.js" defer></script>
     <script type="text/javascript" src="/Scripts/network.js" defer></script>
     <script type="text/javascript" src="/Scripts/Pages/user.js" defer></script>
@@ -11,135 +11,172 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/Content/style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"/>
 </head>
 <body onload="init()">
-    <header id="header">
-        <nav class="navbar navbar-expand">
-            <div class="container">
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span data="AuthorizedUser.Name"></span>
-                                (<span data="AuthorizedUser.Identifier"></span>)
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/Logout">Logout</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 col-lg-12 mt-2 mb-4">
-                <h1 class="font-weight-bold">EasyGradeManager</h1>
-            </div>
-            <div class="col-md-12 col-lg-6">
-                <div class="card pb-1 mb-4">
-                    <h4>My Profile</h4>
-                    <div class="row mx-0">
-                        <div class="col-md-12 col-lg-12 px-3">
-                            <p class="mb-0"><span class="font-weight-bold">User ID: </span><span data="Identifier"></span></p>
-                            <p class="mb-0" mode="edit"><span class="font-weight-bold">New Password: </span><span data="NewPassword" type="password"></span></p>
-                            <p class="mb-0"><span class="font-weight-bold">Name: </span><span data="Name"></span></p>
-                            <p><span class="font-weight-bold">Email: </span><span data="Email"></span></p>
+<header id="header">
+    <nav class="navbar navbar-expand">
+        <div class="container">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span data="AuthorizedUser.Name"></span>
+                            (<span data="AuthorizedUser.Identifier"></span>)
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/Logout">Logout</a>
                         </div>
-                        <div class="col-md-12 col-lg-12">
-                            <button class="btn btn-default float-right ml-2" task="Edit">Edit</button>
-                            <button class="btn btn-default float-right" task="Delete">Delete</button>
-                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-lg-12 mt-2 mb-4">
+            <h1 class="font-weight-bold">EasyGradeManager</h1>
+        </div>
+        <div class="col-md-12 col-lg-6">
+            <div class="card pb-1 mb-4">
+                <h4>My Profile</h4>
+                <div class="row mx-0">
+                    <div class="col-md-12 col-lg-12 px-3">
+                        <p class="mb-0"><span class="font-weight-bold">User ID: </span><span id="Identifier"
+                                                                                             data="Identifier"></span>
+                        </p>
+                        <p class="mb-0" mode="edit"><span class="font-weight-bold">New Password: </span><span
+                                id="NewPassword" data="NewPassword" type="password"></span></p>
+                        <p class="mb-0"><span class="font-weight-bold">Name: </span><span id="Name" data="Name"></span>
+                        </p>
+                        <p><span class="font-weight-bold">Email: </span><span id="Email" data="Email"></span></p>
+                    </div>
+                    <div class="col-md-12 col-lg-12">
+                        <button class="btn btn-default float-right ml-2" id="UserButton" task="Edit" custom="true">
+                            Edit
+                        </button>
+                        <button class="btn btn-default float-right" task="Delete">Delete</button>
                     </div>
                 </div>
             </div>
-            <div id="TutorBox" class="col-md-12 col-lg-6" roles="Tutor">
-                <div class="card pb-1 mb-4">
-                    <h4>My Tutored Courses</h4>
-                    <div class="px-3" id="CurrentTutoredCourses">
+        </div>
+        <div class="col-md-12 col-lg-6" roles="Teacher">
+            <div class="card pb-1 mb-4">
+                <h4>User Role Management</h4>
+                <div class="row mx-0">
+                    <div class="col-md-12 col-lg-12 px-3">
+                        <p mode="show" id="RoleText" class="text-center font-italic">
+                            User Role Management enables you to grant Tutor or Teacher roles to existing users.
+                            Note that granting rights to users is an irrevocable action.
+                        </p>
+                        <div mode="edit" scope="User" id="RoleFields">
+                            <label class="control-label" for="NewIdentifier">User Identifier</label>
+                            <input id="NewIdentifier" class="w-100" data="NewUserIdentifier" type="text">
+                            <label class="control-label" for="NewRole">New User Role</label>
+                            <select id="NewRole" class="w-100" data="NewRole">
+                                <option>Tutor</option>
+                                <option>Teacher</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-default float-right" id="RoleButton" task="Edit" custom="true">
+                            Edit User Role
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="TeacherBox" class="col-md-12 col-lg-12" roles="Teacher">
+            <div class="card pb-1 mb-4">
+                <h4>My Taught Courses</h4>
+                <div class="row mx-0">
+                    <div class="col-md-12 col-lg-6 px-3" id="CurrentTaughtCourses">
                         <h5>Current Term</h5>
                         <ul>
-                            <li datalist="Tutor.Course" filter="Tutor.Course.Archived=false" removeonempty="CurrentTutoredCourses">
-                                <span data="Tutor.Course.Name" link="Tutor.Course"></span>
-                                (<span data="Tutor.Course.Term"></span>)
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="px-3" id="PreviousTutoredCourses">
-                        <h5>Previous Terms</h5>
-                        <ul>
-                            <li datalist="Tutor.Course" order="Tutor.Course.Term DESC" filter="Tutor.Course.Archived=true"
-                                removeonempty="PreviousTutoredCourses">
-                                <span data="Tutor.Course.Name" link="Tutor.Course"></span>
-                                (<span data="Tutor.Course.Term"></span>)
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div id="TeacherBox" class="col-md-12 col-lg-12" roles="Teacher">
-                <div class="card pb-1 mb-4">
-                    <h4>My Taught Courses</h4>
-                    <div class="row mx-0">
-                        <div class="col-md-12 col-lg-6 px-3" id="CurrentTaughtCourses">
-                            <h5>Current Term</h5>
-                            <ul>
-                                <li datalist="Teacher.Course" filter="Teacher.Course.Archived=false" removeonempty="CurrentTaughtCourses">
-                                    <span data="Teacher.Course.Name" link="Teacher.Course"></span>
-                                    (<span data="Teacher.Course.Term"></span>)
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-12 col-lg-6 px-3">
-                            <label class="control-label" for="CourseName">Course Name</label>
-                            <input class="w-100" data="NewCourse.Name" type="text">
-                            <label class="control-label" for="CourseTerm">Course Term</label>
-                            <input class="w-100" data="NewCourse.Term" type="text">
-                            <button class="btn btn-default float-right" task="Teacher.NewCourse.Add">
-                                <i class="far fa-plus-square"></i> Add Course
-                            </button>                         
-                        </div>
-                    </div>
-
-                    <div class="px-3" id="PreviousTaughtCourses">
-                        <h5>Previous Terms</h5>
-                        <ul>
-                            <li datalist="Teacher.Course" order="Teacher.Course.Term DESC" filter="Teacher.Course.Archived=true"
-                                removeonempty="PreviousTaughtCourses">
+                            <li datalist="Teacher.Course" filter="Teacher.Course.Archived=false"
+                                removeonempty="CurrentTaughtCourses">
                                 <span data="Teacher.Course.Name" link="Teacher.Course"></span>
                                 (<span data="Teacher.Course.Term"></span>)
                             </li>
                         </ul>
                     </div>
+                    <div class="col-md-12 col-lg-6 px-3">
+                        <label class="control-label" for="CourseName">Course Name</label>
+                        <input id="CourseName" class="w-100" data="NewCourse.Name" type="text">
+                        <label class="control-label" for="CourseTerm">Course Term</label>
+                        <input id="CourseTerm" class="w-100" data="NewCourse.Term" type="text">
+                        <button class="btn btn-default float-right" task="Teacher.NewCourse.Add">
+                            <i class="far fa-plus-square"></i> Add Course
+                        </button>
+                    </div>
+                </div>
+
+                <div class="px-3" id="PreviousTaughtCourses">
+                    <h5>Previous Terms</h5>
+                    <ul>
+                        <li datalist="Teacher.Course" order="Teacher.Course.Term DESC"
+                            filter="Teacher.Course.Archived=true"
+                            removeonempty="PreviousTaughtCourses">
+                            <span data="Teacher.Course.Name" link="Teacher.Course"></span>
+                            (<span data="Teacher.Course.Term"></span>)
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-6" id="StudentBox" roles="Student">
-                <div class="card pb-1 mb-4">
-                    <h4>My Attended Courses</h4>
-                    <div class="px-3" id="CurrentStudentCourses">
-                        <h5>Current Term</h5>
-                        <ul>
-                            <li datalist="Student.Course" filter="Student.Course.Archived=false" removeonempty="CurrentStudentCourses">
-                                <span data="Student.Course.Name" link="Student.Course"></span>
-                                (<span data="Student.Course.Term"></span>)
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="px-3" id="PreviousStudentCourses">
-                        <h5>Previous Terms</h5>
-                        <ul>
-                            <li datalist="Student.Course" order="Student.Course.Term DESC" filter="Student.Course.Archived=true"
-                                removeonempty="PreviousStudentCourses">
-                                <span data="Student.Course.Name" link="Student.Course"></span>
-                                (<span data="Student.Course.Term"></span>)
-                            </li>
-                        </ul>
-                    </div>
+        </div>
+        <div id="TutorBox" class="col-md-12 col-lg-6" roles="Tutor">
+            <div class="card pb-1 mb-4">
+                <h4>My Tutored Courses</h4>
+                <div class="px-3" id="CurrentTutoredCourses">
+                    <h5>Current Term</h5>
+                    <ul>
+                        <li datalist="Tutor.Course" filter="Tutor.Course.Archived=false"
+                            removeonempty="CurrentTutoredCourses">
+                            <span data="Tutor.Course.Name" link="Tutor.Course"></span>
+                            (<span data="Tutor.Course.Term"></span>)
+                        </li>
+                    </ul>
+                </div>
+                <div class="px-3" id="PreviousTutoredCourses">
+                    <h5>Previous Terms</h5>
+                    <ul>
+                        <li datalist="Tutor.Course" order="Tutor.Course.Term DESC" filter="Tutor.Course.Archived=true"
+                            removeonempty="PreviousTutoredCourses">
+                            <span data="Tutor.Course.Name" link="Tutor.Course"></span>
+                            (<span data="Tutor.Course.Term"></span>)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="StudentBox" class="col-md-12 col-lg-6" roles="Student">
+            <div class="card pb-1 mb-4">
+                <h4>My Attended Courses</h4>
+                <div class="px-3" id="CurrentStudentCourses">
+                    <h5>Current Term</h5>
+                    <ul>
+                        <li datalist="Student.Course" filter="Student.Course.Archived=false"
+                            removeonempty="CurrentStudentCourses">
+                            <span data="Student.Course.Name" link="Student.Course"></span>
+                            (<span data="Student.Course.Term"></span>)
+                        </li>
+                    </ul>
+                </div>
+                <div class="px-3" id="PreviousStudentCourses">
+                    <h5>Previous Terms</h5>
+                    <ul>
+                        <li datalist="Student.Course" order="Student.Course.Term DESC"
+                            filter="Student.Course.Archived=true"
+                            removeonempty="PreviousStudentCourses">
+                            <span data="Student.Course.Name" link="Student.Course"></span>
+                            (<span data="Student.Course.Term"></span>)
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

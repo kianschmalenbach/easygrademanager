@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>Lessons</title>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <script type="text/javascript" src="/Scripts/application.js" defer></script>
     <script type="text/javascript" src="/Scripts/network.js" defer></script>
     <script type="text/javascript" src="/Scripts/Pages/lesson.js" defer></script>
@@ -14,58 +14,64 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
 </head>
 <body onload="init()">
-    <header id="header">
-        <nav class="navbar navbar-expand">
-            <div class="container">
-                <a link="AuthorizedUser" class="navbar-brand">Homepage</a>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span data="AuthorizedUser.Name"></span>
-                                (<span data="AuthorizedUser.Identifier"></span>)
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/Logout">Logout</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 col-lg-12 mt-2 mb-4">
-                <h1 class="font-weight-bold">Lesson <span data="Number"></span></h1>
-                <p class="text-center">Course: <span data="Course.Name" link="Course"></span> (<span data="Course.Term"></span>)</p>
-            </div>
-            <div class="col-md-12 col-lg-12">
-                <div class="card pb-1 mb-4">
-                    <h4>Lesson Details</h4>
-                    <div class="col-md-12 col-lg-6 px-3">
-                        <p class="mb-0"><span class="font-weight-bold">Assignment: </span><span data="Assignment.Name" link="Assignment"></span></p>
-                        <p class="mb-0" roles="Teacher"><span class="font-weight-bold">Tutor: </span><span data="Tutor.Name"></span></p>
-                        <p class="mb-0"><span class="font-weight-bold">Date: </span><span data="Date"></span></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 col-lg-12" id="GroupBox">
-                <div class="card pb-1 mb-4">
-                    <h4>Student Groups</h4>
-                    <div class="row mx-0">
-                        <div class="col-md-12 col-lg-6 px-3" datalist="Group" order="Group.Number ASC" removeonempty="GroupBox">
-                            <h5 link="Group">Group <span data="Group.Number"></span></h5>
-                            <ul>
-                                <li datalist="Group.Student">
-                                    <span data="Group.Student.Name"></span>
-                                </li>
-                            </ul>
+<header id="header">
+    <nav class="navbar navbar-expand">
+        <div class="container">
+            <a link="AuthorizedUser" class="navbar-brand">Homepage</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span data="AuthorizedUser.Name"></span>
+                            (<span data="AuthorizedUser.Identifier"></span>)
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/Logout">Logout</a>
                         </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-lg-12 mt-2 mb-4">
+            <h1 class="font-weight-bold">Lesson <span data="Number"></span></h1>
+            <p class="text-center">Course: <span data="Course.Name" link="Course"></span> (<span
+                    data="Course.Term"></span>)</p>
+        </div>
+        <div class="col-md-12 col-lg-12">
+            <div class="card pb-1 mb-4">
+                <h4>Lesson Details</h4>
+                <div class="col-md-12 col-lg-6 px-3">
+                    <p class="mb-0"><span class="font-weight-bold">Assignment: </span><span data="Assignment.Name"
+                                                                                            link="Assignment"></span>
+                    </p>
+                    <p class="mb-0" roles="Teacher"><span class="font-weight-bold">Tutor: </span><span
+                            data="Tutor.Name"></span></p>
+                    <p class="mb-0"><span class="font-weight-bold">Date: </span><span data="Date"></span></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-lg-12" id="GroupBox">
+            <div class="card pb-1 mb-4">
+                <h4>Student Groups</h4>
+                <div class="row mx-0">
+                    <div class="col-md-12 col-lg-6 px-3" datalist="Group" order="Group.Number ASC"
+                         removeonempty="GroupBox">
+                        <h5 link="Group">Group <span data="Group.Number"></span></h5>
+                        <ul>
+                            <li datalist="Group.Student">
+                                <span data="Group.Student.Name"></span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

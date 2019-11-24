@@ -54,7 +54,7 @@ namespace EasyGradeManager.Models
             if (student == null || student.GroupMemberships == null)
                 return 0;
             double score = 0;
-            foreach(GroupMembership membership in student.GroupMemberships)
+            foreach (GroupMembership membership in student.GroupMemberships)
             {
                 if (membership?.Group?.Lesson?.Assignment == null || membership.Group.Evaluations == null)
                     continue;
@@ -87,7 +87,7 @@ namespace EasyGradeManager.Models
         public ICollection<Student> GetStudents(Tutor tutor)
         {
             ICollection<Student> students = new HashSet<Student>();
-            if(Lessons != null)
+            if (Lessons != null)
             {
                 foreach (Lesson lesson in Lessons)
                 {
@@ -278,7 +278,7 @@ namespace EasyGradeManager.Models
             return
                 Name != null && Number > 0 && !names.Contains(Name) && !numbers.Contains(Number) &&
                 MinGroupSize > 0 && MaxGroupSize > 0 && MinGroupSize <= MaxGroupSize &&
-                MinRequiredScore >= 0 && MinRequiredScore <= maxScore && Weight >= 0 && finalOk && 
+                MinRequiredScore >= 0 && MinRequiredScore <= maxScore && Weight >= 0 && finalOk &&
                 membershipsFinalOk && gradedOk;
         }
         public void Update(Assignment assignment)
@@ -303,9 +303,9 @@ namespace EasyGradeManager.Models
             assignment.CourseId = NewCourseId;
             return assignment;
         }
-        
+
     }
-    
+
     public class AssignmentResult
     {
         internal AssignmentResult(Student student, Assignment assignment, bool setStudent)

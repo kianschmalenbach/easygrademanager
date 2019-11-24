@@ -100,6 +100,8 @@ namespace EasyGradeManager.Models
         public string Email { get; set; }
         public string NewPassword { get; set; }
         public string NewRole { get; set; }
+        public int NewUserId { get; set; }
+        public string NewUserIdentifier { get; set; }
         public TeacherDTO Teacher { get; set; }
         public TutorDTO Tutor { get; set; }
         public StudentDTO Student { get; set; }
@@ -111,8 +113,10 @@ namespace EasyGradeManager.Models
         {
             return Id;
         }
-        public bool Validate(bool create)
+        public bool Validate(bool create, User authorizedUser)
         {
+            if (authorizedUser != null && authorizedUser.Id != Id)
+                return authorizedUser.GetTeacher() != null && (NewRole.Equals("Teacher") || NewRole.Equals("Tutor"));
             bool updateProof =
                 Email != null && Identifier != null && Name != null && !Identifier.Contains("&") &&
                 (NewPassword == null || !NewPassword.Contains("&")) &&
