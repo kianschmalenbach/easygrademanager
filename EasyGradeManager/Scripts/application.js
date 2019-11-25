@@ -328,7 +328,6 @@ function hideLoaders() {
 function addElement(type) {
     disableButtons();
     const dataFields = findDataFields("New" + type);
-    console.log(dataFields);
     createInputFields(dataFields);
     const data = getInputData();
     if (data !== null)

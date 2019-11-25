@@ -124,7 +124,6 @@
                         </tr>
                         </thead>
                         <tbody class="text-center">
-                        <!-- ALSO POSSIBLE: order="Lesson.Tutor.Name DESC" -->
                         <tr datalist="Lesson" order="Lesson.Number ASC" removeonempty="LessonTable"
                             filter="Lesson.IsOwnLesson=true">
                             <td roles="Teacher Tutor" link="Lesson">Lesson <span data="Lesson.Number" type="number"
@@ -148,7 +147,9 @@
                     <input class="mx-2" type="text" placeholder="Tutor Identifier" data="NewLesson.NewTutorIdentifier">
                     <input type="date" placeholder="Date" data="NewLesson.Date">
                     <input type="hidden" data="NewLesson.NewAssignmentId" autoValue="Id">
-                    <button class="btn btn-default mx-2" task="NewLesson.Add">Add Lesson</button>
+                    <button class="btn btn-default mx-2" task="NewLesson.Add"><i class="far fa-plus-square"></i> Add
+                        Lesson
+                    </button>
                 </div>
             </div>
         </div>
@@ -234,9 +235,6 @@
                             </div>
                         </div>
                     </div>
-                    <p showif="MembershipsFinal=true">
-                        You cannot join a group any more because the teacher has already fixed the groups.
-                    </p>
                 </div>
             </div>
         </div>
@@ -305,7 +303,8 @@
                     <input class="mx-2" type="text" size="20" placeholder="Task Name" data="NewTask.Name">
                     <input type="text" size="10" placeholder="Max. Score" data="NewTask.MaxScore">
                     <input type="hidden" autovalue="Id" data="NewTask.NewAssignmentId">
-                    <button class="btn btn-default mx-2" task="NewTask.Add">Add Task</button>
+                    <button class="btn btn-default mx-2" task="NewTask.Add"><i class="far fa-plus-square"></i> Add Task
+                    </button>
                 </div>
             </div>
         </div>
