@@ -56,6 +56,11 @@
                                 data="MinRequiredScore" type="number" min="0" step="any"></span></p>
                         <p class="mb-0"><span class="font-weight-bold">Archived: </span><span data="Archived"
                                                                                               type="checkbox"></span>
+                        <p class="mb-0" roles="Teacher" mode="edit" scope="Course">
+                            <span class="font-weight-bold">Grading Scheme: </span>
+                            <select data="NewGradingSchemeName">
+                                <option datalist="GradingScheme" data="GradingScheme.Name"></option>
+                            </select>
                         </p>
                     </div>
                     <div class="col-md-12 col-lg-12" roles="Teacher">
@@ -231,9 +236,6 @@
                         </tr>
                         </tbody>
                     </table>
-                    <div class="col-md-12 col-lg-12" roles="Teacher">
-                        <button class="btn btn-default float-right" task="GradingScheme.Edit">Edit</button>
-                    </div>
                 </div>
             </div>
         </div>

@@ -18,9 +18,9 @@ namespace EasyGradeManager.Controllers.API
             User authorizedUser = new Authorize().GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null || authorizedUser.GetTeacher() == null)
                 return Unauthorized();
-            var result = new List<GradingSchemeDTO>();
+            var result = new List<GradingSchemeDetailDTO>();
             foreach (GradingScheme scheme in db.GradingSchemes)
-                result.Add(new GradingSchemeDTO(scheme));
+                result.Add(new GradingSchemeDetailDTO(scheme));
             return Ok(result);
         }
 
@@ -32,15 +32,15 @@ namespace EasyGradeManager.Controllers.API
             GradingScheme scheme = db.GradingSchemes.Find(id);
             if (scheme == null)
                 return NotFound();
-            return Ok(new GradingSchemeDTO(scheme));
+            return Ok(new GradingSchemeDetailDTO(scheme));
         }
 
-        public IHttpActionResult PutGradingScheme(int id, GradingSchemeDTO schemeDTO)
+        public IHttpActionResult PutGradingScheme(int id, GradingSchemeDetailDTO schemeDTO)
         {
             return BadRequest();
         }
 
-        public IHttpActionResult PostGradingScheme(GradingSchemeDTO schemeDTO)
+        public IHttpActionResult PostGradingScheme(GradingSchemeDetailDTO schemeDTO)
         {
             User authorizedUser = new Authorize().GetAuthorizedUser(Request.Headers.GetCookies("user").FirstOrDefault());
             if (authorizedUser == null || authorizedUser.GetTeacher() == null)
@@ -49,7 +49,7 @@ namespace EasyGradeManager.Controllers.API
             Course course = db.Courses.Find(schemeDTO.NewCourseId);
             if (!ModelState.IsValid || !schemeDTO.Validate(teacher) || course == null)
                 return BadRequest();
-            GradingScheme scheme = schemeDTO.Create(teacher);
+            GradingScheme scheme = schemeDTO.Create();
             db.GradingSchemes.Add(scheme);
             string error = db.Update(scheme, Added);
             if (error != null)

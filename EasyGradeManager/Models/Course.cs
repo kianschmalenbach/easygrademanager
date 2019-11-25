@@ -137,15 +137,16 @@ namespace EasyGradeManager.Models
 
     public class CourseDetailDTO : CourseListDTO
     {
-        public CourseDetailDTO(Course course, Student student, Tutor tutor, Teacher teacher) : base(course)
+        public CourseDetailDTO(Course course, Student student, Tutor tutor, Teacher teacher, ICollection<GradingScheme> schemes) : base(course)
         {
             if (course != null)
             {
+                GradingSchemes = new HashSet<GradingSchemeListDTO>();
                 Assignments = new HashSet<AssignmentListDTO>();
                 MinRequiredAssignments = course.MinRequiredAssignments;
                 MinRequiredScore = course.MinRequiredScore;
                 if (course.GradingScheme != null)
-                    GradingScheme = new GradingSchemeDTO(course.GradingScheme);
+                    GradingScheme = new GradingSchemeDetailDTO(course.GradingScheme);
                 if (course.Teacher != null)
                     Teacher = new UserListDTO(course.Teacher.User);
                 foreach (Assignment assignment in course.Assignments)
@@ -162,16 +163,23 @@ namespace EasyGradeManager.Models
                             Results.Add(new CourseResult(otherStudent, course, true));
                     }
                 }
+                if (schemes != null)
+                {
+                    foreach (GradingScheme scheme in schemes)
+                        GradingSchemes.Add(new GradingSchemeListDTO(scheme));
+                }
             }
         }
         public bool Final { get; }
         public int MinRequiredAssignments { get; set; }
         public int MinRequiredScore { get; set; }
-        public GradingSchemeDTO GradingScheme { get; set; }
+        public GradingSchemeDetailDTO GradingScheme { get; set; }
         public UserListDTO Teacher { get; set; }
         public ICollection<AssignmentListDTO> Assignments { get; }
         public CourseResult Result { get; }
         public ICollection<CourseResult> Results { get; }
+        public ICollection<GradingSchemeListDTO> GradingSchemes { get; }
+        public string NewGradingSchemeName { get; set; }
         public override bool Equals(object other)
         {
             return other != null && other is CourseDetailDTO && Id == ((CourseDetailDTO)other).Id;

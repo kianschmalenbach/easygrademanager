@@ -35,8 +35,8 @@ namespace EasyGradeManager.Controllers.API
             string accessRole = auth.GetAccessRole(authorizedUser, course);
             if (accessRole == null)
                 return Ok(new CourseListDTO(course));
-            return Ok(new CourseDetailDTO(course, authorizedUser.GetStudent(), authorizedUser.GetTutor(), authorizedUser.GetTeacher()));
-
+            return Ok(new CourseDetailDTO(course, authorizedUser.GetStudent(), authorizedUser.GetTutor(),
+                authorizedUser.GetTeacher(), db.GradingSchemes.ToList()));
         }
 
         public IHttpActionResult PutCourse(int id, CourseDetailDTO courseDTO)
@@ -50,6 +50,17 @@ namespace EasyGradeManager.Controllers.API
                 return BadRequest(ModelState);
             if (!"Teacher".Equals(auth.GetAccessRole(authorizedUser, course)))
                 return Unauthorized();
+            if (courseDTO.NewGradingSchemeName != null)
+            {
+                foreach (GradingScheme scheme in db.GradingSchemes)
+                {
+                    if (courseDTO.NewGradingSchemeName.Equals(scheme.Name))
+                    {
+                        course.GradingSchemeId = scheme.Id;
+                        break;
+                    }
+                }
+            }
             if (!courseDTO.Validate(course))
                 return BadRequest();
             courseDTO.Update(course);

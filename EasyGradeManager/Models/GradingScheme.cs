@@ -43,26 +43,44 @@ namespace EasyGradeManager.Models
         }
     }
 
-    public class GradingSchemeDTO
+    public class GradingSchemeListDTO
     {
-        public GradingSchemeDTO(GradingScheme gradingScheme)
+        public GradingSchemeListDTO(GradingScheme gradingScheme)
         {
             if (gradingScheme != null)
             {
-                Grades = new HashSet<GradeDTO>();
                 Id = gradingScheme.Id;
                 Name = gradingScheme.Name;
-                foreach (Grade grade in gradingScheme.Grades)
-                    Grades.Add(new GradeDTO(grade));
             }
         }
         public int Id { get; set; }
         public string Name { get; set; }
+        public override bool Equals(object other)
+        {
+            return other != null && other is GradingSchemeListDTO && Id == ((GradingSchemeListDTO)other).Id;
+        }
+        public override int GetHashCode()
+        {
+            return Id;
+        }
+    }
+
+    public class GradingSchemeDetailDTO : GradingSchemeListDTO
+    {
+        public GradingSchemeDetailDTO(GradingScheme gradingScheme) : base(gradingScheme)
+        {
+            if (gradingScheme != null)
+            {
+                Grades = new HashSet<GradeDTO>();
+                foreach (Grade grade in gradingScheme.Grades)
+                    Grades.Add(new GradeDTO(grade));
+            }
+        }
         public ICollection<GradeDTO> Grades { get; set; }
         public int NewCourseId { get; set; }
         public override bool Equals(object other)
         {
-            return other != null && other is GradingSchemeDTO && Id == ((GradingSchemeDTO)other).Id;
+            return other != null && other is GradingSchemeDetailDTO && Id == ((GradingSchemeDetailDTO)other).Id;
         }
         public override int GetHashCode()
         {
@@ -93,7 +111,7 @@ namespace EasyGradeManager.Models
             foreach (GradeDTO gradeDTO in Grades)
                 scheme.Grades.Add(gradeDTO.Create());
         }
-        public GradingScheme Create(Teacher teacher)
+        public GradingScheme Create()
         {
             GradingScheme scheme = new GradingScheme();
             Update(scheme);
