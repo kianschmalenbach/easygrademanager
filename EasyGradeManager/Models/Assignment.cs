@@ -237,6 +237,10 @@ namespace EasyGradeManager.Models
             }
         }
         public int NewCourseId { get; set; }
+        public bool NewIsDerived { get; set; }
+        public string NewDerivedFromName { get; set; }
+        public bool NewCopyGroups { get; set; }
+        public int NewDaysOffset { get; set; }
         public ICollection<AssignmentResult> Results { get; }
         public override bool Equals(object other)
         {
@@ -248,38 +252,45 @@ namespace EasyGradeManager.Models
         }
         public bool Validate(Assignment assignment)
         {
-            bool finalOk = true;
-            bool membershipsFinalOk = true;
-            bool gradedOk = true;
-            double maxScore = 0;
-            HashSet<string> names = new HashSet<string>();
-            HashSet<int> numbers = new HashSet<int>();
-            if (assignment != null)
+            if (NewIsDerived)
             {
-                finalOk = (!IsFinal && !assignment.IsFinal) || (IsFinal && MembershipsFinal);
-                membershipsFinalOk = (!assignment.IsFinal && !assignment.MembershipsFinal) || MembershipsFinal;
-                gradedOk = !IsFinal || (IsGraded == assignment.IsGraded);
-                if (assignment.Tasks != null)
-                {
-                    foreach (Task task in assignment.Tasks)
-                        maxScore += task.MaxScore;
-                }
-                if (assignment.Course != null && assignment.Course.Assignments != null)
-                {
-                    foreach (Assignment otherAssignment in assignment.Course.Assignments)
-                    {
-                        names.Add(otherAssignment.Name);
-                        numbers.Add(otherAssignment.Number);
-                    }
-                }
-                names.Remove(assignment.Name);
-                numbers.Remove(assignment.Number);
+                return false;
             }
-            return
-                Name != null && Number > 0 && !names.Contains(Name) && !numbers.Contains(Number) &&
-                MinGroupSize > 0 && MaxGroupSize > 0 && MinGroupSize <= MaxGroupSize &&
-                MinRequiredScore >= 0 && MinRequiredScore <= maxScore && Weight >= 0 && finalOk &&
-                membershipsFinalOk && gradedOk;
+            else
+            {
+                bool finalOk = true;
+                bool membershipsFinalOk = true;
+                bool gradedOk = true;
+                double maxScore = 0;
+                HashSet<string> names = new HashSet<string>();
+                HashSet<int> numbers = new HashSet<int>();
+                if (assignment != null)
+                {
+                    finalOk = (!IsFinal && !assignment.IsFinal) || (IsFinal && MembershipsFinal);
+                    membershipsFinalOk = (!assignment.IsFinal && !assignment.MembershipsFinal) || MembershipsFinal;
+                    gradedOk = !IsFinal || (IsGraded == assignment.IsGraded);
+                    if (assignment.Tasks != null)
+                    {
+                        foreach (Task task in assignment.Tasks)
+                            maxScore += task.MaxScore;
+                    }
+                    if (assignment.Course != null && assignment.Course.Assignments != null)
+                    {
+                        foreach (Assignment otherAssignment in assignment.Course.Assignments)
+                        {
+                            names.Add(otherAssignment.Name);
+                            numbers.Add(otherAssignment.Number);
+                        }
+                    }
+                    names.Remove(assignment.Name);
+                    numbers.Remove(assignment.Number);
+                }
+                return
+                    Name != null && Number > 0 && !names.Contains(Name) && !numbers.Contains(Number) &&
+                    MinGroupSize > 0 && MaxGroupSize > 0 && MinGroupSize <= MaxGroupSize &&
+                    MinRequiredScore >= 0 && MinRequiredScore <= maxScore && Weight >= 0 && finalOk &&
+                    membershipsFinalOk && gradedOk;
+            }
         }
         public void Update(Assignment assignment)
         {

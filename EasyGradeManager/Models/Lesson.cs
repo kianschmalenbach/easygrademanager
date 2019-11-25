@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
 
 namespace EasyGradeManager.Models
 {
@@ -111,8 +110,6 @@ namespace EasyGradeManager.Models
         public string NewTutorIdentifier { get; set; }
         public ICollection<GroupListDTO> Groups { get; }
         public LessonListDTO DerivedFrom { get; set; }
-        public int NewDerivedFromId { get; set; }
-        public int NewDayOffset { get; set; }
         public override bool Equals(object other)
         {
             return other != null && other is LessonDetailDTO && Id == ((LessonDetailDTO)other).Id;
@@ -121,9 +118,9 @@ namespace EasyGradeManager.Models
         {
             return Id;
         }
-        public bool Validate(Lesson lesson, DbSet<Lesson> allLessons, Assignment assignment, Tutor tutor)
+        public bool Validate(Lesson lesson, Assignment assignment, Tutor tutor)
         {
-            if (tutor != null && NewDerivedFromId != 0)
+            if (tutor == null)
                 return false;
             HashSet<int> numbers = new HashSet<int>();
             if (lesson != null && lesson.Assignment != null && lesson.Assignment.Lessons != null)
@@ -131,60 +128,30 @@ namespace EasyGradeManager.Models
                 foreach (Lesson otherLesson in lesson.Assignment.Lessons)
                     numbers.Add(otherLesson.Number);
                 numbers.Remove(lesson.Number);
-                return NewDerivedFromId == 0 && NewAssignmentId == 0 && !numbers.Contains(Number);
+                return NewAssignmentId == 0 && !numbers.Contains(Number);
             }
             if (lesson == null)
             {
-                if (allLessons == null || assignment == null || assignment.Course == null ||
-                    assignment.Id != NewAssignmentId || assignment.Lessons == null)
+                if (assignment == null || assignment.Course == null || assignment.Id != NewAssignmentId ||
+                    assignment.Lessons == null)
                     return false;
                 foreach (Lesson otherLesson in assignment.Lessons)
                     numbers.Add(otherLesson.Number);
-                if (NewDerivedFromId != 0)
-                {
-                    Lesson derivedFrom = allLessons.Find(NewDerivedFromId);
-                    if (derivedFrom == null || derivedFrom.Tutor == null || derivedFrom.Assignment == null ||
-                        derivedFrom.Assignment.Course == null || !assignment.Course.Equals(derivedFrom.Assignment.Course))
-                        return false;
-                    return !numbers.Contains(derivedFrom.Number) && tutor == null;
-                }
                 return !numbers.Contains(Number);
             }
             return false;
         }
-        public void Update(Lesson lesson, Lesson derivedFrom, Tutor tutor)
+        public void Update(Lesson lesson, Tutor tutor)
         {
-            if (derivedFrom != null)
-            {
-                lesson.DerivedFrom = derivedFrom;
-                lesson.Number = derivedFrom.Number;
-                lesson.Date = derivedFrom.Date.AddDays(NewDayOffset);
-                lesson.TutorId = derivedFrom.TutorId;
-            }
-            else
-            {
-                lesson.Number = Number;
-                lesson.Date = Date;
-                if (tutor != null)
-                    lesson.TutorId = tutor.Id;
-            }
+            lesson.Number = Number;
+            lesson.Date = Date;
+            if (tutor != null)
+                lesson.TutorId = tutor.Id;
         }
-        public Lesson Create(DbSet<Lesson> allLessons, Tutor tutor)
+        public Lesson Create(Tutor tutor)
         {
             Lesson lesson = new Lesson();
-            if (allLessons == null)
-                return null;
-            if (NewDerivedFromId != 0)
-            {
-                Lesson derivedFrom = allLessons.Find(NewDerivedFromId);
-                if (derivedFrom == null)
-                    return null;
-                Update(lesson, derivedFrom, tutor);
-            }
-            else
-            {
-                Update(lesson, null, tutor);
-            }
+            Update(lesson, tutor);
             lesson.AssignmentId = NewAssignmentId;
             return lesson;
         }

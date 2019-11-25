@@ -132,6 +132,7 @@ function handleArray(key, type, array, rootElement) {
     if (rootElement.hasAttribute("filter"))
         array = filterArray(array, rootElement.getAttribute("filter"));
     if (array.length === 0 && rootElement.hasAttribute("removeOnEmpty")) {
+        initializeButtons(type + key + "s", null);
         const toRemove = document.getElementById(rootElement.getAttribute("removeOnEmpty"));
         if (toRemove !== null)
             toRemove.remove();

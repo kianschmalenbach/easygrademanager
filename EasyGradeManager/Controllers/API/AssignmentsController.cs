@@ -75,7 +75,7 @@ namespace EasyGradeManager.Controllers.API
             string error = db.Update(assignment, Added);
             if (error != null)
                 return BadRequest(error);
-            return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Assignments/" + assignment.Id);
+            return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Courses/" + course.Id);
         }
 
         //TODO Delete Tasks if there are no groups yet
