@@ -82,8 +82,8 @@ namespace EasyGradeManager.Controllers.API
                 return BadRequest();
             if (!membershipDTO.Validate(student, group, lesson.Assignment))
                 return BadRequest();
-            GroupMembership membership = membershipDTO.Create(student, group, lesson);
-            string error = db.Update(membership, Added);
+            ICollection<object> memberships = membershipDTO.Create(student, group, lesson);
+            string error = db.UpdateAll(memberships, Added);
             if (error != null)
                 return BadRequest(error);
             return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Assignments/" + lesson.Assignment.Id);
@@ -104,11 +104,14 @@ namespace EasyGradeManager.Controllers.API
                 membership.Group.Lesson.Assignment.MembershipsFinal || membership.Student == null)
                 return BadRequest();
             int assignmentId = membership.Group.Lesson.Assignment.Id;
+            Group deleteGroup = null;
             if (membership.Group.GroupMemberships.Count == 0)
-                db.Entry(membership.Group).State = Deleted;
+                deleteGroup = membership.Group;
             string error = db.Update(membership, Deleted);
             if (error != null)
                 return BadRequest(error);
+            if (deleteGroup != null)
+                db.Update(deleteGroup, Deleted);
             return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Assignments/" + assignmentId);
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace EasyGradeManager.Models
@@ -14,7 +15,8 @@ namespace EasyGradeManager.Models
         public virtual Group Group { get; set; }
         public override bool Equals(object other)
         {
-            return other != null && other is GroupMembership && Id == ((GroupMembership)other).Id;
+            return
+                other != null && other is GroupMembership && Id == ((GroupMembership)other).Id && Id != 0;
         }
         public override int GetHashCode()
         {
@@ -72,15 +74,15 @@ namespace EasyGradeManager.Models
             }
             return group == null || (NewGroupPassword != null && NewGroupPassword.Equals(group.Password));
         }
-        public GroupMembership Create(Student student, Group group, Lesson lesson)
+        public ICollection<object> Create(Student student, Group group, Lesson lesson)
         {
-            if (student == null)
+            if (student == null || lesson == null || lesson.Assignment == null)
                 return null;
+            ICollection<object> memberships = new HashSet<object>();
             GroupMembership membership = new GroupMembership();
-            if (group == null)
+            bool isNewGroup = group == null;
+            if (isNewGroup)
             {
-                if (lesson == null || lesson.Assignment == null)
-                    return null;
                 group = new Group
                 {
                     LessonId = lesson.Id,
@@ -92,7 +94,38 @@ namespace EasyGradeManager.Models
             else
                 membership.GroupId = group.Id;
             membership.StudentId = student.Id;
-            return membership;
+            memberships.Add(membership);
+            if (lesson.DerivedLessons != null)
+            {
+                foreach (Lesson otherLesson in lesson.DerivedLessons)
+                {
+                    GroupMembership newMembership = new GroupMembership();
+                    if (isNewGroup)
+                    {
+                        Group newGroup = new Group
+                        {
+                            LessonId = otherLesson.Id,
+                            Number = group.Number,
+                            Password = group.Password
+                        };
+                        newMembership.Group = newGroup;
+                    }
+                    else
+                    {
+                        foreach (Group otherGroup in otherLesson.Groups)
+                        {
+                            if (otherGroup.Number == group.Number)
+                            {
+                                newMembership.GroupId = otherGroup.Id;
+                                break;
+                            }
+                        }
+                    }
+                    newMembership.StudentId = student.Id;
+                    memberships.Add(newMembership);
+                }
+            }
+            return memberships;
         }
     }
 }

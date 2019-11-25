@@ -250,11 +250,23 @@ namespace EasyGradeManager.Models
         {
             return Id;
         }
-        public bool Validate(Assignment assignment)
+        public bool Validate(Assignment assignment, Assignment derived)
         {
+            if (Name == null)
+                return false;
             if (NewIsDerived)
             {
-                return false;
+                if (assignment != null || derived == null || derived.Course == null ||
+                    derived.Course.Assignments == null || derived.Lessons == null)
+                    return false;
+                HashSet<string> names = new HashSet<string>();
+                HashSet<int> numbers = new HashSet<int>();
+                foreach (Assignment otherAssignment in derived.Course.Assignments)
+                {
+                    names.Add(otherAssignment.Name);
+                    numbers.Add(otherAssignment.Number);
+                }
+                return !names.Contains(Name) && !numbers.Contains(Number);
             }
             else
             {
@@ -292,26 +304,79 @@ namespace EasyGradeManager.Models
                     membershipsFinalOk && gradedOk;
             }
         }
-        public void Update(Assignment assignment)
+        public void Update(Assignment assignment, Assignment derived)
         {
             assignment.Name = Name;
             assignment.Number = Number;
-            assignment.Deadline = Deadline;
-            assignment.IsGraded = IsGraded;
-            assignment.IsFinal = IsFinal;
-            assignment.Mandatory = Mandatory;
-            assignment.MembershipsFinal = MembershipsFinal;
-            assignment.MinGroupSize = MinGroupSize;
-            assignment.MaxGroupSize = MaxGroupSize;
-            assignment.MinRequiredScore = MinRequiredScore;
-            assignment.Weight = Weight;
+            if (derived == null)
+            {
+                assignment.Deadline = Deadline;
+                assignment.IsGraded = IsGraded;
+                assignment.IsFinal = IsFinal;
+                assignment.Mandatory = Mandatory;
+                assignment.MembershipsFinal = MembershipsFinal;
+                assignment.MinGroupSize = MinGroupSize;
+                assignment.MaxGroupSize = MaxGroupSize;
+                assignment.MinRequiredScore = MinRequiredScore;
+                assignment.Weight = Weight;
+            }
+            else
+            {
+                assignment.Deadline = derived.Deadline.AddDays(NewDaysOffset);
+                assignment.IsGraded = derived.IsGraded;
+                assignment.IsFinal = derived.IsFinal;
+                assignment.Mandatory = derived.Mandatory;
+                assignment.MembershipsFinal = derived.MembershipsFinal;
+                assignment.MinGroupSize = derived.MinGroupSize;
+                assignment.MaxGroupSize = derived.MaxGroupSize;
+                assignment.MinRequiredScore = derived.MinRequiredScore;
+                assignment.Weight = derived.Weight;
+            }
+
         }
-        public Assignment Create()
+        public Assignment Create(Assignment derived)
         {
             Assignment assignment = new Assignment();
-            Update(assignment);
+            Update(assignment, derived);
             assignment.CourseId = NewCourseId;
-            assignment.NextGroupNumber = 1;
+            if (derived == null)
+                assignment.NextGroupNumber = 1;
+            else
+            {
+                assignment.NextGroupNumber = derived.NextGroupNumber;
+                foreach (Lesson lesson in derived.Lessons)
+                {
+                    Lesson newLesson = new Lesson()
+                    {
+                        Date = lesson.Date.AddDays(NewDaysOffset),
+                        DerivedFromId = NewCopyGroups ? lesson.Id : 0,
+                        Number = lesson.Number,
+                        TutorId = lesson.TutorId
+                    };
+                    if (NewCopyGroups)
+                    {
+                        foreach (Group group in lesson.Groups)
+                        {
+                            Group newGroup = new Group()
+                            {
+                                IsFinal = false,
+                                Number = group.Number,
+                                Password = group.Password
+                            };
+                            foreach (GroupMembership membership in group.GroupMemberships)
+                            {
+                                GroupMembership newMembership = new GroupMembership()
+                                {
+                                    StudentId = membership.StudentId
+                                };
+                                newGroup.GroupMemberships.Add(newMembership);
+                            }
+                            newLesson.Groups.Add(newGroup);
+                        }
+                    }
+                    assignment.Lessons.Add(newLesson);
+                }
+            }
             return assignment;
         }
 

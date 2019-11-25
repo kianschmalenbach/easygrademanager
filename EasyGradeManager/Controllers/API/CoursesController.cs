@@ -74,7 +74,6 @@ namespace EasyGradeManager.Controllers.API
             return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Courses/" + course.Id);
         }
 
-        //TODO Delete Assignments, Lessons, and Tasks if there are no groups yet
         public IHttpActionResult DeleteCourse(int id)
         {
             Authorize auth = new Authorize();

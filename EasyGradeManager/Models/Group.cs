@@ -23,7 +23,9 @@ namespace EasyGradeManager.Models
         public virtual ICollection<GroupMembership> GroupMemberships { get; }
         public override bool Equals(object other)
         {
-            return other != null && other is Group && Id == ((Group)other).Id;
+            return
+                other != null && other is Group && Id == ((Group)other).Id &&
+                (Id != 0 || (LessonId == ((Group)other).LessonId && Number == ((Group)other).Number));
         }
         public override int GetHashCode()
         {

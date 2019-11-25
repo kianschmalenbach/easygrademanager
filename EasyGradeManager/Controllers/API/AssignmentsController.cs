@@ -51,9 +51,9 @@ namespace EasyGradeManager.Controllers.API
             Course course = assignment.Course;
             if (!"Teacher".Equals(auth.GetAccessRole(authorizedUser, course)))
                 return Unauthorized();
-            if (!assignmentDTO.Validate(assignment))
+            if (!assignmentDTO.Validate(assignment, null))
                 return BadRequest();
-            assignmentDTO.Update(assignment);
+            assignmentDTO.Update(assignment, null);
             string error = db.Update(assignment, Modified);
             if (error != null)
                 return BadRequest(error);
@@ -67,18 +67,33 @@ namespace EasyGradeManager.Controllers.API
             if (authorizedUser == null || authorizedUser.GetTeacher() == null)
                 return Unauthorized();
             Course course = db.Courses.Find(assignmentDTO.NewCourseId);
-            if (!ModelState.IsValid || course == null || !assignmentDTO.Validate(null))
-                return BadRequest();
             if (!"Teacher".Equals(auth.GetAccessRole(authorizedUser, course)))
                 return Unauthorized();
-            Assignment assignment = assignmentDTO.Create();
+            Assignment derived = null;
+            if (assignmentDTO.NewIsDerived)
+            {
+                if (assignmentDTO.NewDerivedFromName == null)
+                    return BadRequest();
+                foreach (Assignment otherAssignment in course.Assignments)
+                {
+                    if (assignmentDTO.NewDerivedFromName.Equals(otherAssignment.Name))
+                    {
+                        derived = otherAssignment;
+                        break;
+                    }
+                }
+                if (derived == null)
+                    return BadRequest();
+            }
+            if (!ModelState.IsValid || course == null || !assignmentDTO.Validate(null, derived))
+                return BadRequest();
+            Assignment assignment = assignmentDTO.Create(derived);
             string error = db.Update(assignment, Added);
             if (error != null)
                 return BadRequest(error);
             return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Courses/" + course.Id);
         }
 
-        //TODO Delete Tasks if there are no groups yet
         public IHttpActionResult DeleteAssignment(int id)
         {
             Authorize auth = new Authorize();
