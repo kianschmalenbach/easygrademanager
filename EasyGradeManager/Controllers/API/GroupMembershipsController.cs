@@ -12,12 +12,9 @@ namespace EasyGradeManager.Controllers.API
     {
         private readonly EasyGradeManagerContext db = new EasyGradeManagerContext();
 
-        public IHttpActionResult GetGroupMemberships() //TODO remove method body
+        public IHttpActionResult GetGroupMemberships()
         {
-            List<GroupMembershipDTO> results = new List<GroupMembershipDTO>();
-            foreach (GroupMembership membership in db.GroupMemberships)
-                results.Add(new GroupMembershipDTO(membership));
-            return Ok(results);
+            return BadRequest();
         }
 
         public IHttpActionResult GetGroupMembership(int id)

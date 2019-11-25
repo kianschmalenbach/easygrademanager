@@ -1,5 +1,6 @@
 ﻿using EasyGradeManager.Models;
 using EasyGradeManager.Static;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
@@ -87,8 +88,8 @@ namespace EasyGradeManager.Controllers.API
             }
             if (!ModelState.IsValid || course == null || !assignmentDTO.Validate(null, derived))
                 return BadRequest();
-            Assignment assignment = assignmentDTO.Create(derived);
-            string error = db.Update(assignment, Added);
+            ICollection<object> objects = assignmentDTO.Create(derived);
+            string error = db.UpdateAll(objects, Added);
             if (error != null)
                 return BadRequest(error);
             return Redirect("https://" + Request.RequestUri.Host + ":" + Request.RequestUri.Port + "/Courses/" + course.Id);

@@ -244,7 +244,7 @@ namespace EasyGradeManager.Models
         public ICollection<AssignmentResult> Results { get; }
         public override bool Equals(object other)
         {
-            return other != null && other is AssignmentDetailTeacherDTO && Id == ((AssignmentDetailTeacherDTO)other).Id;
+            return other != null && other is AssignmentDetailTeacherDTO && Id == ((AssignmentDetailTeacherDTO)other).Id && Id != 0;
         }
         public override int GetHashCode()
         {
@@ -334,27 +334,28 @@ namespace EasyGradeManager.Models
             }
 
         }
-        public Assignment Create(Assignment derived)
+        public ICollection<object> Create(Assignment derived)
         {
+            ICollection<object> newObjects = new HashSet<object>();
             Assignment assignment = new Assignment();
             Update(assignment, derived);
             assignment.CourseId = NewCourseId;
+            newObjects.Add(assignment);
             if (derived == null)
                 assignment.NextGroupNumber = 1;
             else
             {
-                assignment.NextGroupNumber = derived.NextGroupNumber;
                 foreach (Lesson lesson in derived.Lessons)
                 {
                     Lesson newLesson = new Lesson()
                     {
                         Date = lesson.Date.AddDays(NewDaysOffset),
-                        DerivedFromId = NewCopyGroups ? lesson.Id : 0,
                         Number = lesson.Number,
                         TutorId = lesson.TutorId
                     };
                     if (NewCopyGroups)
                     {
+                        assignment.NextGroupNumber = derived.NextGroupNumber;
                         foreach (Group group in lesson.Groups)
                         {
                             Group newGroup = new Group()
@@ -373,11 +374,13 @@ namespace EasyGradeManager.Models
                             }
                             newLesson.Groups.Add(newGroup);
                         }
+                        assignment.Lessons.Add(newLesson);
                     }
-                    assignment.Lessons.Add(newLesson);
+                    else
+                        newObjects.Add(newLesson);
                 }
             }
-            return assignment;
+            return newObjects;
         }
 
     }
