@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace EasyGradeManager.Models
@@ -69,7 +70,7 @@ namespace EasyGradeManager.Models
         {
             if (student == null)
                 return false;
-            if (GetAbsoluteScore(student) >= MinRequiredScore)
+            if (GetAbsoluteScore(student) < MinRequiredScore)
                 return false;
             int passedAssignments = 0;
             if (Assignments != null)
@@ -232,7 +233,7 @@ namespace EasyGradeManager.Models
                 Id = student.Id;
                 AbsoluteScore = course.GetAbsoluteScore(student);
                 HasPassed = course.HasPassed(student);
-                Percentage = course.GetPercentage(student);
+                Percentage = Math.Round(course.GetPercentage(student), 3);
                 Grade = course.GetGrade(student);
             }
         }

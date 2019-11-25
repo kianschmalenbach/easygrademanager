@@ -29,17 +29,15 @@ namespace EasyGradeManager.Models
         {
             if (Grades == null || Grades.Count == 0)
                 return null;
-            List<Grade> grades = Grades.OrderBy(grade => grade.MinPercentage).ToList();
-            if (grades[0].MinPercentage != 0.0)
+            List<Grade> grades = Grades.OrderByDescending(grade => grade.MinPercentage).ToList();
+            if (grades[grades.Count-1].MinPercentage != 0.0)
                 return null;
-            int index = 0;
-            Grade cursor;
-            do
+            foreach (Grade grade in grades)
             {
-                cursor = grades[index];
-                index++;
-            } while (cursor.MinPercentage < percentage && index < grades.Count);
-            return grades[index - 1].Name;
+                if (grade.MinPercentage <= percentage)
+                    return grade.Name;
+            }
+            return null;
         }
     }
 
@@ -65,7 +63,7 @@ namespace EasyGradeManager.Models
         }
     }
 
-    public class GradingSchemeDetailDTO : GradingSchemeListDTO
+    public class GradingSchemeDetailDTO: GradingSchemeListDTO
     {
         public GradingSchemeDetailDTO(GradingScheme gradingScheme) : base(gradingScheme)
         {

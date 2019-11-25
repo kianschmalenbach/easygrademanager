@@ -178,6 +178,23 @@ namespace EasyGradeManager.Static
                 });
                 db.SaveChanges();
             }
+            gradingScheme = new GradingScheme()
+            {
+                Name = "American"
+            };
+            db.GradingSchemes.Add(gradingScheme);
+            db.SaveChanges();
+            string[] grades = new string[] { "D", "C", "B", "A" };
+            for (double i = 0; i < 4; ++i)
+            {
+                db.Grades.Add(new Grade()
+                {
+                    GradingSchemeId = 2,
+                    MinPercentage = i / 4,
+                    Name = grades[(int)i]
+                });
+                db.SaveChanges();
+            }
         }
 
         private static void InitializeCourses()
@@ -201,7 +218,7 @@ namespace EasyGradeManager.Static
             {
                 CourseId = 1,
                 Deadline = new DateTime(2019, 10, 25),
-                IsFinal = false,
+                IsFinal = true,
                 IsGraded = false,
                 Mandatory = false,
                 MinRequiredScore = 10,
@@ -217,7 +234,7 @@ namespace EasyGradeManager.Static
             {
                 CourseId = 1,
                 Deadline = new DateTime(2019, 11, 01),
-                IsFinal = false,
+                IsFinal = true,
                 IsGraded = false,
                 Mandatory = false,
                 MinRequiredScore = 10,
@@ -233,7 +250,7 @@ namespace EasyGradeManager.Static
             {
                 CourseId = 1,
                 Deadline = new DateTime(2019, 11, 08),
-                IsFinal = false,
+                IsFinal = true,
                 IsGraded = false,
                 Mandatory = false,
                 MinRequiredScore = 10,
@@ -341,7 +358,7 @@ namespace EasyGradeManager.Static
             {
                 Number = 1,
                 Name = "Question 1",
-                MaxScore = 10,
+                MaxScore = 20,
                 AssignmentId = 4
             });
             db.SaveChanges();
@@ -349,42 +366,9 @@ namespace EasyGradeManager.Static
             {
                 Number = 2,
                 Name = "Question 2",
-                MaxScore = 10,
+                MaxScore = 40,
                 AssignmentId = 4
             });
-            db.SaveChanges();
-            db.Tasks.Add(new Task()
-            {
-                Number = 3,
-                Name = "Question 3",
-                MaxScore = 10,
-                AssignmentId = 4
-            });
-            db.SaveChanges();
-            db.Tasks.Add(new Task()
-            {
-                Number = 4,
-                Name = "Question 4",
-                MaxScore = 10,
-                AssignmentId = 4
-            });
-            db.SaveChanges();
-            db.Tasks.Add(new Task()
-            {
-                Number = 5,
-                Name = "Question 5",
-                MaxScore = 10,
-                AssignmentId = 4
-            });
-            db.SaveChanges();
-            db.Tasks.Add(new Task()
-            {
-                Number = 6,
-                Name = "Question 6",
-                MaxScore = 10,
-                AssignmentId = 4
-            });
-            db.SaveChanges();
         }
 
         private static void InitializeLessons()
@@ -479,102 +463,120 @@ namespace EasyGradeManager.Static
 
         private static void InitializeGroups()
         {
+            string password1 = new Random().Next(10000000, 99999999).ToString();
+            string password2 = new Random().Next(10000000, 99999999).ToString();
+            string password3 = new Random().Next(10000000, 99999999).ToString();
+
             db.Groups.Add(new Group()
             {
                 Number = 1,
                 LessonId = 1,
-                Password = new Random().Next(10000000, 99999999).ToString()
+                Password = password1,
+                IsFinal = true
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 2,
                 LessonId = 1,
-                Password = new Random().Next(10000000, 99999999).ToString()
+                Password = password2,
+                IsFinal = true
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 3,
                 LessonId = 3,
-                Password = new Random().Next(10000000, 99999999).ToString()
+                Password = password3,
+                IsFinal = true
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 1,
                 LessonId = 4,
-                Password = new Random().Next(10000000, 99999999).ToString()
+                Password = password1,
+                IsFinal = true
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 2,
                 LessonId = 4,
-                Password = new Random().Next(10000000, 99999999).ToString()
+                Password = password2,
+                IsFinal = true
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 3,
                 LessonId = 6,
-                Password = new Random().Next(10000000, 99999999).ToString()
+                Password = password3,
+                IsFinal = true
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 1,
                 LessonId = 7,
-                Password = new Random().Next(10000000, 99999999).ToString()
+                Password = password1,
+                IsFinal = true
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 2,
                 LessonId = 8,
-                Password = new Random().Next(10000000, 99999999).ToString()
+                Password = password2,
+                IsFinal = true
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 3,
                 LessonId = 9,
-                Password = new Random().Next(10000000, 99999999).ToString()
+                Password = password3,
+                IsFinal = true
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 1,
                 LessonId = 10,
-                Password = new Random().Next(10000000, 99999999).ToString()
+                Password = new Random().Next(10000000, 99999999).ToString(),
+                IsFinal = true
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 2,
                 LessonId = 10,
-                Password = new Random().Next(10000000, 99999999).ToString()
+                Password = new Random().Next(10000000, 99999999).ToString(),
+                IsFinal = true
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 3,
                 LessonId = 10,
-                Password = new Random().Next(10000000, 99999999).ToString()
+                Password = new Random().Next(10000000, 99999999).ToString(),
+                IsFinal = true
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 4,
                 LessonId = 10,
-                Password = new Random().Next(10000000, 99999999).ToString()
+                Password = new Random().Next(10000000, 99999999).ToString(),
+                IsFinal = true
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
             {
                 Number = 5,
                 LessonId = 10,
-                Password = new Random().Next(10000000, 99999999).ToString()
+                Password = new Random().Next(10000000, 99999999).ToString(),
+                IsFinal = true
             });
             db.SaveChanges();
             db.Groups.Add(new Group()
@@ -721,6 +723,15 @@ namespace EasyGradeManager.Static
                 StudentId = 11
             });
             db.SaveChanges();
+            for (int i = 5; i <= 11; ++i)
+            {
+                db.GroupMemberships.Add(new GroupMembership()
+                {
+                    GroupId = i + 5,
+                    StudentId = i
+                });
+                db.SaveChanges();
+            }
         }
 
         private static void InitializeEvaluations()
@@ -786,6 +797,205 @@ namespace EasyGradeManager.Static
                 GroupId = 3,
                 TaskId = 3,
                 Score = 2
+            });
+            db.SaveChanges();
+
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 4,
+                TaskId = 4,
+                Score = 5
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 4,
+                TaskId = 5,
+                Score = 7
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 4,
+                TaskId = 6,
+                Score = 3
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 5,
+                TaskId = 4,
+                Score = 5
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 5,
+                TaskId = 5,
+                Score = 7
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 5,
+                TaskId = 6,
+                Score = 3
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 6,
+                TaskId = 4,
+                Score = 6
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 6,
+                TaskId = 5,
+                Score = 4
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 6,
+                TaskId = 6,
+                Score = 5
+            });
+            db.SaveChanges();
+
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 7,
+                TaskId = 7,
+                Score = 4
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 7,
+                TaskId = 8,
+                Score = 5
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 7,
+                TaskId = 9,
+                Score = 8
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 8,
+                TaskId = 7,
+                Score = 5
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 8,
+                TaskId = 8,
+                Score = 6
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 8,
+                TaskId = 9,
+                Score = 7
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 9,
+                TaskId = 7,
+                Score = 3
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 9,
+                TaskId = 8,
+                Score = 2
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 9,
+                TaskId = 9,
+                Score = 7
+            });
+            db.SaveChanges();
+
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 10,
+                TaskId = 10,
+                Score = 18
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 10,
+                TaskId = 11,
+                Score = 35
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 11,
+                TaskId = 10,
+                Score = 9
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 11,
+                TaskId = 11,
+                Score = 14
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 12,
+                TaskId = 10,
+                Score = 14
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 12,
+                TaskId = 11,
+                Score = 38
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 13,
+                TaskId = 10,
+                Score = 17
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 13,
+                TaskId = 11,
+                Score = 24
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 14,
+                TaskId = 10,
+                Score = 0
+            });
+            db.SaveChanges();
+            db.Evaluations.Add(new Evaluation()
+            {
+                GroupId = 14,
+                TaskId = 11,
+                Score = 0
             });
             db.SaveChanges();
         }
