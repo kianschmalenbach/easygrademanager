@@ -185,18 +185,23 @@
                         <tr>
                             <th>Group Members:</th>
                             <td>
-                                        <span datalist="GroupMembership.Group.Student"
-                                              order="GroupMembership.Group.Student.Name ASC" removeonempty="GroupTable">
-                                            <span data="GroupMembership.Group.Student.Name"></span><br>
-                                        </span>
+                                <span datalist="GroupMembership.Group.Student"
+                                      order="GroupMembership.Group.Student.Name ASC" removeonempty="GroupTable">
+                                    <span data="GroupMembership.Group.Student.Name"></span><br>
+                                </span>
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <div roles="Student" class="col-md-12 col-lg-12" showif="GroupMembership!=null">
-                    <button class="btn btn-default float-right" task="GroupMembership.Delete">Leave Group</button>
+                <div roles="Student" class="col-md-12 col-lg-12" showif="MembershipsFinal=false">
+                    <span showif="GroupMembership!=null">
+                        <button class="btn btn-default float-right" task="GroupMembership.Delete">Leave Group</button>
+                    </span>
                 </div>
+                <p class="text-center font-italic" showif="MembershipsFinal=true">
+                    You cannot make changes to your group any more because the teacher has already fixed the groups.
+                </p>
                 <div class="col-md-12 col-lg-12" showif="GroupMembership=null">
                     <div showif="MembershipsFinal=false">
                         <p class="text-center font-italic">
@@ -229,7 +234,7 @@
                             </div>
                         </div>
                     </div>
-                    <p class="text-center font-italic" showif="MembershipsFinal=true">
+                    <p showif="MembershipsFinal=true">
                         You cannot join a group any more because the teacher has already fixed the groups.
                     </p>
                 </div>

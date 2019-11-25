@@ -118,6 +118,7 @@ namespace EasyGradeManager.Models
                 Name = assignment.Name;
                 Number = assignment.Number;
                 Weight = assignment.Weight;
+                MembershipsFinal = assignment.MembershipsFinal;
             }
         }
         public int Id { get; set; }
@@ -131,6 +132,7 @@ namespace EasyGradeManager.Models
         public int MaxGroupSize { get; set; }
         public bool IsFinal { get; set; }
         public bool IsGraded { get; set; }
+        public bool MembershipsFinal { get; set; }
         public override bool Equals(object other)
         {
             return other != null && other is AssignmentListDTO && Id == ((AssignmentListDTO)other).Id;
@@ -155,13 +157,11 @@ namespace EasyGradeManager.Models
                     foreach (Lesson lesson in assignment.Lessons)
                         Lessons.Add(new LessonListDTO(lesson, tutor));
                 }
-                MembershipsFinal = assignment.MembershipsFinal;
             }
         }
         public ICollection<LessonListDTO> Lessons { get; }
         public CourseListDTO Course { get; set; }
         public GroupMembershipDTO GroupMembership { get; set; }
-        public bool MembershipsFinal { get; set; }
         public override bool Equals(object other)
         {
             return other != null && other is AssignmentDetailDTO && Id == ((AssignmentDetailDTO)other).Id;
@@ -256,8 +256,8 @@ namespace EasyGradeManager.Models
             HashSet<int> numbers = new HashSet<int>();
             if (assignment != null)
             {
-                finalOk = IsFinal || !assignment.IsFinal;
-                membershipsFinalOk = MembershipsFinal || !assignment.MembershipsFinal;
+                finalOk = (!IsFinal && !assignment.IsFinal) || (IsFinal && MembershipsFinal);
+                membershipsFinalOk = (!assignment.IsFinal && !assignment.MembershipsFinal) || MembershipsFinal;
                 gradedOk = !IsFinal || (IsGraded == assignment.IsGraded);
                 if (assignment.Tasks != null)
                 {
@@ -294,13 +294,13 @@ namespace EasyGradeManager.Models
             assignment.MaxGroupSize = MaxGroupSize;
             assignment.MinRequiredScore = MinRequiredScore;
             assignment.Weight = Weight;
-            assignment.NextGroupNumber = 1;
         }
         public Assignment Create()
         {
             Assignment assignment = new Assignment();
             Update(assignment);
             assignment.CourseId = NewCourseId;
+            assignment.NextGroupNumber = 1;
             return assignment;
         }
 

@@ -17,7 +17,7 @@
     text-decoration: none !important;
 }
 
-h1{
+h1 {
     text-align: center;
     color: #213345;
 }
@@ -35,7 +35,7 @@ h1{
 
 .btn.btn-default {
     background-color: #41698E;
-    border-radius: 0px !important;
+    border-radius: 0 !important;
     color: #ffffff;
     width: fit-content;
     margin-top: 0.5em;
@@ -53,7 +53,7 @@ h1{
 }
 
 input[type=text], input[type=password] {
-    background-image: linear-gradient(0deg,#41698E 1px,rgba(213,0,0,0) 0),linear-gradient(0deg,rgba(0,0,0,.20) 1px,transparent 0);
+    background-image: linear-gradient(0deg, #41698E 1px, rgba(213, 0, 0, 0) 0), linear-gradient(0deg, rgba(0, 0, 0, .20) 1px, transparent 0);
     border: 0 !important;
     box-shadow: none !important;
     background-color: transparent !important;
@@ -62,15 +62,19 @@ input[type=text], input[type=password] {
 }
 
 input[type=text]:focus, input[type=password]:focus {
-    background-image: linear-gradient(0deg,#41698E 2px,rgba(213,0,0,0) 0),linear-gradient(0deg,rgba(0,0,0,.26) 1px,transparent 0);
+    background-image: linear-gradient(0deg, #41698E 2px, rgba(213, 0, 0, 0) 0), linear-gradient(0deg, rgba(0, 0, 0, .26) 1px, transparent 0);
     box-shadow: none !important;
     border-color: transparent !important;
+}
+
+input[type=number] {
+    width: 80px;
 }
 
 .card {
     background-color: #f1f1f1 !important;
     border: none !important;
-    box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.6);
+    box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.6);
 }
 
 .card > h4 {
@@ -89,7 +93,7 @@ a:hover {
     text-decoration: none !important;
 }
 
-li{
+li {
     list-style: circle;
 }
 
@@ -102,7 +106,7 @@ li{
     width: fit-content !important;
 }
 
-.custom-select:focus, input[type=number]:focus, input[type=date]: focus {
+.custom-select:focus, input[type=number]:focus, input[type=date]:focus {
     box-shadow: none !important;
 }
 

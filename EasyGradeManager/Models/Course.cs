@@ -34,7 +34,7 @@ namespace EasyGradeManager.Models
         }
         public bool IsFinal()
         {
-            if (Assignments == null)
+            if (Assignments == null || Assignments.Count == 0)
                 return false;
             foreach (Assignment assignment in Assignments)
             {

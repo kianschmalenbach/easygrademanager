@@ -60,7 +60,6 @@
                     </div>
                     <div class="col-md-12 col-lg-12" roles="Teacher">
                         <button class="btn btn-default float-right ml-2" task="Edit">Edit</button>
-                        <button class="btn btn-default float-right ml-2">Archive</button>
                         <button class="btn btn-default float-right " task="Delete">Delete</button>
                     </div>
                 </div>
@@ -79,7 +78,6 @@
                 </div>
             </div>
         </div>
-
         <div class="col-md-12 col-lg-12" roles="Teacher Tutor Student" showif="Final=true">
             <div class="card pb-1 mb-4">
                 <h4>
@@ -116,7 +114,6 @@
                 </div>
             </div>
         </div>
-
         <div class="col-md-12 col-lg-12">
             <div class="card pb-1 mb-4">
                 <h4>Course Assignments</h4>
@@ -124,26 +121,33 @@
                     <table class="table table-striped table-bordered table-hover table-sm" id="AssignmentTable">
                         <thead class="thead-dark text-center">
                         <tr>
+                            <th roles="Teacher" mode="edit" scope="Assignment">Number</th>
                             <th>Name</th>
                             <th>Deadline</th>
-                            <th>Final</th>
-                            <th>Min. Required Score</th>
+                            <th>Final Results</th>
+                            <th>Fixed Groups</th>
+                            <th>Min. Req. Score</th>
                             <th>Mandatory</th>
                             <th>Weight</th>
+                            <th>Graded</th>
                             <th>Group Size</th>
                             <th roles="Teacher">Actions</th>
                         </tr>
                         </thead>
                         <tbody class="text-center">
                         <tr datalist="Assignment" order="Assignment.Number ASC" removeonempty="AssignmentTable">
+                            <td roles="Teacher" mode="edit"><span data="Assignment.Number" type="number" min="1"></span>
+                            </td>
                             <td><span data="Assignment.Name" link="Assignment"></span></td>
                             <td><span data="Assignment.Deadline" type="date"></span></td>
                             <td><span data="Assignment.IsFinal" type="checkbox"></span></td>
+                            <td><span data="Assignment.MembershipsFinal" type="checkbox"></span></td>
                             <td><span data="Assignment.MinRequiredScore" type="number" min="0" step="any"></span></td>
                             <td><span data="Assignment.Mandatory" type="checkbox"></span></td>
                             <td><span data="Assignment.Weight" type="number" min="0" max="1" step="any"></span></td>
+                            <td><span data="Assignment.IsGraded" type="checkbox"></span></td>
                             <td>
-                                        <span data="Assignment.MinGroupSize" type="number" min="1">
+                                <span data="Assignment.MinGroupSize" type="number" min="1">
                                         </span>-<span data="Assignment.MaxGroupSize" type="number" min="1"></span>
                             </td>
                             <td roles="Teacher">
